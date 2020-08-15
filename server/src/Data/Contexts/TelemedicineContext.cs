@@ -6,7 +6,6 @@ namespace Data.Contexts
     {
         public TelemedicineContext(DbContextOptions options) : base(options)
         {
-                
         }
     }
 }
