@@ -16,71 +16,86 @@ import './AddForm.scss'
 
 
 function AddForm() {
-  const [displayUserForm, setDisaplayForm] = useState(false);
 
-  const { Option } = Select;
-
-  const handleSubmit = () => { };
-
-  const dataSource = [
-    {
-      key: '1',
-      name: 'CHRISTOPHER SE LA COME',
-      age: 32,
-      address: '10 Downing Street',
-      actions: <div> <Button type="primary" danger icon={<DeleteOutlined />} style={{ height: '40px', width: '40px', marginLeft: '2px' }}>
-      </Button><Button type="primary" className="btnEdit" icon={<EditOutlined />} style={{ height: '40px', width: '40px', marginLeft: '2px' }}>
-        </Button></div>,
+  const layout = {
+    labelCol: {
+      span: 8,
     },
-    {
-      key: '2',
-      name: 'MW2',
-      age: 42,
-      address: '10 Downing Street',
-      actions: <div> <Button type="primary" danger icon={<DeleteOutlined />} style={{ height: '40px', width: '40px', marginLeft: '2px' }}>
-      </Button><Button type="primary" className="btnEdit" icon={<EditOutlined />} style={{ height: '40px', width: '40px', marginLeft: '2px' }}>
-        </Button></div>,
-
+    wrapperCol: {
+      span: 10,
     },
-  ];
+  };
 
-  const columns = [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      actions: 'name',
+  const validateMessages = {
+    required: '${label} is required!',
+    types: {
+      email: '${label} is not validate email!',
+      number: '${label} is not a validate number!',
     },
-    {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
-      actions: 'age',
-
+    number: {
+      range: '${label} must be between ${min} and ${max}',
     },
-    {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
-      actions: 'address',
+  };
 
-    },
-    {
-      title: 'Acciones',
-      dataIndex: 'actions',
-      key: 'actions',
-      actions: 'actions',
 
-    }
 
-  ];
+
   return (
-      <div>
-        <h2 className="hospitalTitle">GODZILLA IS REAL</h2>
-        <Button type="primary" >Agregar</Button>
-        <br /><br />
-        <Table dataSource={dataSource} columns={columns} />
-      </div>
+    <div>
+      <h2 className="hospitalTitle">GODZILLA IS REAL</h2>
+
+      <br /><br />
+
+      <Form {...layout} name="nest-messages" validateMessages={validateMessages}>
+        <Form.Item
+          name={['user', 'name']}
+          label="Name"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name={['user', 'email']}
+          label="Email"
+          rules={[
+            {
+              type: 'email',
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name={['user', 'age']}
+          label="Age"
+          rules={[
+            {
+              type: 'number',
+              min: 0,
+              max: 99,
+            },
+          ]}
+        >
+          <InputNumber />
+        </Form.Item>
+        <Form.Item name={['user', 'website']} label="Website">
+          <Input />
+        </Form.Item>
+        <Form.Item name={['user', 'introduction']} label="Introduction">
+          <Input.TextArea />
+        </Form.Item>
+        <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+          <Button type="primary" htmlType="submit">
+            Submit
+        </Button>
+        </Form.Item>
+      </Form>
+
+    </div>
   );
 }
 
