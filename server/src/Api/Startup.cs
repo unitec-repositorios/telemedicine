@@ -2,7 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Hospitals;
 using Data.Contexts;
+using Data.Repositories;
+using Data.Repositories.Hospitals;
+using Domain.Aggregates.Hospitals;
+using Domain.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,8 +34,17 @@ namespace Api
         {
             services.AddControllers();
 
-            // services.AddDbContext<TelemedicineContext>(options =>
-            //     options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<TelemedicineContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+        }
+
+        private static void ConfigureDependencies(IServiceCollection services)
+        {
+            services.AddScoped<TelemedicineContext>();
+            services.AddScoped(typeof(IBaseRepository<>), typeof(EfRepository<>));
+
+            services.AddScoped<IHospitalRepository, HospitalRepository>();
+            services.AddScoped<IHospitalService, HospitalService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

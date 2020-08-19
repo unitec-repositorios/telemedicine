@@ -13,6 +13,7 @@ function Hospital() {
   const { Option } = Select;
   const history = useHistory();
   const handleClick = () => history.push('/addForm');
+  const editClick = () => history.push('/editForm');
   
   const handleSubmit = () => { };
 
@@ -23,7 +24,7 @@ function Hospital() {
       age: 32,
       address: '10 Downing Street',
       actions: <div> <Button type="primary" danger icon={<DeleteOutlined />} style={{ height: '40px', width: '40px', marginLeft: '2px' }}>
-      </Button><Button type="primary" className="btnEdit" icon={<EditOutlined />} style={{ height: '40px', width: '40px', marginLeft: '2px' }}>
+      </Button><Button type="primary" className="btnEdit" onClick={editClick} icon={<EditOutlined />} style={{ height: '40px', width: '40px', marginLeft: '2px' }}>
         </Button></div>,
     },
     {
@@ -32,7 +33,7 @@ function Hospital() {
       age: 42,
       address: '10 Downing Street',
       actions: <div> <Button type="primary" danger icon={<DeleteOutlined />} style={{ height: '40px', width: '40px', marginLeft: '2px' }}>
-      </Button><Button type="primary" className="btnEdit" icon={<EditOutlined />} style={{ height: '40px', width: '40px', marginLeft: '2px' }}>
+      </Button><Button type="primary" className="btnEdit" onClick={editClick} icon={<EditOutlined />} style={{ height: '40px', width: '40px', marginLeft: '2px' }}>
         </Button></div>,
 
     },

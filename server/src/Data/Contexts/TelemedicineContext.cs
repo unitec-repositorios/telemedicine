@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Aggregates.Hospitals;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data.Contexts
 {
@@ -6,6 +7,9 @@ namespace Data.Contexts
     {
         public TelemedicineContext(DbContextOptions options) : base(options)
         {
+           
         }
+
+        public DbSet<Hospital> Hospital { get; set; }
     }
 }

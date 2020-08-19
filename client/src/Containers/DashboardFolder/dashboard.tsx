@@ -4,6 +4,8 @@ import { Layout, Menu } from "antd";
 import Hospital from '../Components/Hospitals/Hospital';
 import Patient from '../Components/Patients/Patient';
 import Network from '../Components/Networks/Network';
+import HospitalAddForm from '../Components/Hospitals/addForm/HospitalAddForm';
+import HospitalEditForm from '../Components/Hospitals/editForm/HospitalEditForm';
 import {
   BrowserRouter as Router,
   Switch,
@@ -22,7 +24,7 @@ import {
     HomeOutlined,
   } from '@ant-design/icons';
 
-import AddForm from '../Components/Hospitals/addForm/AddForm'
+
 
 const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu;
@@ -110,7 +112,10 @@ function Dashboard() {
                   <Network />
                 </Route>
                 <Route path="/addForm">
-                  <AddForm />
+                  <HospitalAddForm />
+                </Route>
+                <Route path="/editForm">
+                  <HospitalEditForm />
                 </Route>
             </Switch>
           </Content>
