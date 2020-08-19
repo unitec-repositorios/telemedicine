@@ -9,15 +9,16 @@ import {
   ApartmentOutlined,
   HomeOutlined,
 } from "@ant-design/icons";
-import { Link } from "@reach/router";
+import { Link, RouteComponentProps } from "@reach/router";
 
 const { Header, Sider, Content } = Layout;
 
-interface DashboardProps {
+interface DashboardProps extends RouteComponentProps {
   children: React.ReactNode;
 }
 
 function Dashboard(props: DashboardProps) {
+  debugger;
   const [collapsed, setCollapsed] = useState(false);
 
   const toggle = () => setCollapsed(!collapsed);
@@ -30,18 +31,24 @@ function Dashboard(props: DashboardProps) {
     >
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="logo" />
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
+        <Menu
+          theme="dark"
+          mode="inline"
+          selectedKeys={[
+            props.location !== undefined ? props.location.pathname : "1",
+          ]}
+        >
           <Menu.Item key="1" icon={<HomeOutlined />}>
-            <Link to="/">Inicio</Link>
+            <Link to="home">Inicio</Link>
           </Menu.Item>
           <Menu.Item key="2" icon={<EnvironmentOutlined />}>
-            <Link to="/hospitales">Hospitales</Link>
+            <Link to="hospitals">Hospitales</Link>
           </Menu.Item>
           <Menu.Item key="3" icon={<UserOutlined />}>
-            <Link to="/pacientes">Pacientes</Link>
+            <Link to="patients">Pacientes</Link>
           </Menu.Item>
           <Menu.Item key="4" icon={<ApartmentOutlined />}>
-            <Link to="/redes">Redes</Link>
+            <Link to="networks">Redes</Link>
           </Menu.Item>
         </Menu>
       </Sider>
@@ -59,14 +66,16 @@ function Dashboard(props: DashboardProps) {
           )}
         </Header>
         <Content
-          className="site-layout-background"
+          className="main-content"
           style={{
             margin: "24px 16px",
             padding: 24,
             minHeight: 280,
           }}
         >
-          {props.children}
+          <div style={{ maxWidth: "70%", margin: "0 auto" }}>
+            {props.children}
+          </div>
         </Content>
       </Layout>
     </Layout>

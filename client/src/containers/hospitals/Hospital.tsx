@@ -1,10 +1,13 @@
-import React, { useState } from "react";
-import { Button, Select, Table } from "antd";
+import React from "react";
+import { Button, Table } from "antd";
 
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import "./Hospital.scss";
+import { RouteComponentProps } from "@reach/router";
 
-function Hospital() {
+interface HospitalProps extends RouteComponentProps {}
+
+function Hospital(props: HospitalProps) {
   const dataSource = [
     {
       key: "1",
@@ -42,13 +45,13 @@ function Hospital() {
             danger
             icon={<DeleteOutlined />}
             style={{ height: "40px", width: "40px", marginLeft: "2px" }}
-          ></Button>
+          />
           <Button
             type="primary"
             className="btnEdit"
             icon={<EditOutlined />}
             style={{ height: "40px", width: "40px", marginLeft: "2px" }}
-          ></Button>
+          />
         </div>
       ),
     },
