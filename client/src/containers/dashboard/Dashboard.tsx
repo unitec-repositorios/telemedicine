@@ -22,8 +22,9 @@ function Dashboard(props: DashboardProps) {
   const [collapsed, setCollapsed] = useState(false);
 
   const toggle = () => setCollapsed(!collapsed);
-
+  
   return (
+    
     <Layout
       style={{
         minHeight: "100vh",
@@ -34,9 +35,8 @@ function Dashboard(props: DashboardProps) {
         <Menu
           theme="dark"
           mode="inline"
-          selectedKeys={[
-            props.location !== undefined ? props.location.pathname : "1",
-          ]}
+          defaultSelectedKeys={['1']}
+          
         >
           <Menu.Item key="1" icon={<HomeOutlined />}>
             <Link to="home">Inicio</Link>

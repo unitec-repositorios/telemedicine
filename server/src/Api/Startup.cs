@@ -21,7 +21,7 @@ namespace Api
             services.AddControllers();
 
             // services.AddDbContext<TelemedicineContext>(options =>
-            //     options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+               // options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -32,7 +32,7 @@ namespace Api
                 app.UseDeveloperExceptionPage();
             }
 
-            // app.UseHttpsRedirection();
+             //app.UseHttpsRedirection();
 
             app.UseRouting();
 
