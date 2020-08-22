@@ -18,7 +18,6 @@ interface DashboardProps extends RouteComponentProps {
 }
 
 function Dashboard(props: DashboardProps) {
-  debugger;
   const [collapsed, setCollapsed] = useState(false);
 
   const toggle = () => setCollapsed(!collapsed);
