@@ -3,9 +3,10 @@ import "./App.css";
 import Dashboard from "./containers/dashboard/Dashboard";
 import { Router } from "@reach/router";
 import Hospital from "./containers/hospitals/Hospital";
-import Patient from "./containers/patients/Patient";
+import PatientTable from "./containers/patients/PatientTable";
 import NetworkTable from "./containers/networks/NetworkTable";
 import AddNetworkForm from "./containers/networks/components/AddNetworkForm";
+import AddPatientsForm from "./containers/patients/components/AddPatientForm";
 
 function App() {
   return (
@@ -13,7 +14,8 @@ function App() {
       <Dashboard>
         <Router>
           <Hospital path="hospitals" />
-          <Patient path="patients" />
+          <PatientTable path="patients" />
+          <AddPatientsForm path="patients/add" />
           <NetworkTable path="networks" />
           <AddNetworkForm path="networks/add" />
         </Router>

@@ -35,7 +35,7 @@ function Dashboard(props: DashboardProps) {
           theme="dark"
           mode="inline"
           selectedKeys={[
-            props.location !== undefined ? props.location.pathname : "1",
+            props.location !== undefined ? props.location.pathname : "1", 
           ]}
         >
           <Menu.Item key="1" icon={<HomeOutlined />}>
