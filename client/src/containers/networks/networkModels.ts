@@ -5,7 +5,7 @@ export interface CreateNetwork {
 }
 
 export interface Network {
-  id: string;
+  id: number;
   name: string;
   code: string;
   city: string;
