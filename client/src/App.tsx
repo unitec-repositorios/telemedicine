@@ -11,15 +11,15 @@ import EditNetworkForm from "./containers/networks/components/EditNetworkForm";
 function App() {
   return (
     <div className="App">
-      <Dashboard>
-        <Router>
+      <Router>
+        <Dashboard path="/">
           <Hospital path="hospitals" />
           <Patient path="patients" />
           <NetworksTable path="networks" />
           <AddNetworkForm path="networks/add" />
           <EditNetworkForm path="networks/edit/:id" />
-        </Router>
-      </Dashboard>
+        </Dashboard>
+      </Router>
     </div>
   );
 }
