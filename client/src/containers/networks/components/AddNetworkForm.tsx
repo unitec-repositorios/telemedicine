@@ -2,7 +2,8 @@ import React from "react";
 import { Button, Form, Input } from "antd";
 import { RouteComponentProps } from "@reach/router";
 import MainTitle from "../../../components/MainTitle";
-import { create } from "../networkService";
+import { create, rupsCodeExists } from "../networkService";
+import { RuleObject, StoreValue } from "rc-field-form/lib/interface";
 
 export interface AddNetworkProps extends RouteComponentProps {}
 
@@ -49,6 +50,15 @@ function AddNetworkForm(props: AddNetworkProps) {
     })();
   };
 
+  const validateCode = async (rule: RuleObject, value: StoreValue) => {
+    const code = parseInt(value, 10);
+    const exists = await rupsCodeExists(code);
+
+    if (exists) {
+      throw new Error(`Ya existe una red con el código ${code}`);
+    }
+  };
+
   return (
     <>
       <MainTitle>Registrar red</MainTitle>
@@ -80,6 +90,9 @@ function AddNetworkForm(props: AddNetworkProps) {
               required: true,
               message: "Código es un campo requerido",
               whitespace: true,
+            },
+            {
+              validator: validateCode,
             },
           ]}
         >

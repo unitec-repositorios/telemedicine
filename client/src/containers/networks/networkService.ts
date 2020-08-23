@@ -26,3 +26,19 @@ export async function update(network: CreateNetwork) {
 export async function remove(id: number) {
   await axios.delete(`${baseUrl}/${id}`);
 }
+
+export async function rupsCodeExists(code: number) {
+  try {
+    const response = await axios.get(baseUrl, {
+      params: {
+        code,
+      },
+    });
+
+    const data = response.data as Network[];
+
+    return data.length > 0;
+  } catch (e) {
+    console.log(e);
+  }
+}
