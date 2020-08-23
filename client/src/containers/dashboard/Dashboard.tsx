@@ -33,20 +33,18 @@ function Dashboard(props: DashboardProps) {
         <Menu
           theme="dark"
           mode="inline"
-          selectedKeys={[
-            props.location !== undefined ? props.location.pathname : "1", 
-          ]}
+          selectedKeys={[props.location?.pathname ?? "/"]}
         >
-          <Menu.Item key="1" icon={<HomeOutlined />}>
-            <Link to="home">Inicio</Link>
+          <Menu.Item key="/" icon={<HomeOutlined />}>
+            <Link to="/">Inicio</Link>
           </Menu.Item>
-          <Menu.Item key="2" icon={<EnvironmentOutlined />}>
+          <Menu.Item key="/hospitals" icon={<EnvironmentOutlined />}>
             <Link to="hospitals">Hospitales</Link>
           </Menu.Item>
-          <Menu.Item key="3" icon={<UserOutlined />}>
+          <Menu.Item key="/patients" icon={<UserOutlined />}>
             <Link to="patients">Pacientes</Link>
           </Menu.Item>
-          <Menu.Item key="4" icon={<ApartmentOutlined />}>
+          <Menu.Item key="/networks" icon={<ApartmentOutlined />}>
             <Link to="networks">Redes</Link>
           </Menu.Item>
         </Menu>

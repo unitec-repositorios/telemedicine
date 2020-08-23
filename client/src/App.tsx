@@ -13,8 +13,8 @@ import EditPatientForm from "./containers/patients/components/EditPatientForm";
 function App() {
   return (
     <div className="App">
-      <Dashboard>
-        <Router>
+      <Router>
+        <Dashboard path="/">
           <Hospital path="hospitals" />
           <PatientTable path="patients" />
           <AddPatientsForm path="patients/add" />
@@ -22,8 +22,8 @@ function App() {
           <EditPatientForm path="patients/edit/:id" />
           <AddNetworkForm path="networks/add" />
           <EditNetworkForm path="networks/edit/:id" />
-        </Router>
-      </Dashboard>
+        </Dashboard>
+      </Router>
     </div>
   );
 }
