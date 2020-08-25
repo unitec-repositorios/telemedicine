@@ -10,23 +10,23 @@ namespace Core.Networks
     {
         private readonly INetworkRepository _networkRepository;
 
-
         public NetworkService(INetworkRepository networkRepository)
         {
             _networkRepository = networkRepository;
         }
-        
-        
+
+
         public async Task<Network> FindById(int id)
         {
             return await _networkRepository.FindById(id);
         }
 
-        public async Task<IEnumerable<Network>> All(int? id ,int? code)
+        public async Task<IEnumerable<Network>> All(int? id)
         {
             return await _networkRepository
-                .Filter(network => !network.Disabled).Where(x => id == null || x.Id == id)
-                .Where(x => code == null || x.RupsCode == code).ToListAsync();
+                .Filter(network => !network.Disabled)
+                .Where(x => id == null || x.Id == id)
+                .ToListAsync();
         }
 
         public async Task Remove(int id)
@@ -38,29 +38,18 @@ namespace Core.Networks
         public async Task Update(int id, Network network)
         {
             var updateNetwork = await _networkRepository.FindById(id);
-
             updateNetwork.Name = network.Name;
-            updateNetwork.RupsCode = network.RupsCode;
-            updateNetwork.HealthUnit = network.HealthUnit;
-            updateNetwork.Township = network.Township;
-            updateNetwork.NewCategory = network.NewCategory;
-            
             await _networkRepository.Update(updateNetwork);
         }
 
         public async Task Create(Network network)
         {
-            var newnetwork = new Network
+            var newNetwork = new Network
             {
                 Name = network.Name,
-                RupsCode = network.RupsCode,
-                HealthUnit = network.HealthUnit,
-                Township = network.Township,
-                NewCategory = network.NewCategory
             };
 
-            await _networkRepository.Add(newnetwork);
+            await _networkRepository.Add(newNetwork);
         }
-        
     }
 }

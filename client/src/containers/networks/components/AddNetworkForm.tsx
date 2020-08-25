@@ -1,9 +1,8 @@
 import React from "react";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import { RouteComponentProps } from "@reach/router";
 import MainTitle from "../../../components/MainTitle";
-import { create, rupsCodeExists } from "../networkService";
-import { RuleObject, StoreValue } from "rc-field-form/lib/interface";
+import { create } from "../networkService";
 
 export interface AddNetworkProps extends RouteComponentProps {}
 
@@ -34,6 +33,10 @@ const tailFormItemLayout = {
       span: 16,
       offset: 8,
     },
+    md: {
+      span: 16,
+      offset: 8,
+    },
   },
 };
 
@@ -42,21 +45,16 @@ function AddNetworkForm(props: AddNetworkProps) {
 
   const onFinish = (values: NetworkForm) => {
     (async () => {
-      await create({
-        city: values.city,
-        code: values.code,
-        name: values.name,
-      });
+      try {
+        await create({
+          name: values.name,
+        });
+        form.resetFields();
+        message.success("La red ha sido creada existosamente");
+      } catch (error) {
+        message.error("Ocurrió un error al guardar la red");
+      }
     })();
-  };
-
-  const validateCode = async (rule: RuleObject, value: StoreValue) => {
-    const code = parseInt(value, 10);
-    const exists = await rupsCodeExists(code);
-
-    if (exists) {
-      throw new Error(`Ya existe una red con el código ${code}`);
-    }
   };
 
   return (
@@ -82,42 +80,16 @@ function AddNetworkForm(props: AddNetworkProps) {
         >
           <Input />
         </Form.Item>
-        <Form.Item
-          name="code"
-          label="Código"
-          rules={[
-            {
-              required: true,
-              message: "Código es un campo requerido.",
-              whitespace: true,
-            },
-            {
-              type: "number",
-              message: "Solo se permiten números.",
-            },
-            {
-              validator: validateCode,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="city"
-          label="Municipio"
-          rules={[
-            {
-              required: true,
-              message: "Municipio es un campo requerido",
-              whitespace: true,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
         <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit">
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={{ marginRight: "8px" }}
+          >
             Guardar
+          </Button>
+          <Button htmlType="button" onClick={() => form.resetFields()}>
+            Reiniciar campo
           </Button>
         </Form.Item>
       </Form>

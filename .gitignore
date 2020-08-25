@@ -132,3 +132,5 @@ server/src/Api/obj/
 server/.idea/.idea.Telemedicine/.idea/
 
 client/.idea/
+
+server/src/Data/Migrations/
