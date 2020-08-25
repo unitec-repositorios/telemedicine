@@ -88,8 +88,12 @@ function AddNetworkForm(props: AddNetworkProps) {
           rules={[
             {
               required: true,
-              message: "Código es un campo requerido",
+              message: "Código es un campo requerido.",
               whitespace: true,
+            },
+            {
+              type: "number",
+              message: "Solo se permiten números.",
             },
             {
               validator: validateCode,
