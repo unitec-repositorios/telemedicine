@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Button, Popconfirm, Table } from "antd";
+import { Button, Popconfirm, Table, Space } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { Link,  navigate, RouteComponentProps } from "@reach/router";
+import { Link, navigate, RouteComponentProps } from "@reach/router";
 
 import { Patient } from "./patientModels";
 import MainTitle from "../../components/MainTitle";
@@ -39,16 +39,16 @@ function PatientTable(props: PatientProps) {
       title: "Número de Expediente",
       dataIndex: "idRecord",
       key: "idRecord",
-  },
+    },
     {
       title: "Nombre",
       dataIndex: "name",
       key: "name",
     },
     {
-        title: "Primer Apellido",
-        dataIndex: "firstLastName",
-        key: "lastName",
+      title: "Primer Apellido",
+      dataIndex: "firstLastName",
+      key: "lastName",
     },
     {
       title: "Segundo Apellido",
@@ -66,7 +66,7 @@ function PatientTable(props: PatientProps) {
       key: "email",
     },
     {
-      title: "Genero",
+      title: "Género",
       dataIndex: "gender",
       key: "gender",
     },
@@ -81,29 +81,31 @@ function PatientTable(props: PatientProps) {
       key: "actions",
       render: (text: string, record: Patient) => (
         <div>
-          {" "}
-          <Button
-            onClick={onEdit}
-            data-id={record.id}
-            type="primary"
-            icon={<EditOutlined />}
-            style={{ height: "40px", width: "40px", marginLeft: "2px" }}
-          />
-          <Popconfirm
-            placement="top"
-            title="¿Está seguro que sea eliminar el registro?"
-            onConfirm={() => onDelete(record.id)}
-            okText="Sí"
-            cancelText="No"
-          >
+          <Space size={0}>
+            {" "}
             <Button
+              onClick={onEdit}
               data-id={record.id}
               type="primary"
-              danger
-              icon={<DeleteOutlined />}
+              icon={<EditOutlined />}
               style={{ height: "40px", width: "40px", marginLeft: "2px" }}
             />
-          </Popconfirm>
+            <Popconfirm
+              placement="top"
+              title="¿Está seguro que sea eliminar el registro?"
+              onConfirm={() => onDelete(record.id)}
+              okText="Sí"
+              cancelText="No"
+            >
+              <Button
+                data-id={record.id}
+                type="primary"
+                danger
+                icon={<DeleteOutlined />}
+                style={{ height: "40px", width: "40px", marginLeft: "2px" }}
+              />
+            </Popconfirm>
+          </Space>
         </div>
       ),
     },
@@ -121,7 +123,7 @@ function PatientTable(props: PatientProps) {
         columns={columns}
         rowKey="firstName"
         locale={{ emptyText: "Sin información" }}
-        scroll={{ x: 1300}}
+        scroll={{ x: 1300 }}
       />
     </div>
   );
