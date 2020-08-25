@@ -1,13 +1,35 @@
+export interface Patient {
+  id: number;
+  idNumber: string;
+  name: string;
+  firstLastName: string;    
+  secondLastName: string;
+  dateOfBirth: Date;
+  email: string;
+  gender: string;
+  idRecord: number;
+  address: string;
+}
+
 export interface CreatePatient {
-    code: string;
-    firstName: string;    
-    lastName: string;
+    idNumber: string;
+    name: string;
+    firstLastName: string;    
+    secondLastName: string;
+    dateOfBirth: Date;
+    email: string;
+    gender: string;
+    address: string;
   }
-  
-  export interface Patient {
-    id: string;
-    code: string;
-    firstName: string;    
-    lastName: string;
+
+  export interface UpdatePatient {
+    idNumber: string;
+    name: string;
+    firstLastName: string;    
+    secondLastName: string;
+    dateOfBirth: Date;
+    email: string;
+    gender: string;
+    address: string;
   }
   

@@ -1,50 +1,33 @@
-import React from "react";
-import { Button, Form, Input, Radio, Select, DatePicker } from "antd";
-import { Link, RouteComponentProps } from "@reach/router";
+import React, { useEffect } from "react";
 import MainTitle from "../../../components/MainTitle";
-import { create } from "../patientService";
+import { Button, Form, Input, Radio, DatePicker } from "antd";
+import { findById, update } from "../patientService";
+import { PatientForm } from "./AddPatientForm";
+import { Link, RouteComponentProps } from "@reach/router";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import moment from "moment";
 import MaskedInput from "antd-mask-input";
+import moment from "moment";
 
-export interface AddPatientProps extends RouteComponentProps {}
-
-export interface PatientForm {
-  [key: string]: string;
+interface EditPatientRouteParams {
+  id: number;
 }
 
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 24 },
-    sm: { span: 8 },
-    md: { span: 8 },
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 16 },
-    md: { span: 8 },
-  },
-};
+interface EditPatientFormProps
+  extends RouteComponentProps<EditPatientRouteParams> {}
 
-const tailFormItemLayout = {
-  wrapperCol: {
-    xs: {
-      span: 24,
-      offset: 0,
-    },
-    sm: {
-      span: 16,
-      offset: 8,
-    },
-  },
-};
-
-function AddPatientForm(props: AddPatientProps) {
+function EditPatientForm(props: EditPatientFormProps) {
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    (async () => {
+      const patient = await findById(props.id ?? 1);
+      form.setFieldsValue(patient);
+    })();
+  }, []);
 
   const onFinish = (values: PatientForm) => {
     (async () => {
-      await create({
+      await update({
         idNumber: values.idNumber,
         name: values.name,
         firstLastName: values.firstLastName,
@@ -55,6 +38,32 @@ function AddPatientForm(props: AddPatientProps) {
         address: values.address,
       });
     })();
+  };
+
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 8 },
+      md: { span: 8 },
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 16 },
+      md: { span: 8 },
+    },
+  };
+
+  const tailFormItemLayout = {
+    wrapperCol: {
+      xs: {
+        span: 24,
+        offset: 0,
+      },
+      sm: {
+        span: 16,
+        offset: 8,
+      },
+    },
   };
 
   return (
@@ -68,7 +77,7 @@ function AddPatientForm(props: AddPatientProps) {
           style={{ marginLeft: "-20%" }}
         ></Button>
       </Link>
-      <MainTitle>Registrar paciente</MainTitle>
+      <MainTitle>Editar paciente</MainTitle>
       <Form
         {...formItemLayout}
         form={form}
@@ -163,7 +172,6 @@ function AddPatientForm(props: AddPatientProps) {
             {
               required: true,
               message: "Fecha nacimiento es un campo requerido",
-              whitespace: true,
             },
           ]}
         >
@@ -171,6 +179,7 @@ function AddPatientForm(props: AddPatientProps) {
             name="dateOfBirth"
             defaultValue={moment("15-01-1995", "DD-MM-YYYY")}
             format={"DD-MM-YYYY"}
+            placeholder="Ingrese fecha"
           />
         </Form.Item>
         <Form.Item
@@ -237,4 +246,4 @@ function AddPatientForm(props: AddPatientProps) {
   );
 }
 
-export default AddPatientForm;
+export default EditPatientForm;
