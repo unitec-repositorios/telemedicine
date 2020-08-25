@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Aggregates.Networks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data.Contexts
 {
@@ -7,5 +8,7 @@ namespace Data.Contexts
         public TelemedicineContext(DbContextOptions options) : base(options)
         {
         }
+
+        public DbSet<Network> Networks { get; set; }
     }
 }

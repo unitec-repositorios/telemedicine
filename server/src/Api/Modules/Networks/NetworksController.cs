@@ -1,4 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Core.Networks;
+using Domain.Aggregates.Networks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Modules.Networks
@@ -7,51 +11,73 @@ namespace Api.Modules.Networks
     [Route("[controller]")]
     public class NetworksController : Controller
     {
-        private readonly NetworkViewModel[] networks =
-        {
-            new NetworkViewModel
-            {
-                Id = 1,
-                Name = "El Progreso",
-                City = "El Progreso"
-            },
-            new NetworkViewModel
-            {
-                Id = 2,
-                Name = "SPS",
-                City = "San Pedro Sula"
-            },
-            new NetworkViewModel
-            {
-                Id = 3,
-                Name = "La Ceiba",
-                City = "La Ceiba"
-            }
-        };
+       
+        
+        private readonly INetworkService _networkService;
 
-        // GET
-        [HttpGet()]
-        public IEnumerable<NetworkViewModel> Get()
+        public NetworksController(INetworkService networkService)
         {
-            return networks;
+            _networkService = networkService;
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<NetworkViewModel> Get(int? id)
+
+        [HttpGet("{id:int?}")]
+        public async Task<IActionResult> Get(int? id, [FromQuery] int? code)
         {
-            if (id == null)
-            {
-                return BadRequest("the id parameter can't be null");
-            }
+            var data = (await _networkService.All(id,code))
+                .Select(network => new NetworksViewModel
+                {
+                    Id = network.Id,
+                    Name = network.Name,
+                    RupsCode = network.RupsCode,
+                    HealthUnit = network.HealthUnit,
+                    Township = network.Township,
+                    NewCategory = network.NewCategory,
+                });
 
-            return networks[id.Value - 1];
+            return Ok(data);
         }
-
-        //localhost:5000/networks
+        
         [HttpPost]
-        public IActionResult Post(NetworkViewModel networkViewModel)
+        public async Task Post(NetworksViewModel projectViewModel)
         {
-            return Ok();
+            
+            var network = new Network
+            {
+                Id = projectViewModel.Id,
+                Name = projectViewModel.Name,
+                RupsCode = projectViewModel.RupsCode,
+                HealthUnit = projectViewModel.HealthUnit,
+                Township = projectViewModel.Township,
+                NewCategory = projectViewModel.NewCategory
+            };
+
+            await _networkService.Create(network);
         }
+        
+        
+        [HttpDelete("{id}")]
+        public async Task Delete(int id)
+        {
+            await _networkService.Remove(id);
+        }
+        
+        [HttpPut("{id}")]
+        public async Task Edit(int id, NetworksViewModel projectViewModel)
+        {
+            var network = new Network
+            {
+                Id = projectViewModel.Id,
+                Name = projectViewModel.Name,
+                RupsCode = projectViewModel.RupsCode,
+                HealthUnit = projectViewModel.HealthUnit,
+                Township = projectViewModel.Township,
+                NewCategory = projectViewModel.NewCategory
+
+            };
+            await _networkService.Update(id, network);
+        }
+        
+
     }
 }
