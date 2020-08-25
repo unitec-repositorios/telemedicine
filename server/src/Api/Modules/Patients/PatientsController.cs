@@ -1,7 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Api.Modules.Networks;
+using Core.Patients;
+using Domain.Aggregates.Networks;
+using Domain.Aggregates.Patients;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Modules.Patients
@@ -10,75 +12,78 @@ namespace Api.Modules.Patients
     [Route("[controller]")]
     public class PatientsController : Controller
     {
-        private readonly PatientViewModel[] patients =
-        {
-            new PatientViewModel
-            {
-               Id = 1,
-               IdNumber =  "0501199802810",
-               IdRecord =  452,
-               Name = "William Fernando",
-               FirstLastName = "Portillo",    
-               SecondLastName = "Portillo2",
-               DateOfBirth = "19980118",
-               Email = "william@email.com",
-               Gender = "Masculino",
-               Address =  "Colonia las colinas",
-            },
-            new PatientViewModel
-            {
-               Id = 2,
-               IdNumber =  "0000-0000-00000",
-               IdRecord =  189,
-               Name = "Christopher",
-               FirstLastName = "Ecalon",
-               SecondLastName = "Escalon 2",
-               DateOfBirth = "23-04-1997",
-               Email = "escalon@email.com",
-               Gender = "Masculino",
-               Address = "Colonia las colinas",
-            }
-        };
+        private readonly IPatientService _patientService;
 
-        [HttpGet()]
-        public IEnumerable<PatientViewModel> Get()
+        public PatientsController(IPatientService patientService)
         {
-            return patients;
+            _patientService = patientService;
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<PatientViewModel> Get(int? id)
-        {
-            if (id == null)
-                return BadRequest("the id parameter can't be null");
 
-
-            return patients[id.Value - 1];
-        }
-
-        /*
-         *  // GET
         [HttpGet("{id:int?}")]
-        public IEnumerable<PatientViewModel> Get(int? id)
+        public async Task<IActionResult> Get(int? id)
         {
-            return _patients
-                .Where(x => id == null || x.Id == id);
-        }
+            var data = (await _patientService.All(id))
+                .Select(patient => new PatientViewModel
+                {
+                    Id=patient.Id,
+                    IdNumber = patient.IdNumber,
+                    Name = patient.Name,
+                    FirstLastName = patient.FirstLastName,
+                    SecondLastName= patient.SecondLastName,
+                    DateOfBirth= patient.DateOfBirth,
+                    Email= patient.Email,
+                    Gender= patient.Gender,
+                    Address= patient.Address,
+                    IdRecord = patient.IdRecord
+                });
 
-        [HttpGet("{idNumber:string?}")]
-        public IEnumerable<PatientViewModel> GetIdNumber([FromQuery] string? idNumber)
-        {
-            return _patients
-                .Where(x => idNumber == null || x.IdNumber == idNumber);
+            return Ok(data);
         }
-         * 
-         */
-
 
         [HttpPost]
-        public IActionResult Post(PatientViewModel patientViewModel)
+        public async Task Post(PatientViewModel patientViewModel)
         {
-            return Ok();
+            var patient = new Patient
+            {
+                
+                IdNumber = patientViewModel.IdNumber,
+                Name = patientViewModel.Name,
+                FirstLastName = patientViewModel.FirstLastName,
+                SecondLastName= patientViewModel.SecondLastName,
+                DateOfBirth= patientViewModel.DateOfBirth,
+                Email= patientViewModel.Email,
+                Gender= patientViewModel.Gender,
+                Address= patientViewModel.Address,
+                IdRecord = patientViewModel.IdRecord
+            };
+
+            await _patientService.Create(patient);
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task Delete(int id)
+        {
+            await _patientService.Remove(id);
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task Put(int id, [FromBody] PatientViewModel patientViewModel)
+        {
+            var patient = new Patient
+            {
+                IdNumber = patientViewModel.IdNumber,
+                Name = patientViewModel.Name,
+                FirstLastName = patientViewModel.FirstLastName,
+                SecondLastName= patientViewModel.SecondLastName,
+                DateOfBirth= patientViewModel.DateOfBirth,
+                Email= patientViewModel.Email,
+                Gender= patientViewModel.Gender,
+                Address= patientViewModel.Address,
+                IdRecord = patientViewModel.IdRecord
+            };
+            await _patientService.Update(id, patient);
         }
     }
 }
