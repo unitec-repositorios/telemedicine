@@ -11,8 +11,6 @@ namespace Api.Modules.Networks
     [Route("[controller]")]
     public class NetworksController : Controller
     {
-       
-        
         private readonly INetworkService _networkService;
 
         public NetworksController(INetworkService networkService)
@@ -24,8 +22,8 @@ namespace Api.Modules.Networks
         [HttpGet("{id:int?}")]
         public async Task<IActionResult> Get(int? id, [FromQuery] int? code)
         {
-            var data = (await _networkService.All(id,code))
-                .Select(network => new NetworksViewModel
+            var data = (await _networkService.All(id, code))
+                .Select(network => new NetworkViewModel
                 {
                     Id = network.Id,
                     Name = network.Name,
@@ -37,11 +35,10 @@ namespace Api.Modules.Networks
 
             return Ok(data);
         }
-        
+
         [HttpPost]
-        public async Task Post(NetworksViewModel projectViewModel)
+        public async Task Post(NetworkViewModel projectViewModel)
         {
-            
             var network = new Network
             {
                 Id = projectViewModel.Id,
@@ -54,16 +51,16 @@ namespace Api.Modules.Networks
 
             await _networkService.Create(network);
         }
-        
-        
+
+
         [HttpDelete("{id}")]
         public async Task Delete(int id)
         {
             await _networkService.Remove(id);
         }
-        
+
         [HttpPut("{id}")]
-        public async Task Edit(int id, NetworksViewModel projectViewModel)
+        public async Task Put(int id, NetworkViewModel projectViewModel)
         {
             var network = new Network
             {
@@ -73,11 +70,8 @@ namespace Api.Modules.Networks
                 HealthUnit = projectViewModel.HealthUnit,
                 Township = projectViewModel.Township,
                 NewCategory = projectViewModel.NewCategory
-
             };
             await _networkService.Update(id, network);
         }
-        
-
     }
 }
