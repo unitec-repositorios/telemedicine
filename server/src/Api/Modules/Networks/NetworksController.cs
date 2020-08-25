@@ -11,8 +11,6 @@ namespace Api.Modules.Networks
     [Route("[controller]")]
     public class NetworksController : Controller
     {
-       
-        
         private readonly INetworkService _networkService;
 
         public NetworksController(INetworkService networkService)
@@ -34,10 +32,16 @@ namespace Api.Modules.Networks
             return Ok(data);
         }
         
-        [HttpPost]
-        public async Task Post(NetworksViewModel projectViewModel)
+        
+        [HttpDelete("{id}")]
+        public async Task Delete(int id)
         {
-            
+            await _networkService.Remove(id);
+        }
+
+        [HttpPost]
+        public async Task Post(NetworkViewModel projectViewModel)
+        {
             var network = new Network
             {
                 Name = projectViewModel.Name,
@@ -45,8 +49,8 @@ namespace Api.Modules.Networks
 
             await _networkService.Create(network);
         }
-        
-        
+
+
         [HttpDelete("{id}")]
         public async Task Delete(int id)
         {
@@ -63,7 +67,5 @@ namespace Api.Modules.Networks
             };
             await _networkService.Update(id, network);
         }
-        
-
     }
 }
