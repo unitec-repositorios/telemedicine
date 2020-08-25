@@ -3,11 +3,11 @@ import "./App.css";
 import Dashboard from "./containers/dashboard/Dashboard";
 import { Router } from "@reach/router";
 import Hospital from "./containers/hospitals/Hospital";
-import PatientTable from "./containers/patients/PatientsTable";
+import PatientsTable from "./containers/patients/PatientsTable";
 import NetworksTable from "./containers/networks/NetworksTable";
 import AddNetworkForm from "./containers/networks/components/AddNetworkForm";
 import EditNetworkForm from "./containers/networks/components/EditNetworkForm";
-import AddPatientsForm from "./containers/patients/components/AddPatientForm";
+import AddPatientForm from "./containers/patients/components/AddPatientForm";
 import EditPatientForm from "./containers/patients/components/EditPatientForm";
 
 function App() {
@@ -16,8 +16,8 @@ function App() {
       <Router>
         <Dashboard path="/">
           <Hospital path="hospitals" />
-          <PatientTable path="patients" />
-          <AddPatientsForm path="patients/add" />
+          <PatientsTable path="patients" />
+          <AddPatientForm path="patients/add" />
           <NetworksTable path="networks" />
           <EditPatientForm path="patients/edit/:id" />
           <AddNetworkForm path="networks/add" />
