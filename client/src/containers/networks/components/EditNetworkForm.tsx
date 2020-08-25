@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import MainTitle from "../../../components/MainTitle";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import { findById, update } from "../networkService";
 import { NetworkForm } from "./AddNetworkForm";
 import { RouteComponentProps } from "@reach/router";
+import { Network } from "../networkModels";
 
 interface EditNetworkRouteParams {
   id: number;
@@ -14,21 +15,27 @@ interface EditNetworkFormProps
 
 function EditNetworkForm(props: EditNetworkFormProps) {
   const [form] = Form.useForm();
+  const [network, setNetwork] = useState({} as Network);
 
   useEffect(() => {
     (async () => {
-      const network = await findById(props.id ?? 1);
-      form.setFieldsValue(network);
+      const foundNetwork = await findById(props.id ?? 1);
+      setNetwork(foundNetwork);
+      form.setFieldsValue(foundNetwork);
     })();
   }, []);
 
   const onFinish = (values: NetworkForm) => {
     (async () => {
-      await update({
-        city: values.city,
-        code: values.code,
-        name: values.name,
-      });
+      try {
+        await update({
+          id: network.id,
+          name: values.name,
+        });
+        message.success("La red ha sido editada existosamente");
+      } catch (error) {
+        message.error("Ocurrió un error al editar la red");
+      }
     })();
   };
 
@@ -60,7 +67,7 @@ function EditNetworkForm(props: EditNetworkFormProps) {
 
   return (
     <>
-      <MainTitle>Registrar red</MainTitle>
+      <MainTitle>Editar red</MainTitle>
       <Form
         {...formItemLayout}
         form={form}
@@ -81,35 +88,16 @@ function EditNetworkForm(props: EditNetworkFormProps) {
         >
           <Input />
         </Form.Item>
-        <Form.Item
-          name="code"
-          label="Código"
-          rules={[
-            {
-              required: true,
-              message: "Código es un campo requerido",
-              whitespace: true,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="city"
-          label="Municipio"
-          rules={[
-            {
-              required: true,
-              message: "Municipio es un campo requerido",
-              whitespace: true,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
         <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit">
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={{ marginRight: "8px" }}
+          >
             Guardar
+          </Button>
+          <Button htmlType="button" onClick={() => form.resetFields()}>
+            Reiniciar campo
           </Button>
         </Form.Item>
       </Form>

@@ -20,17 +20,13 @@ namespace Api.Modules.Networks
 
 
         [HttpGet("{id:int?}")]
-        public async Task<IActionResult> Get(int? id, [FromQuery] int? code)
+        public async Task<IActionResult> Get(int? id)
         {
-            var data = (await _networkService.All(id, code))
+            var data = (await _networkService.All(id))
                 .Select(network => new NetworkViewModel
                 {
                     Id = network.Id,
                     Name = network.Name,
-                    RupsCode = network.RupsCode,
-                    HealthUnit = network.HealthUnit,
-                    Township = network.Township,
-                    NewCategory = network.NewCategory,
                 });
 
             return Ok(data);
@@ -41,12 +37,7 @@ namespace Api.Modules.Networks
         {
             var network = new Network
             {
-                Id = projectViewModel.Id,
                 Name = projectViewModel.Name,
-                RupsCode = projectViewModel.RupsCode,
-                HealthUnit = projectViewModel.HealthUnit,
-                Township = projectViewModel.Township,
-                NewCategory = projectViewModel.NewCategory
             };
 
             await _networkService.Create(network);
@@ -59,17 +50,13 @@ namespace Api.Modules.Networks
             await _networkService.Remove(id);
         }
 
-        [HttpPut("{id}")]
-        public async Task Put(int id, NetworkViewModel projectViewModel)
+        [HttpPut("{id:int}")]
+        public async Task Put(int id, [FromBody] NetworkViewModel projectViewModel)
         {
             var network = new Network
             {
                 Id = projectViewModel.Id,
                 Name = projectViewModel.Name,
-                RupsCode = projectViewModel.RupsCode,
-                HealthUnit = projectViewModel.HealthUnit,
-                Township = projectViewModel.Township,
-                NewCategory = projectViewModel.NewCategory
             };
             await _networkService.Update(id, network);
         }

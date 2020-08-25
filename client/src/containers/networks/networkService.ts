@@ -16,29 +16,13 @@ export async function all() {
 export async function findById(id: number) {
   const response = await axios.get(`${baseUrl}/${id}`);
 
-  return response.data as Network;
+  return (response.data as Network[])[0];
 }
 
-export async function update(network: CreateNetwork) {
-  await axios.put(baseUrl);
+export async function update(network: Network) {
+  await axios.put(`${baseUrl}/${network.id}`, network);
 }
 
 export async function remove(id: number) {
   await axios.delete(`${baseUrl}/${id}`);
-}
-
-export async function rupsCodeExists(code: number) {
-  try {
-    const response = await axios.get(baseUrl, {
-      params: {
-        code,
-      },
-    });
-
-    const data = response.data as Network[];
-
-    return data.length > 0;
-  } catch (e) {
-    console.log(e);
-  }
 }
