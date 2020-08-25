@@ -1,4 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Core.Networks;
+using Domain.Aggregates.Networks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Modules.Networks
@@ -7,51 +11,54 @@ namespace Api.Modules.Networks
     [Route("[controller]")]
     public class NetworksController : Controller
     {
-        private readonly NetworkViewModel[] networks =
-        {
-            new NetworkViewModel
-            {
-                Id = 1,
-                Name = "El Progreso",
-                City = "El Progreso"
-            },
-            new NetworkViewModel
-            {
-                Id = 2,
-                Name = "SPS",
-                City = "San Pedro Sula"
-            },
-            new NetworkViewModel
-            {
-                Id = 3,
-                Name = "La Ceiba",
-                City = "La Ceiba"
-            }
-        };
+        private readonly INetworkService _networkService;
 
-        // GET
-        [HttpGet()]
-        public IEnumerable<NetworkViewModel> Get()
+        public NetworksController(INetworkService networkService)
         {
-            return networks;
+            _networkService = networkService;
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<NetworkViewModel> Get(int? id)
-        {
-            if (id == null)
-            {
-                return BadRequest("the id parameter can't be null");
-            }
 
-            return networks[id.Value - 1];
+        [HttpGet("{id:int?}")]
+        public async Task<IActionResult> Get(int? id)
+        {
+            var data = (await _networkService.All(id))
+                .Select(network => new NetworkViewModel
+                {
+                    Id = network.Id,
+                    Name = network.Name,
+                });
+
+            return Ok(data);
         }
 
-        //localhost:5000/networks
         [HttpPost]
-        public IActionResult Post(NetworkViewModel networkViewModel)
+        public async Task Post(NetworkViewModel projectViewModel)
         {
-            return Ok();
+            var network = new Network
+            {
+                Name = projectViewModel.Name,
+            };
+
+            await _networkService.Create(network);
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task Delete(int id)
+        {
+            await _networkService.Remove(id);
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task Put(int id, [FromBody] NetworkViewModel projectViewModel)
+        {
+            var network = new Network
+            {
+                Id = projectViewModel.Id,
+                Name = projectViewModel.Name,
+            };
+            await _networkService.Update(id, network);
         }
     }
 }

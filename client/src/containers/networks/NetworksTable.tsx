@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Button, Popconfirm, Table } from "antd";
+import { Button, message, Popconfirm, Table } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Link, navigate, RouteComponentProps } from "@reach/router";
 
 import { Network } from "./networkModels";
 import MainTitle from "../../components/MainTitle";
-import { all } from "./networkService";
+import { all, remove } from "./networkService";
 
 interface NetworkProps extends RouteComponentProps {}
 
@@ -24,9 +24,16 @@ function NetworksTable(props: NetworkProps) {
     await navigate(`/networks/edit/${id}`);
   };
 
-  const onDelete = (id: number) => {
-    console.log(id);
-    setNetworks(networks.filter((currentNetwork) => currentNetwork.id !== id));
+  const onDelete = async (id: number) => {
+    try {
+      await remove(id);
+      message.info("La red ha sido borrada");
+      setNetworks(
+        networks.filter((currentNetwork) => currentNetwork.id !== id)
+      );
+    } catch (error) {
+      message.error("Ocurrió un error al borrar la red");
+    }
   };
 
   const columns = [
