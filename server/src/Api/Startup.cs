@@ -1,3 +1,6 @@
+using Core.Networks;
+using Data.Repositories.Networks;
+using Domain.Aggregates.Networks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,7 +22,10 @@ namespace Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-
+            
+            
+            services.AddScoped<INetworkRepository, NetworkRepository>();
+            services.AddScoped<INetworkService, NetworkService>();
             // services.AddDbContext<TelemedicineContext>(options =>
             //     options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
         }
