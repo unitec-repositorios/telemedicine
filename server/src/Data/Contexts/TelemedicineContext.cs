@@ -1,4 +1,5 @@
-﻿using Domain.Aggregates.Networks;
+﻿using Domain.Aggregates.Hospitals;
+using Domain.Aggregates.Networks;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Contexts
@@ -10,5 +11,9 @@ namespace Data.Contexts
         }
 
         public DbSet<Network> Networks { get; set; }
+
+        
+        
+        public DbSet<Hospital> Hospitals { get; set; }
     }
 }
