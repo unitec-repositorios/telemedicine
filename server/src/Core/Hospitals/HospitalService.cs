@@ -23,12 +23,13 @@ namespace Core.Hospitals
             return await _hospitalRepository.FindById(id);
         }
 
-        public async Task<IEnumerable<Hospital>> All(int? id)
+        public async Task<IEnumerable<Hospital>> All(int? id, int? code)
         {
             return await _hospitalRepository
-                .Filter(hospital => !hospital.Disabled)
-                .Where(x => id == null || x.Id == id)
+                .Filter(hospital => !hospital.Disabled).Where(x => id == null || x.Id == id)
+                .Where(x => code == null || x.Code == code)
                 .ToListAsync();
+                
         }
 
         public async Task Remove(int id)

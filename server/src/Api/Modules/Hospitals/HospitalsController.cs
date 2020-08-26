@@ -19,11 +19,12 @@ namespace Api.Modules.Networks
             _hospitalService = hospitalService;
         }
 
+        
 
         [HttpGet("{id:int?}")]
-        public async Task<IActionResult> Get(int? id)
+        public async Task<IActionResult> Get(int? id, [FromQuery] int? code)
         {
-            var data = (await _hospitalService.All(id))
+            var data = (await _hospitalService.All(id, code))
                 .Select(hospital => new HospitalViewModel
                 {
                     Id = hospital.Id,

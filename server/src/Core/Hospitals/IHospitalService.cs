@@ -12,7 +12,7 @@ namespace Core.Hospitals
 
         public Task Create(Hospital network);
 
-        public Task<IEnumerable<Hospital>> All(int? id);
+        public Task<IEnumerable<Hospital>> All(int? id, int? code);
 
         public Task Remove(int id);
 

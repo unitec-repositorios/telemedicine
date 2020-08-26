@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Select } from "antd";
+import { Button, Form, Input, Select, message } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { RouteComponentProps, Link } from "@reach/router";
 import MainTitle from "../../../components/MainTitle";
@@ -54,13 +54,23 @@ function AddHospitalForm(props: AddHospitalProps) {
 
   const onFinish = (values: HospitalForm) => {
     (async () => {
-      await create({
-        city: values.city,
-        code: parseInt(values.code),
-        name: values.name,
-        neighborhood: values.neighborhood,
-        department: values.department,
-      });
+      try {
+        await create({
+          code: parseInt(values.code),
+          name: values.name,
+          neighborhood: values.neighborhood,
+          department:
+            departmentsLocations.departments[parseInt(values.department) - 1]
+              .name,
+          city:
+            departmentsLocations.departments[parseInt(values.department) - 1]
+              .cities[parseInt(values.city) - 1].name,
+        });
+        form.resetFields();
+        message.success("El Hospital ha sido creado existosamente");
+      } catch (error) {
+        message.error("Ocurrió un error al guardar el Hospital");
+      }
     })();
   };
 
@@ -165,7 +175,7 @@ function AddHospitalForm(props: AddHospitalProps) {
             }
           >
             {departmentsLocations.departments.map((l: any) => (
-              <option key={l.id} value={l.id}>
+              <option key={l.id} value={l.id} label={l.name}>
                 {l.name}
               </option>
             ))}
@@ -193,6 +203,9 @@ function AddHospitalForm(props: AddHospitalProps) {
         <Form.Item {...tailFormItemLayout}>
           <Button type="primary" htmlType="submit">
             Guardar
+          </Button>
+          <Button htmlType="button" onClick={() => form.resetFields()}>
+            Reiniciar campos
           </Button>
         </Form.Item>
       </Form>
