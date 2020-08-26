@@ -3,6 +3,9 @@ using Data.Contexts;
 using Data.Repositories;
 using Data.Repositories.Hospitals;
 using Domain.Aggregates.Hospitals;
+using Core.Networks;
+using Data.Repositories.Networks;
+using Domain.Aggregates.Networks;
 using Domain.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,6 +37,8 @@ namespace Api
             services.AddScoped(typeof(IBaseRepository<>), typeof(EfRepository<>));
             services.AddScoped<IHospitalRepository, HospitalRepository>();
             services.AddScoped<IHospitalService, HospitalService>();
+            services.AddScoped<INetworkRepository, NetworkRepository>();
+            services.AddScoped<INetworkService, NetworkService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

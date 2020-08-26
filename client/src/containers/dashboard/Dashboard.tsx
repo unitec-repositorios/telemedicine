@@ -18,13 +18,11 @@ interface DashboardProps extends RouteComponentProps {
 }
 
 function Dashboard(props: DashboardProps) {
-  debugger;
   const [collapsed, setCollapsed] = useState(false);
 
   const toggle = () => setCollapsed(!collapsed);
-  
+
   return (
-    
     <Layout
       style={{
         minHeight: "100vh",
@@ -35,19 +33,18 @@ function Dashboard(props: DashboardProps) {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={['1']}
-          
+          selectedKeys={[props.location?.pathname ?? "/"]}
         >
-          <Menu.Item key="1" icon={<HomeOutlined />}>
-            <Link to="home">Inicio</Link>
+          <Menu.Item key="/" icon={<HomeOutlined />}>
+            <Link to="/">Inicio</Link>
           </Menu.Item>
-          <Menu.Item key="2" icon={<EnvironmentOutlined />}>
+          <Menu.Item key="/hospitals" icon={<EnvironmentOutlined />}>
             <Link to="hospitals">Hospitales</Link>
           </Menu.Item>
-          <Menu.Item key="3" icon={<UserOutlined />}>
+          <Menu.Item key="/patients" icon={<UserOutlined />}>
             <Link to="patients">Pacientes</Link>
           </Menu.Item>
-          <Menu.Item key="4" icon={<ApartmentOutlined />}>
+          <Menu.Item key="/networks" icon={<ApartmentOutlined />}>
             <Link to="networks">Redes</Link>
           </Menu.Item>
         </Menu>

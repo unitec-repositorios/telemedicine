@@ -12,3 +12,17 @@ export async function all() {
 
   return response.data as Network[];
 }
+
+export async function findById(id: number) {
+  const response = await axios.get(`${baseUrl}/${id}`);
+
+  return (response.data as Network[])[0];
+}
+
+export async function update(network: Network) {
+  await axios.put(`${baseUrl}/${network.id}`, network);
+}
+
+export async function remove(id: number) {
+  await axios.delete(`${baseUrl}/${id}`);
+}

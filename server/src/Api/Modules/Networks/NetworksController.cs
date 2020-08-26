@@ -1,4 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Core.Networks;
+using Domain.Aggregates.Networks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Modules.Networks
@@ -7,25 +11,54 @@ namespace Api.Modules.Networks
     [Route("[controller]")]
     public class NetworksController : Controller
     {
-        // GET
-        public IEnumerable<NetworkViewModel> Get()
+        private readonly INetworkService _networkService;
+
+        public NetworksController(INetworkService networkService)
         {
-            return new[]
-            {
-                new NetworkViewModel
-                {
-                    Id = 1,
-                    Name = "El Progreso",
-                    City = "El Progreso"
-                }
-            };
+            _networkService = networkService;
         }
 
-        //localhost:5000/networks
-        [HttpPost]
-        public IActionResult Post(NetworkViewModel networkViewModel)
+
+        [HttpGet("{id:int?}")]
+        public async Task<IActionResult> Get(int? id)
         {
-            return Ok();
+            var data = (await _networkService.All(id))
+                .Select(network => new NetworkViewModel
+                {
+                    Id = network.Id,
+                    Name = network.Name,
+                });
+
+            return Ok(data);
+        }
+
+        [HttpPost]
+        public async Task Post(NetworkViewModel projectViewModel)
+        {
+            var network = new Network
+            {
+                Name = projectViewModel.Name,
+            };
+
+            await _networkService.Create(network);
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task Delete(int id)
+        {
+            await _networkService.Remove(id);
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task Put(int id, [FromBody] NetworkViewModel projectViewModel)
+        {
+            var network = new Network
+            {
+                Id = projectViewModel.Id,
+                Name = projectViewModel.Name,
+            };
+            await _networkService.Update(id, network);
         }
     }
 }
