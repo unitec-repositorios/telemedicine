@@ -19,9 +19,9 @@ namespace Api.Modules.Patients
 
 
         [HttpGet("{id:int?}")]
-        public async Task<IActionResult> Get(int? id)
+        public async Task<IActionResult> Get(int? id, [FromQuery] string idNumber)
         {
-            var data = (await _patientService.All(id))
+            var data = (await _patientService.All(id, idNumber))
                 .Select(patient => new PatientViewModel
                 {
                     Id = patient.Id,
@@ -32,8 +32,7 @@ namespace Api.Modules.Patients
                     DateOfBirth = patient.DateOfBirth,
                     Email = patient.Email,
                     Gender = patient.Gender,
-                    Address = patient.Address,
-                    IdRecord = patient.IdRecord
+                    Address = patient.Address
                 });
 
             return Ok(data);
@@ -51,8 +50,7 @@ namespace Api.Modules.Patients
                 DateOfBirth = patientViewModel.DateOfBirth,
                 Email = patientViewModel.Email,
                 Gender = patientViewModel.Gender,
-                Address = patientViewModel.Address,
-                IdRecord = patientViewModel.IdRecord
+                Address = patientViewModel.Address
             };
 
             await _patientService.Create(patient);
@@ -70,6 +68,7 @@ namespace Api.Modules.Patients
         {
             var patient = new Patient
             {
+                Id = patientViewModel.Id,
                 IdNumber = patientViewModel.IdNumber,
                 Name = patientViewModel.Name,
                 FirstLastName = patientViewModel.FirstLastName,
@@ -77,8 +76,7 @@ namespace Api.Modules.Patients
                 DateOfBirth = patientViewModel.DateOfBirth,
                 Email = patientViewModel.Email,
                 Gender = patientViewModel.Gender,
-                Address = patientViewModel.Address,
-                IdRecord = patientViewModel.IdRecord
+                Address = patientViewModel.Address
             };
             await _patientService.Update(id, patient);
         }

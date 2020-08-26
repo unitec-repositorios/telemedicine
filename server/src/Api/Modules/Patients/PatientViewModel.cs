@@ -1,4 +1,6 @@
-﻿namespace Api.Modules.Patients
+﻿using System;
+
+namespace Api.Modules.Patients
 {
     public class PatientViewModel
     {
@@ -7,10 +9,9 @@
         public string Name { get; set; }
         public string FirstLastName { get; set; }
         public string SecondLastName { get; set; }
-        public string DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
         public string Email { get; set; }
         public string Gender { get; set; }
         public string Address { get; set; }
-        public int IdRecord { get; set; }
     }
 }

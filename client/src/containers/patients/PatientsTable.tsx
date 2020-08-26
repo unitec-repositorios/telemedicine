@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Button, Popconfirm, Table, Space } from "antd";
+import { Button, Popconfirm, Table, Space, message } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Link, navigate, RouteComponentProps } from "@reach/router";
+import { ColumnType } from "antd/lib/table/interface";
 
 import { Patient } from "./patientModels";
 import MainTitle from "../../components/MainTitle";
-import { all } from "./patientService";
+import { all, remove } from "./patientService";
 
 interface PatientProps extends RouteComponentProps {}
 
@@ -24,21 +25,24 @@ function PatientTable(props: PatientProps) {
     await navigate(`/patients/edit/${id}`);
   };
 
-  const onDelete = (id: number) => {
-    console.log(id);
-    setPatients(patients.filter((currentPatient) => currentPatient.id !== id));
+  const onDelete = async (id: number) => {
+    try {
+      await remove(id);
+      message.info("El paciente ha sido borrado.");
+      setPatients(
+        patients.filter((currentPatients) => currentPatients.id !== id)
+      );
+    } catch (error) {
+      message.error("Ocurrió un error al borrar el paciente. ");
+    }
   };
 
-  const columns = [
+  const columns: ColumnType<Patient>[] = [
     {
       title: "Número de Identidad",
       dataIndex: "idNumber",
       key: "idNumber",
-    },
-    {
-      title: "Número de Expediente",
-      dataIndex: "idRecord",
-      key: "idRecord",
+      width: 150,
     },
     {
       title: "Nombre",
@@ -59,11 +63,23 @@ function PatientTable(props: PatientProps) {
       title: "Fecha de Nacimiento",
       dataIndex: "dateOfBirth",
       key: "dateOfBirth",
+      render(text: string, record: Patient) {
+        return (
+          <div>
+            {`${record.dateOfBirth.getDate().toString().padStart(2, "0")}-${(
+              record.dateOfBirth.getMonth() + 1
+            )
+              .toString()
+              .padStart(2, "0")}-${record.dateOfBirth.getFullYear()}`}
+          </div>
+        );
+      },
     },
     {
       title: "Correo electrónico",
       dataIndex: "email",
       key: "email",
+      width: 200,
     },
     {
       title: "Género",
@@ -74,11 +90,13 @@ function PatientTable(props: PatientProps) {
       title: "Dirección",
       dataIndex: "address",
       key: "address",
+      width: 200,
     },
     {
       title: "Acciones",
       dataIndex: "actions",
       key: "actions",
+      fixed: "right",
       render: (text: string, record: Patient) => (
         <div>
           <Space size={0}>

@@ -1,12 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import MainTitle from "../../../components/MainTitle";
-import { Button, Form, Input, Radio, DatePicker } from "antd";
-import { findById, update } from "../patientService";
+import { Button, Form, Input, Radio, DatePicker, message } from "antd";
+import { findById, update, IdNumberExists } from "../patientService";
 import { PatientForm } from "./AddPatientForm";
 import { Link, RouteComponentProps } from "@reach/router";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import MaskedInput from "antd-mask-input";
 import moment from "moment";
+import { Patient } from "../patientModels";
+import { RuleObject } from "antd/lib/form";
+import { StoreValue } from "antd/lib/form/interface";
 
 interface EditPatientRouteParams {
   id: number;
@@ -18,25 +21,50 @@ interface EditPatientFormProps
 function EditPatientForm(props: EditPatientFormProps) {
   const [form] = Form.useForm();
 
+  const [currentDate, setCurrentDate] = useState(moment());
+
+  const [patient, setPatient] = useState({} as Patient);
+
+  const dateFormat = "DD-MM-YYYY";
+
+  const validateIdNumber = async (rule: RuleObject, value: StoreValue) => {
+    const IdNumber = value;
+    const exists = await IdNumberExists(IdNumber);
+
+    if (exists && patient.idNumber !== IdNumber) {
+      throw new Error(
+        `Ya existe un paciente con ese número de identidad. ${IdNumber}`
+      );
+    }
+  };
+
   useEffect(() => {
     (async () => {
       const patient = await findById(props.id ?? 1);
+      setPatient({ ...patient, dateOfBirth: patient.dateOfBirth.toDate() });
+      setCurrentDate(patient.dateOfBirth);
       form.setFieldsValue(patient);
     })();
   }, []);
 
   const onFinish = (values: PatientForm) => {
     (async () => {
-      await update({
-        idNumber: values.idNumber,
-        name: values.name,
-        firstLastName: values.firstLastName,
-        secondLastName: values.secondLastName,
-        dateOfBirth: moment(values.dateOfBirth).toDate(),
-        email: values.email,
-        gender: values.gender,
-        address: values.address,
-      });
+      try {
+        await update({
+          id: patient.id,
+          idNumber: values.idNumber,
+          name: values.name,
+          firstLastName: values.firstLastName,
+          secondLastName: values.secondLastName,
+          dateOfBirth: currentDate.toDate(),
+          email: values.email,
+          gender: values.gender,
+          address: values.address,
+        });
+        message.success("El paciente ha sido editado existosamente");
+      } catch (error) {
+        message.error("Ocurrió un error al editar el paciente");
+      }
     })();
   };
 
@@ -90,13 +118,16 @@ function EditPatientForm(props: EditPatientFormProps) {
           label="Número de Identidad"
           rules={[
             {
-              pattern: /\d{13}/,
+              pattern: /\d{5}/,
               message: "Número de Identidad incompleto. ",
             },
             {
               required: true,
               message: "Número de Identidad es un campo requerido",
               whitespace: true,
+            },
+            {
+              validator: validateIdNumber,
             },
           ]}
         >
@@ -168,6 +199,7 @@ function EditPatientForm(props: EditPatientFormProps) {
         </Form.Item>
         <Form.Item
           label="Fecha Nacimiento"
+          name="dateOfBirth"
           rules={[
             {
               required: true,
@@ -177,9 +209,13 @@ function EditPatientForm(props: EditPatientFormProps) {
         >
           <DatePicker
             name="dateOfBirth"
-            defaultValue={moment("15-01-1995", "DD-MM-YYYY")}
-            format={"DD-MM-YYYY"}
             placeholder="Ingrese fecha"
+            format={dateFormat}
+            value={currentDate}
+            onChange={(value) => setCurrentDate(value!)}
+            disabledDate={(d) =>
+              !d || d.isSameOrBefore("1940-01-01") || d.isAfter(moment())
+            }
           />
         </Form.Item>
         <Form.Item
@@ -237,8 +273,15 @@ function EditPatientForm(props: EditPatientFormProps) {
           <Input />
         </Form.Item>
         <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit">
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={{ marginRight: "8px" }}
+          >
             Guardar
+          </Button>
+          <Button htmlType="button" onClick={() => form.resetFields()}>
+            Reiniciar campo
           </Button>
         </Form.Item>
       </Form>

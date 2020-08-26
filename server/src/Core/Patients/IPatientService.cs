@@ -8,12 +8,12 @@ namespace Core.Patients
     {
         public Task<Patient> FindById(int id);
 
-        public Task Create(Patient network);
+        public Task Create(Patient patient);
 
-        public Task<IEnumerable<Patient>> All(int? id);
+        public Task<IEnumerable<Patient>> All(int? id, string idNumber);
 
         public Task Remove(int id);
 
-        public Task Update(int id, Patient network);
+        public Task Update(int id, Patient patient);
     }
 }

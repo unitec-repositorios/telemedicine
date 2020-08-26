@@ -1,5 +1,6 @@
 import axios from "axios";
 import { CreatePatient, UpdatePatient, Patient } from "./patientModels";
+import moment from "moment";
 
 const baseUrl: string = `${process.env.REACT_APP_BASE_URL}/patients`;
 
@@ -9,20 +10,41 @@ export async function create(network: CreatePatient) {
 
 export async function all() {
   const response = await axios.get(baseUrl);
-
-  return response.data as Patient[];
+  const data = response.data as Patient[];
+  return data.map((patient) => ({
+    ...patient,
+    dateOfBirth: new Date(patient.dateOfBirth),
+  }));
 }
 
 export async function findById(id: number) {
   const response = await axios.get(`${baseUrl}/${id}`);
-
-  return response.data as Patient;
+  const patient = (response.data as Patient[])[0];
+  return {
+    ...patient,
+    dateOfBirth: moment(patient.dateOfBirth),
+  };
 }
 
-export async function update(network: UpdatePatient) {
-  await axios.put(baseUrl);
+export async function update(patient: Patient) {
+  await axios.put(`${baseUrl}/${patient.id}`, patient);
 }
 
 export async function remove(id: number) {
   await axios.delete(`${baseUrl}/${id}`);
+}
+
+export async function IdNumberExists(idNumber: string) {
+  try {
+    const response = await axios.get(baseUrl, {
+      params: {
+        idNumber,
+      },
+    });
+
+    const data = response.data as Patient[];
+    return data.length > 0;
+  } catch (e) {
+    console.log(e);
+  }
 }

@@ -1,4 +1,5 @@
 ﻿using Domain.Contracts;
+using System;
 
 namespace Domain.Aggregates.Patients
 {
@@ -12,7 +13,7 @@ namespace Domain.Aggregates.Patients
         
         public string SecondLastName { get; set; }
         
-        public string DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
         
         public string Email { get; set; }
         
@@ -20,7 +21,6 @@ namespace Domain.Aggregates.Patients
         
         public string Address { get; set; }
         
-        public int IdRecord { get; set; }
         
     }
 }

@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Patients
 {
-    public class PatientService: IPatientService
+    public class PatientService : IPatientService
     {
         private readonly IPatientRepository _patientRepository;
 
         public PatientService(IPatientRepository patientRepository)
         {
-            _patientRepository =patientRepository;
+            _patientRepository = patientRepository;
         }
 
 
@@ -21,11 +21,12 @@ namespace Core.Patients
             return await _patientRepository.FindById(id);
         }
 
-        public async Task<IEnumerable<Patient>> All(int? id)
+        public async Task<IEnumerable<Patient>> All(int? id, string idNumber)
         {
             return await _patientRepository
                 .Filter(patient => !patient.Disabled)
                 .Where(x => id == null || x.Id == id)
+                .Where(x => idNumber == null || x.IdNumber == idNumber)
                 .ToListAsync();
         }
 
@@ -38,15 +39,14 @@ namespace Core.Patients
         public async Task Update(int id, Patient patient)
         {
             var updatePatient = await _patientRepository.FindById(id);
-         updatePatient. IdNumber = patient.IdNumber;
-         updatePatient.Name = patient.Name;
-         updatePatient.FirstLastName = patient.FirstLastName;
-         updatePatient.SecondLastName= patient.SecondLastName; 
-         updatePatient.DateOfBirth= patient.DateOfBirth;
-         updatePatient.Email= patient.Email;
-         updatePatient.Gender= patient.Gender;
-         updatePatient.Address= patient.Address;
-         updatePatient.IdRecord = patient.IdRecord;
+            updatePatient.IdNumber = patient.IdNumber;
+            updatePatient.Name = patient.Name;
+            updatePatient.FirstLastName = patient.FirstLastName;
+            updatePatient.SecondLastName = patient.SecondLastName;
+            updatePatient.DateOfBirth = patient.DateOfBirth;
+            updatePatient.Email = patient.Email;
+            updatePatient.Gender = patient.Gender;
+            updatePatient.Address = patient.Address;
             await _patientRepository.Update(updatePatient);
         }
 
@@ -54,15 +54,14 @@ namespace Core.Patients
         {
             var newPatient = new Patient
             {
-                 IdNumber = patient.IdNumber,
+                IdNumber = patient.IdNumber,
                 Name = patient.Name,
                 FirstLastName = patient.FirstLastName,
-                SecondLastName= patient.SecondLastName,
-                DateOfBirth= patient.DateOfBirth,
-                Email= patient.Email,
-                Gender= patient.Gender,
-                Address= patient.Address,
-                IdRecord = patient.IdRecord
+                SecondLastName = patient.SecondLastName,
+                DateOfBirth = patient.DateOfBirth,
+                Email = patient.Email,
+                Gender = patient.Gender,
+                Address = patient.Address
             };
 
             await _patientRepository.Add(newPatient);
