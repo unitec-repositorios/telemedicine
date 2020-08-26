@@ -43,16 +43,6 @@ function NetworksTable(props: NetworkProps) {
       key: "name",
     },
     {
-      title: "Código",
-      dataIndex: "code",
-      key: "code",
-    },
-    {
-      title: "Municipio",
-      dataIndex: "city",
-      key: "city",
-    },
-    {
       title: "Acciones",
       dataIndex: "actions",
       key: "actions",
