@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Button, Table } from "antd";
+import React, { useEffect, useState, MouseEventHandler } from "react";
+import { Button, Table, Popconfirm } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { Link, RouteComponentProps } from "@reach/router";
+import { Link, RouteComponentProps, navigate } from "@reach/router";
 
 import { Hospital } from "./hospitalModels";
 import MainTitle from "../../components/MainTitle";
@@ -19,16 +19,32 @@ function HospitalTable(props: HospitalProps) {
     })();
   }, []);
 
+  const onEdit = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    const id = event.currentTarget.dataset.id;
+    await navigate(`/hospitals/edit/${id}`);
+  }
+
+  const onDelete = (id: number) => {
+    console.log(id)
+    setHospitals(hospitals.filter(currentHospital => currentHospital.id != id))
+  }
+
+
   const columns = [
+    {
+      title: "Código",
+      dataIndex: "code",
+      key: "code",
+    },
     {
       title: "Nombre",
       dataIndex: "name",
       key: "name",
     },
     {
-      title: "Código",
-      dataIndex: "code",
-      key: "code",
+      title: "Colonia",
+      dataIndex: "neighborhood",
+      key: "neigborhood"
     },
     {
       title: "Municipio",
@@ -36,23 +52,41 @@ function HospitalTable(props: HospitalProps) {
       key: "city",
     },
     {
+      title: "Departamento",
+      dataIndex: "department",
+      key: "department"
+    },
+    {
       title: "Acciones",
       dataIndex: "actions",
       key: "actions",
-      render: (text: string, record: Hospital) => (
+      render: (text: string, record: Hospital) =>
+       (
         <div>
           {" "}
           <Button
-            type="primary"
-            danger
-            icon={<DeleteOutlined />}
-            style={{ height: "40px", width: "40px", marginLeft: "2px" }}
-          />
-          <Button
+            onClick={onEdit}
+            data-id = {record.id}
             type="primary"
             icon={<EditOutlined />}
             style={{ height: "40px", width: "40px", marginLeft: "2px" }}
           />
+           <Popconfirm
+            placement="top"
+            title="¿Está seguro que sea eliminar el registro?"
+            onConfirm={() => onDelete(record.id)}
+            okText="Si"
+            cancelText="No"
+          >
+            <Button
+              data-id={record.id}
+              type="primary"
+              danger
+              icon={<DeleteOutlined />}
+              style={{ height: "40px", width: "40px", marginLeft: "2px" }}
+            />
+          </Popconfirm>
+          
         </div>
       ),
     },
@@ -65,7 +99,7 @@ function HospitalTable(props: HospitalProps) {
           Agregar
         </Button>
       </Link>
-      <Table dataSource={hospitals} columns={columns} rowKey="name" />
+      <Table dataSource={hospitals} columns={columns} rowKey="name" locale={{emptyText: "Sin Informacion."}}/>
     </div>
   );
 }

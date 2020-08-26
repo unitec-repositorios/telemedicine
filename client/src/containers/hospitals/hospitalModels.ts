@@ -1,13 +1,17 @@
 export interface CreateHospital {
     name: string;
-    code: string;
+    code: number;
     city: string;
+    neighborhood: string;
+    department: string;
   }
   
   export interface Hospital {
-    id: string;
+    id: number;
     name: string;
-    code: string;
+    code: number;
     city: string;
+    neighborhood: string;
+    department: string;
   }
   

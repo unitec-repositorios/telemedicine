@@ -1,12 +1,17 @@
-import React, { useState } from "react";
 import { Button, Form, Input, Select } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { RouteComponentProps, Link } from "@reach/router";
 import MainTitle from "../../../components/MainTitle";
-import { create, rupsCodeExists } from "../hospitalService";
-import departmentsLocations from "../../../departmentsLocations";
+import { create, findById, update, rupsCodeExists } from "../hospitalService";
 import { RuleObject, StoreValue } from "rc-field-form/lib/interface";
-export interface AddHospitalProps extends RouteComponentProps {}
+import React, { useEffect, useState, MouseEventHandler } from "react";
+import departmentsLocations from "../../../departmentsLocations";
+interface EditHospitalRouterParams {
+  id: number;
+}
+
+interface EditHospitalProps
+  extends RouteComponentProps<EditHospitalRouterParams> {}
 
 export interface HospitalForm {
   [key: string]: string;
@@ -45,16 +50,21 @@ const validateCode = async (rule: RuleObject, value: StoreValue) => {
     throw new Error(`Ya existe un Hospital con el código ${code}`);
   }
 };
-
-function AddHospitalForm(props: AddHospitalProps) {
+function EditHospitalForm(props: EditHospitalProps) {
   const [form] = Form.useForm();
   const [department, setDepartment] = useState(
     departmentsLocations.departments[0]
   );
+  useEffect(() => {
+    (async () => {
+      const hospital = await findById(props.id ?? 1);
+      form.setFieldsValue(hospital);
+    })();
+  }, []);
 
   const onFinish = (values: HospitalForm) => {
     (async () => {
-      await create({
+      await update({
         city: values.city,
         code: parseInt(values.code),
         name: values.name,
@@ -75,14 +85,13 @@ function AddHospitalForm(props: AddHospitalProps) {
           style={{ marginLeft: "-20%" }}
         ></Button>
       </Link>
-      <MainTitle>Registrar Hospital</MainTitle>
+      <MainTitle>Editar Hospital</MainTitle>
       <Form
         {...formItemLayout}
         form={form}
         name="register"
         onFinish={onFinish}
         scrollToFirstError
-        id="form-register"
       >
         <Form.Item
           name="code"
@@ -192,7 +201,7 @@ function AddHospitalForm(props: AddHospitalProps) {
 
         <Form.Item {...tailFormItemLayout}>
           <Button type="primary" htmlType="submit">
-            Guardar
+            Editar
           </Button>
         </Form.Item>
       </Form>
@@ -200,4 +209,4 @@ function AddHospitalForm(props: AddHospitalProps) {
   );
 }
 
-export default AddHospitalForm;
+export default EditHospitalForm;

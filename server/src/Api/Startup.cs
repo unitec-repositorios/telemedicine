@@ -1,5 +1,12 @@
+using Core.Hospitals;
+using Data.Contexts;
+using Data.Repositories;
+using Data.Repositories.Hospitals;
+using Domain.Aggregates.Hospitals;
+using Domain.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -18,10 +25,15 @@ namespace Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<TelemedicineContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddControllers();
 
-            // services.AddDbContext<TelemedicineContext>(options =>
-               // options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<DbContext, TelemedicineContext>();
+            services.AddScoped(typeof(IBaseRepository<>), typeof(EfRepository<>));
+            services.AddScoped<IHospitalRepository, HospitalRepository>();
+            services.AddScoped<IHospitalService, HospitalService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -32,7 +44,7 @@ namespace Api
                 app.UseDeveloperExceptionPage();
             }
 
-             //app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
 

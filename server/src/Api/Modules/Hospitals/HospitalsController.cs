@@ -1,33 +1,77 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
+using Api.Modules.Hospitals;
+using Core.Hospitals;
+using Domain.Aggregates.Hospitals;
 using Microsoft.AspNetCore.Mvc;
-namespace Api.Modules.Hospitals
+
+namespace Api.Modules.Networks
 {
     [ApiController]
     [Route("[controller]")]
-    public class HospitalsController: Controller
+    public class HospitalsController : Controller
     {
-        public IEnumerable<HospitalViewModel> Get()
+        private readonly IHospitalService _hospitalService;
+
+        public HospitalsController(IHospitalService hospitalService)
         {
-            return new[]
-            {
-                new HospitalViewModel
-                {
-                    Id = 1,
-                    Name = "Cemesa",
-                    City = "San Pedro Sula"
-                }
-            };
+            _hospitalService = hospitalService;
         }
 
-        //localhost:5000/networks
-        [HttpPost]
-        public IActionResult Post(HospitalViewModel hospitalViewModel)
+
+        [HttpGet("{id:int?}")]
+        public async Task<IActionResult> Get(int? id)
         {
-            return Ok();
+            var data = (await _hospitalService.All(id))
+                .Select(hospital => new HospitalViewModel
+                {
+                    Id = hospital.Id,
+                    Code = hospital.Code,
+                    Name = hospital.Name,
+                    Neighborhood = hospital.Neighborhood,
+                    Department = hospital.Department,
+                    City = hospital.City,
+                });
+
+            return Ok(data);
+        }
+
+        [HttpPost]
+        public async Task Post(HospitalViewModel hospitalViewModel)
+        {
+            var hospital = new Hospital
+            {
+                Code = hospitalViewModel.Code,
+                Name = hospitalViewModel.Name,
+                Neighborhood = hospitalViewModel.Neighborhood,
+                Department = hospitalViewModel.Department,
+                City = hospitalViewModel.City,
+            };
+
+            await _hospitalService.Create(hospital);
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task Delete(int id)
+        {
+            await _hospitalService.Remove(id);
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task Put(int id, [FromBody] HospitalViewModel hospitalViewModel)
+        {
+            var hospital = new Hospital
+            {
+                Id = hospitalViewModel.Id,
+                Code = hospitalViewModel.Code,
+                Name = hospitalViewModel.Name,
+                Neighborhood = hospitalViewModel.Neighborhood,
+                Department = hospitalViewModel.Department,
+                City = hospitalViewModel.City,
+            };
+            await _hospitalService.Update(id, hospital);
         }
     }
 }
