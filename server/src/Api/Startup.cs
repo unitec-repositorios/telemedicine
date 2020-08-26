@@ -1,12 +1,4 @@
-using Core.Hospitals;
 using Data.Contexts;
-using Data.Repositories;
-using Data.Repositories.Hospitals;
-using Domain.Aggregates.Hospitals;
-using Core.Networks;
-using Data.Repositories.Networks;
-using Domain.Aggregates.Networks;
-using Domain.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
