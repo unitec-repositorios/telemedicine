@@ -1,8 +1,11 @@
+using Core.Hospitals;
 using Core.Networks;
 using Core.Patients;
 using Data.Contexts;
 using Data.Repositories;
+using Data.Repositories.Hospitals;
 using Data.Repositories.Networks;
+using Domain.Aggregates.Hospitals;
 using Data.Repositories.Patients;
 using Domain.Aggregates.Networks;
 using Domain.Aggregates.Patients;
@@ -35,6 +38,8 @@ namespace Api
 
             services.AddScoped<DbContext, TelemedicineContext>();
             services.AddScoped(typeof(IBaseRepository<>), typeof(EfRepository<>));
+            services.AddScoped<IHospitalRepository, HospitalRepository>();
+            services.AddScoped<IHospitalService, HospitalService>();
             services.AddScoped<INetworkRepository, NetworkRepository>();
             services.AddScoped<INetworkService, NetworkService>();
             services.AddScoped<IPatientRepository, PatientRepository>();

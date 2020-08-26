@@ -2,7 +2,9 @@ import React from "react";
 import "./App.css";
 import Dashboard from "./containers/dashboard/Dashboard";
 import { Router } from "@reach/router";
-import Hospital from "./containers/hospitals/Hospital";
+import Hospital from "./containers/hospitals/HospitalTable";
+import AddHospitalForm from "./containers/hospitals/components/AddHospitalForm";
+import EditHospitalForm from "./containers/hospitals/components/EditHospitalForm";
 import PatientsTable from "./containers/patients/PatientsTable";
 import NetworksTable from "./containers/networks/NetworksTable";
 import AddNetworkForm from "./containers/networks/components/AddNetworkForm";
@@ -16,6 +18,8 @@ function App() {
       <Router>
         <Dashboard path="/">
           <Hospital path="hospitals" />
+          <AddHospitalForm path="hospitals/add" />
+          <EditHospitalForm path="hospitals/edit/:id" />
           <PatientsTable path="patients" />
           <AddPatientForm path="patients/add" />
           <NetworksTable path="networks" />

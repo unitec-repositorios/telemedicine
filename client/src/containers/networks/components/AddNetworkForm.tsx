@@ -1,9 +1,9 @@
 import React from "react";
 import { Button, Form, Input, message } from "antd";
-import { RouteComponentProps } from "@reach/router";
+import { RouteComponentProps, Link } from "@reach/router";
 import MainTitle from "../../../components/MainTitle";
 import { create } from "../networkService";
-
+import { ArrowLeftOutlined } from "@ant-design/icons";
 export interface AddNetworkProps extends RouteComponentProps {}
 
 export interface NetworkForm {
@@ -59,6 +59,15 @@ function AddNetworkForm(props: AddNetworkProps) {
 
   return (
     <>
+      <Link to="/networks">
+        <Button
+          type="primary"
+          shape="circle"
+          htmlType="submit"
+          icon={<ArrowLeftOutlined />}
+          style={{ marginLeft: "-20%" }}
+        ></Button>
+      </Link>
       <MainTitle>Registrar red</MainTitle>
       <Form
         {...formItemLayout}
