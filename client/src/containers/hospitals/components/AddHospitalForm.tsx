@@ -42,7 +42,7 @@ const validateCode = async (rule: RuleObject, value: StoreValue) => {
   const exists = await rupsCodeExists(code);
 
   if (exists) {
-    throw new Error(`Ya existe un Hospital con el código ${code}`);
+    throw new Error(`Ya existe un hospital con el código ${code}`);
   }
 };
 
@@ -67,9 +67,9 @@ function AddHospitalForm(props: AddHospitalProps) {
               .cities[parseInt(values.city) - 1].name,
         });
         form.resetFields();
-        message.success("El Hospital ha sido creado existosamente");
+        message.success("El hospital ha sido creado existosamente.");
       } catch (error) {
-        message.error("Ocurrió un error al guardar el Hospital");
+        message.error("Ocurrió un error al guardar el hospital.");
       }
     })();
   };
@@ -105,7 +105,7 @@ function AddHospitalForm(props: AddHospitalProps) {
             },
             {
               pattern: /^(\d)+$/g,
-              message: "Solo se permiten Numeros.",
+              message: "Sólo se permiten números.",
             },
             {
               validator: validateCode,
@@ -120,11 +120,11 @@ function AddHospitalForm(props: AddHospitalProps) {
           rules={[
             {
               pattern: /^.{2,30}$/g,
-              message: "Nombre debe tener Minimo 2 letras y maximo 30.",
+              message: "Nombre debe tener mínimo 2 letras y máximo 30.",
             },
             {
-              pattern: /^(([a-zA-Z])+\s?)+$/g,
-              message: "Solo se permiten letras.",
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
+              message: "Sólo se permiten letras.",
             },
             {
               required: true,
@@ -140,12 +140,12 @@ function AddHospitalForm(props: AddHospitalProps) {
           label="Colonia"
           rules={[
             {
-              pattern: /^.{2,30}$/g,
-              message: "Colonia debe tener Minimo 2 letras y maximo 30.",
+              pattern: /^.{5,30}$/g,
+              message: "Colonia debe tener mínimo 5 letras y máximo 30.",
             },
             {
-              pattern: /^(([a-zA-Z])+\s?)+$/g,
-              message: "Solo se permiten letras.",
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ.,])+\s?)+([0-9])*$/g,
+              message: "Sólo se permiten letras, números, puntos y comas.",
             },
             {
               required: true,
@@ -201,7 +201,11 @@ function AddHospitalForm(props: AddHospitalProps) {
         </Form.Item>
 
         <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit">
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={{ marginRight: "8px" }}
+          >
             Guardar
           </Button>
           <Button htmlType="button" onClick={() => form.resetFields()}>

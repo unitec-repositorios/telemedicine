@@ -68,7 +68,7 @@ function EditHospitalForm(props: EditHospitalProps) {
     const exists = await rupsCodeExists(code);
 
     if (exists && currentHospital.code !== code) {
-      throw new Error(`Ya existe un Hospital con el código ${code}`);
+      throw new Error(`Ya existe un hospital con el código ${code}`);
     }
   };
 
@@ -83,9 +83,9 @@ function EditHospitalForm(props: EditHospitalProps) {
           department: currentHospital.department,
           city: currentHospital.city,
         });
-        message.success("El Hospital ha sido editado existosamente.");
+        message.success("El hospital ha sido editado existosamente");
       } catch (error) {
-        message.error("Ocurrió un error al editar el Hospital.");
+        message.error("Ocurrió un error al editar el hospital");
       }
     })();
   };
@@ -119,7 +119,7 @@ function EditHospitalForm(props: EditHospitalProps) {
             },
             {
               pattern: /^(\d)+$/g,
-              message: "Solo se permiten Numeros.",
+              message: "Sólo se permiten números",
             },
             {
               validator: validateCode,
@@ -134,11 +134,11 @@ function EditHospitalForm(props: EditHospitalProps) {
           rules={[
             {
               pattern: /^.{2,30}$/g,
-              message: "Nombre debe tener Minimo 2 letras y maximo 30.",
+              message: "Nombre debe tener mínimo 2 letras y máximo 30",
             },
             {
-              pattern: /^(([a-zA-Z])+\s?)+$/g,
-              message: "Solo se permiten letras.",
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
+              message: "Sólo se permiten letras",
             },
             {
               required: true,
@@ -154,12 +154,12 @@ function EditHospitalForm(props: EditHospitalProps) {
           label="Colonia"
           rules={[
             {
-              pattern: /^.{2,30}$/g,
-              message: "Colonia debe tener Minimo 2 letras y maximo 30.",
+              pattern: /^.{5,30}$/g,
+              message: "Colonia debe tener mínimo 5 letras y máximo 30",
             },
             {
-              pattern: /^(([a-zA-Z])+\s?)+$/g,
-              message: "Solo se permiten letras.",
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ.,])+\s?)+$/g,
+              message: "Sólo se permiten letras, puntos y comas",
             },
             {
               required: true,
@@ -230,7 +230,11 @@ function EditHospitalForm(props: EditHospitalProps) {
         </Form.Item>
 
         <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit">
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={{ marginRight: "8px" }}
+          >
             Editar
           </Button>
           <Button htmlType="button" onClick={() => form.resetFields()}>
