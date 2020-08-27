@@ -2,9 +2,9 @@ import { Button, Form, Input, Select, message } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { RouteComponentProps, Link } from "@reach/router";
 import MainTitle from "../../../components/MainTitle";
-import { create, findById, update, rupsCodeExists } from "../hospitalService";
+import { findById, update, rupsCodeExists } from "../hospitalService";
 import { RuleObject, StoreValue } from "rc-field-form/lib/interface";
-import React, { useEffect, useState, MouseEventHandler } from "react";
+import React, { useEffect, useState } from "react";
 import departmentsLocations from "../../../departmentsLocations";
 import { Hospital } from "../hospitalModels";
 interface EditHospitalRouterParams {
@@ -44,6 +44,8 @@ const tailFormItemLayout = {
   },
 };
 
+const { Option } = Select;
+
 function EditHospitalForm(props: EditHospitalProps) {
   const [form] = Form.useForm();
 
@@ -78,12 +80,8 @@ function EditHospitalForm(props: EditHospitalProps) {
           code: parseInt(values.code),
           name: values.name,
           neighborhood: values.neighborhood,
-          department:
-            departmentsLocations.departments[parseInt(values.department) - 1]
-              .name,
-          city:
-            departmentsLocations.departments[parseInt(values.department) - 1]
-              .cities[parseInt(values.city) - 1].name,
+          department: currentHospital.department,
+          city: currentHospital.city,
         });
         message.success("El hospital ha sido editado existosamente");
       } catch (error) {
@@ -101,7 +99,7 @@ function EditHospitalForm(props: EditHospitalProps) {
           htmlType="submit"
           icon={<ArrowLeftOutlined />}
           style={{ marginLeft: "-20%" }}
-        ></Button>
+        />
       </Link>
       <MainTitle>Editar Hospital</MainTitle>
       <Form
@@ -183,17 +181,25 @@ function EditHospitalForm(props: EditHospitalProps) {
           ]}
         >
           <Select
-            onSelect={(value) =>
-              setDepartment(
+            onSelect={(value) => {
+              const selectedDepartment =
                 departmentsLocations.departments.find((d) => d.id === value) ||
-                  departmentsLocations.departments[0]
-              )
-            }
+                departmentsLocations.departments[0];
+
+              setDepartment(selectedDepartment);
+
+              setCurrentHospital({
+                ...currentHospital,
+                department: selectedDepartment.name,
+              });
+
+              form.resetFields(["city"]);
+            }}
           >
             {departmentsLocations.departments.map((l: any) => (
-              <option key={l.id} value={l.id}>
+              <Option key={l.name} value={l.id}>
                 {l.name}
-              </option>
+              </Option>
             ))}
           </Select>
         </Form.Item>
@@ -207,11 +213,18 @@ function EditHospitalForm(props: EditHospitalProps) {
             },
           ]}
         >
-          <Select>
+          <Select
+            onSelect={(value) => {
+              setCurrentHospital({
+                ...currentHospital,
+                city: department.cities.find((x) => x.id === value)!.name,
+              });
+            }}
+          >
             {department.cities.map((l: any) => (
-              <option key={l.id} value={l.id}>
+              <Option key={l.name} value={l.id}>
                 {l.name}
-              </option>
+              </Option>
             ))}
           </Select>
         </Form.Item>
