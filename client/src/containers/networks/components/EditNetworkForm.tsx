@@ -3,9 +3,9 @@ import MainTitle from "../../../components/MainTitle";
 import { Button, Form, Input, message } from "antd";
 import { findById, update } from "../networkService";
 import { NetworkForm } from "./AddNetworkForm";
-import { RouteComponentProps } from "@reach/router";
+import { RouteComponentProps, Link } from "@reach/router";
 import { Network } from "../networkModels";
-
+import { ArrowLeftOutlined } from "@ant-design/icons";
 interface EditNetworkRouteParams {
   id: number;
 }
@@ -67,6 +67,15 @@ function EditNetworkForm(props: EditNetworkFormProps) {
 
   return (
     <>
+      <Link to="/networks">
+        <Button
+          type="primary"
+          shape="circle"
+          htmlType="submit"
+          icon={<ArrowLeftOutlined />}
+          style={{ marginLeft: "-20%" }}
+        ></Button>
+      </Link>
       <MainTitle>Editar red</MainTitle>
       <Form
         {...formItemLayout}
@@ -80,8 +89,16 @@ function EditNetworkForm(props: EditNetworkFormProps) {
           label="Nombre"
           rules={[
             {
+              pattern: /^.{5,15}$/g,
+              message: "Nombre de red debe tener mínimo 5 letras y máximo 15.",
+            },
+            {
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
+              message: "Sólo se permiten letras.",
+            },
+            {
               required: true,
-              message: "Nombre es un campo requerido",
+              message: "Nombre de red es un campo requerido",
               whitespace: true,
             },
           ]}
