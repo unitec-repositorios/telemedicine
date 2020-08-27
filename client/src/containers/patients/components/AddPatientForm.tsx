@@ -125,7 +125,7 @@ function AddPatientForm(props: AddPatientProps) {
               message: "Nombre debe tener mínimo 2 letras y máximo 30.",
             },
             {
-              pattern: /^(([a-zA-Z])+\s?)+$/g,
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
               message: "Sólo se permiten letras.",
             },
             {
@@ -146,7 +146,7 @@ function AddPatientForm(props: AddPatientProps) {
               message: "Apellido debe tener mínimo 2 letras y máximo 30.",
             },
             {
-              pattern: /^(([a-zA-Z])+\s?)+$/g,
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
               message: "Solo se permiten letras.",
             },
             {
@@ -168,7 +168,7 @@ function AddPatientForm(props: AddPatientProps) {
                 "Segundo apellido debe tener mínimo 2 letras y máximo 30.",
             },
             {
-              pattern: /^(([a-zA-Z])+\s?)+$/g,
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
               message: "Solo se permiten letras.",
             },
             {
@@ -237,12 +237,16 @@ function AddPatientForm(props: AddPatientProps) {
           label="Dirección"
           rules={[
             {
-              pattern: /^.{10,50}$/g,
-              message: "Dirección debe tener mínimo 10 letras y máximo 50.",
+              pattern: /^.{8,50}$/g,
+              message: "Dirección debe tener mínimo 8 letras y máximo 50.",
             },
             {
-              pattern: /^(([a-zA-Z])+\s?)+$/g,
-              message: "Solo se permiten letras.",
+              pattern: /^[^\d]/g,
+              message: "No puede empezar con un número.",
+            },
+            {
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ.,])+\s?)+([0-9])*$/g,
+              message: "No se permiten caracteres especiales.",
             },
             {
               required: true,
