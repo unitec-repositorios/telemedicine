@@ -81,8 +81,16 @@ function AddNetworkForm(props: AddNetworkProps) {
           label="Nombre"
           rules={[
             {
+              pattern: /^.{2,30}$/g,
+              message: "Nombre de red debe tener mínimo 5 letras y máximo 15.",
+            },
+            {
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
+              message: "Sólo se permiten letras.",
+            },
+            {
               required: true,
-              message: "Nombre es un campo requerido",
+              message: "Nombre de red es un campo requerido",
               whitespace: true,
             },
           ]}
