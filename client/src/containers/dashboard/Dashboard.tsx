@@ -22,6 +22,7 @@ function Dashboard(props: DashboardProps) {
 
   const toggle = () => setCollapsed(!collapsed);
 
+  const selectedKey = `/${props.location?.pathname.split("/")[1]}`;
   return (
     <Layout
       style={{
@@ -30,11 +31,7 @@ function Dashboard(props: DashboardProps) {
     >
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="logo" />
-        <Menu
-          theme="dark"
-          mode="inline"
-          selectedKeys={[props.location?.pathname ?? "/"]}
-        >
+        <Menu theme="dark" mode="inline" selectedKeys={[selectedKey]}>
           <Menu.Item key="/" icon={<HomeOutlined />}>
             <Link to="/">Inicio</Link>
           </Menu.Item>

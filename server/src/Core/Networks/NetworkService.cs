@@ -44,12 +44,7 @@ namespace Core.Networks
 
         public async Task Create(Network network)
         {
-            var newNetwork = new Network
-            {
-                Name = network.Name,
-            };
-
-            await _networkRepository.Add(newNetwork);
+            await _networkRepository.Add(network);
         }
     }
 }

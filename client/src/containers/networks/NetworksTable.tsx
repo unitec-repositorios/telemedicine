@@ -43,19 +43,10 @@ function NetworksTable(props: NetworkProps) {
       key: "name",
     },
     {
-      title: "Código",
-      dataIndex: "code",
-      key: "code",
-    },
-    {
-      title: "Municipio",
-      dataIndex: "city",
-      key: "city",
-    },
-    {
       title: "Acciones",
       dataIndex: "actions",
       key: "actions",
+      width: 150,
       render: (text: string, record: Network) => (
         <div>
           {" "}
@@ -68,7 +59,7 @@ function NetworksTable(props: NetworkProps) {
           />
           <Popconfirm
             placement="top"
-            title="¿Está seguro que sea elimiar el registro?"
+            title="¿Está seguro que sea eliminar el registro?"
             onConfirm={() => onDelete(record.id)}
             okText="Si"
             cancelText="No"

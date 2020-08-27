@@ -1,8 +1,14 @@
+using Core.Hospitals;
 using Core.Networks;
+using Core.Patients;
 using Data.Contexts;
 using Data.Repositories;
+using Data.Repositories.Hospitals;
 using Data.Repositories.Networks;
+using Domain.Aggregates.Hospitals;
+using Data.Repositories.Patients;
 using Domain.Aggregates.Networks;
+using Domain.Aggregates.Patients;
 using Domain.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,8 +38,13 @@ namespace Api
 
             services.AddScoped<DbContext, TelemedicineContext>();
             services.AddScoped(typeof(IBaseRepository<>), typeof(EfRepository<>));
+            services.AddScoped<IHospitalRepository, HospitalRepository>();
+            services.AddScoped<IHospitalService, HospitalService>();
             services.AddScoped<INetworkRepository, NetworkRepository>();
             services.AddScoped<INetworkService, NetworkService>();
+            services.AddScoped<IPatientRepository, PatientRepository>();
+            services.AddScoped<IPatientService, PatientService>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

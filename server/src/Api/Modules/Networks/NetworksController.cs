@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Core.Networks;
 using Domain.Aggregates.Networks;
@@ -32,6 +31,13 @@ namespace Api.Modules.Networks
             return Ok(data);
         }
 
+
+        [HttpDelete("{id}")]
+        public async Task Delete(int id)
+        {
+            await _networkService.Remove(id);
+        }
+
         [HttpPost]
         public async Task Post(NetworkViewModel projectViewModel)
         {
@@ -41,13 +47,6 @@ namespace Api.Modules.Networks
             };
 
             await _networkService.Create(network);
-        }
-
-
-        [HttpDelete("{id}")]
-        public async Task Delete(int id)
-        {
-            await _networkService.Remove(id);
         }
 
         [HttpPut("{id:int}")]

@@ -1,9 +1,9 @@
 import React from "react";
 import { Button, Form, Input, message } from "antd";
-import { RouteComponentProps } from "@reach/router";
+import { RouteComponentProps, Link } from "@reach/router";
 import MainTitle from "../../../components/MainTitle";
 import { create } from "../networkService";
-
+import { ArrowLeftOutlined } from "@ant-design/icons";
 export interface AddNetworkProps extends RouteComponentProps {}
 
 export interface NetworkForm {
@@ -59,6 +59,15 @@ function AddNetworkForm(props: AddNetworkProps) {
 
   return (
     <>
+      <Link to="/networks">
+        <Button
+          type="primary"
+          shape="circle"
+          htmlType="submit"
+          icon={<ArrowLeftOutlined />}
+          style={{ marginLeft: "-20%" }}
+        ></Button>
+      </Link>
       <MainTitle>Registrar red</MainTitle>
       <Form
         {...formItemLayout}
@@ -72,8 +81,16 @@ function AddNetworkForm(props: AddNetworkProps) {
           label="Nombre"
           rules={[
             {
+              pattern: /^.{5,15}$/g,
+              message: "Nombre de red debe tener mínimo 5 letras y máximo 15.",
+            },
+            {
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
+              message: "Sólo se permiten letras.",
+            },
+            {
               required: true,
-              message: "Nombre es un campo requerido",
+              message: "Nombre de red es un campo requerido",
               whitespace: true,
             },
           ]}
