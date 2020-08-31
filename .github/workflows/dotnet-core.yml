@@ -28,10 +28,12 @@ jobs:
       working-directory: server
     - name: dotnet publish
       run: dotnet publish -c Release -o out 
+      working-directory: server
     - name: 'Run Azure webapp deploy action using publish profile credentials'
       uses: azure/webapps-deploy@v1
       with: 
         app-name: telemedicine-server # Replace with your app name
         publish-profile: ${{ secrets.publish_profile }}
-        package: './out' 
+        package: './out'
+        working-directory: server
 
