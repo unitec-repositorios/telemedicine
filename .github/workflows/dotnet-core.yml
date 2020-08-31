@@ -34,6 +34,5 @@ jobs:
       with: 
         app-name: telemedicine-server # Replace with your app name
         publish-profile: ${{ secrets.publish_profile }}
-        package: './out'
-        working-directory: server
+        package: 'server/out'
 
