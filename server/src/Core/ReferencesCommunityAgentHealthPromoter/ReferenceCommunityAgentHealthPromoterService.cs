@@ -8,23 +8,23 @@ using System.Threading.Tasks;
 
 namespace Core.ReferencesACS_PS
 {
-    public class ReferenceACS_PSService : IReferenceACS_PSService
+    public class ReferenceCommunityAgentHealthPromoterService : IReferenceCommunityAgentHealthPromoterService
     {
 
-        private readonly IReferenceACS_PSRepository _referenceACS_PSRepository;
+        private readonly IReferenceCommunityAgentHealthPromoterRepository _referenceACS_PSRepository;
 
-        public ReferenceACS_PSService(IReferenceACS_PSRepository referenceACS_PSRepository)
+        public ReferenceCommunityAgentHealthPromoterService(IReferenceCommunityAgentHealthPromoterRepository referenceACS_PSRepository)
         {
             _referenceACS_PSRepository = referenceACS_PSRepository;
         }
 
 
-        public async Task<ReferenceACS_PS> FindById(int id)
+        public async Task<ReferenceCommunityAgentHealthPromoter> FindById(int id)
         {
             return await _referenceACS_PSRepository.FindById(id);
         }
 
-        public async Task<IEnumerable<ReferenceACS_PS>> All(int? id)
+        public async Task<IEnumerable<ReferenceCommunityAgentHealthPromoter>> All(int? id)
         {
             return await _referenceACS_PSRepository
                 .Filter(network => !network.Disabled)
@@ -38,7 +38,7 @@ namespace Core.ReferencesACS_PS
             await _referenceACS_PSRepository.Disable(reference);
         }
 
-        public async Task Create(ReferenceACS_PS reference)
+        public async Task Create(ReferenceCommunityAgentHealthPromoter reference)
         {
             await _referenceACS_PSRepository.Add(reference);
         }

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CreateRRForm, RRForm } from "./rrFormModels";
+import { CreateRRForm, RRForm } from "./referenceFormModels";
 
 const baseUrl: string = `${process.env.REACT_APP_BASE_URL}/references`;
 

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Domain.Aggregates.ReferencesACS_PS
 {
-    public class ReferenceACS_PS : BaseEntity, IAggregateRoot
+    public class ReferenceCommunityAgentHealthPromoter : BaseEntity, IAggregateRoot
     {
         public DateTime Date { get; set; }
         public string Community { get; set; }

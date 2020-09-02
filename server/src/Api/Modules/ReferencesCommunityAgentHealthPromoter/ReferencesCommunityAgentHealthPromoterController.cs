@@ -11,12 +11,12 @@ namespace Api.Modules.ReferencesACS_PS
 {
     [Route("[controller]")]
     [ApiController]
-    public class ReferencesACS_PSController : Controller
+    public class ReferencesCommunityAgentHealthPromoterController : Controller
     {
 
-        private readonly IReferenceACS_PSService _referenceACS_PSService;
+        private readonly IReferenceCommunityAgentHealthPromoterService _referenceACS_PSService;
 
-        public ReferencesACS_PSController(IReferenceACS_PSService referenceACS_PSService)
+        public ReferencesCommunityAgentHealthPromoterController(IReferenceCommunityAgentHealthPromoterService referenceACS_PSService)
         {
             _referenceACS_PSService = referenceACS_PSService;
         }
@@ -26,7 +26,7 @@ namespace Api.Modules.ReferencesACS_PS
         public async Task<IActionResult> Get(int? id)
         {
             var data = (await _referenceACS_PSService.All(id))
-                .Select(reference => new ReferenceACS_PSViewModel
+                .Select(reference => new ReferenceCommunityAgentHealthPromoterViewModel
                 {
                     Id = reference.Id,
                     Date = reference.Date,
@@ -52,9 +52,9 @@ namespace Api.Modules.ReferencesACS_PS
         }
 
         [HttpPost]
-        public async Task Post(ReferenceACS_PSViewModel referenceACS_PSViewModel)
+        public async Task Post(ReferenceCommunityAgentHealthPromoterViewModel referenceACS_PSViewModel)
         {
-            var reference = new ReferenceACS_PS
+            var reference = new ReferenceCommunityAgentHealthPromoter
             {
                 Id = referenceACS_PSViewModel.Id,
                 Date = referenceACS_PSViewModel.Date,

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Api.Modules.ReferencesACS_PS
 {
-    public class ReferenceACS_PSViewModel
+    public class ReferenceCommunityAgentHealthPromoterViewModel
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
