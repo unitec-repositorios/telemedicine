@@ -44,6 +44,9 @@ function Dashboard(props: DashboardProps) {
           <Menu.Item key="/networks" icon={<ApartmentOutlined />}>
             <Link to="networks">Redes</Link>
           </Menu.Item>
+          <Menu.Item key="/rrform" icon={<ApartmentOutlined />}>
+            <Link to="rrform/add">Form</Link>
+          </Menu.Item>
         </Menu>
       </Sider>
       <Layout className="site-layout">
