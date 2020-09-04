@@ -11,11 +11,7 @@ import AddNetworkForm from "./containers/networks/components/AddNetworkForm";
 import EditNetworkForm from "./containers/networks/components/EditNetworkForm";
 import AddPatientForm from "./containers/patients/components/AddPatientForm";
 import EditPatientForm from "./containers/patients/components/EditPatientForm";
-<<<<<<< Updated upstream
-import AddRRForm from "./containers/rrform/components/AddRRForm";
-=======
 import AddRRForm from "./containers/referenceForm/components/AddReferenceForm";
->>>>>>> Stashed changes
 
 function App() {
   return (
