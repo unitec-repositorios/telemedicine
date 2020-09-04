@@ -53,26 +53,31 @@ function PatientTable(props: PatientProps) {
       dataIndex: "idNumber",
       key: "idNumber",
       width: 150,
+			sorter: (a:any, b:any) => a.idNumber.localeCompare(b.idNumber),
     },
     {
       title: "Nombre",
       dataIndex: "name",
       key: "name",
+			sorter: (a:any, b:any) => a.name.localeCompare(b.name),
     },
     {
       title: "Primer Apellido",
       dataIndex: "firstLastName",
       key: "lastName",
+			sorter: (a:any, b:any) => a.firstLastName.localeCompare(b.firstLastName),
     },
     {
       title: "Segundo Apellido",
       dataIndex: "secondLastName",
       key: "secondLastName",
+			sorter: (a:any, b:any) => a.secondLastName.localeCompare(b.secondLastName),
     },
     {
       title: "Fecha de Nacimiento",
       dataIndex: "dateOfBirth",
       key: "dateOfBirth",
+			sorter: (a:any, b:any) => a.dateOfBirth.localeCompare(b.dateOfBirth),
       render(text: string, record: Patient) {
         return (
           <div>
@@ -90,17 +95,20 @@ function PatientTable(props: PatientProps) {
       dataIndex: "email",
       key: "email",
       width: 200,
+			sorter: (a:any, b:any) => a.email.localeCompare(b.email),
     },
     {
       title: "Género",
       dataIndex: "gender",
       key: "gender",
+			sorter: (a:any, b:any) => a.gender.localeCompare(b.gender),
     },
     {
       title: "Dirección",
       dataIndex: "address",
       key: "address",
       width: 200,
+			sorter: (a:any, b:any) => a.address.localeCompare(b.address),
     },
     {
       title: "Acciones",

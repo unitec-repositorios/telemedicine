@@ -51,26 +51,31 @@ function HospitalTable(props: HospitalProps) {
       title: "Código",
       dataIndex: "code",
       key: "code",
+			sorter: (a:any, b:any) => a.code - b.code,
     },
     {
       title: "Nombre",
       dataIndex: "name",
       key: "name",
+			sorter: (a:any, b:any) => a.name.localeCompare(b.name),
     },
     {
       title: "Colonia",
       dataIndex: "neighborhood",
-      key: "neigborhood",
+      key: "neighborhood",
+			sorter: (a:any, b:any) => a.neighborhood.localeCompare(b.neighborhood),
     },
     {
       title: "Municipio",
       dataIndex: "city",
       key: "city",
+			sorter: (a:any, b:any) => a.city.localeCompare(b.city),
     },
     {
       title: "Departamento",
       dataIndex: "department",
       key: "department",
+			sorter: (a:any, b:any) => a.department.localeCompare(b.department),
     },
     {
       title: "Acciones",

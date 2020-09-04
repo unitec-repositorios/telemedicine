@@ -46,11 +46,12 @@ function NetworksTable(props: NetworkProps) {
 		setFilterTable(filter);
 	}
 
-  const columns = [
+	const columns = [
     {
       title: "Nombre",
       dataIndex: "name",
       key: "name",
+			sorter: (a:any,b:any) => a.name.localeCompare(b.name),
     },
     {
       title: "Acciones",
