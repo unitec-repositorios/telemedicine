@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+<<<<<<< Updated upstream
+=======
+using System.Text.Json;
+>>>>>>> Stashed changes
 using System.Threading.Tasks;
 using Core.References;
 using Domain.Aggregates.Reference;
@@ -28,6 +32,7 @@ namespace Api.Modules.References
                 .Select(referenceViewModel => new ReferenceViewModel
                 {
                     Id = referenceViewModel.Id,
+<<<<<<< Updated upstream
                     Motive = referenceViewModel.Motive,
                     Description_Motive = referenceViewModel.Description_Motive,
                     Symptoms = referenceViewModel.Symptoms,
@@ -43,6 +48,27 @@ namespace Api.Modules.References
                     Made_By = referenceViewModel.Made_By,
                     Contacted_HF = referenceViewModel.Contacted_HF,
                     Contact_ID = referenceViewModel.Contact_ID,
+=======
+                    Type = referenceViewModel.Type,
+                    OriginHfId = referenceViewModel.OriginHfId,
+                    DestinationHfId = referenceViewModel.DestinationHfId,
+                    PatientId = referenceViewModel.PatientId,
+                    Motive = referenceViewModel.Motive,
+                    DescriptionMotive = referenceViewModel.DescriptionMotive,
+                    Symptoms = referenceViewModel.Symptoms,
+                    MedicalSummary = referenceViewModel.MedicalSummary,
+                    VitalSigns = referenceViewModel.VitalSigns,
+                    ObGyn = referenceViewModel.ObGyn,
+                    PhysicalExamination = referenceViewModel.PhysicalExamination,
+                    ComplementaryExams = referenceViewModel.ComplementaryExams,
+                    DiagnosticImpression = referenceViewModel.DiagnosticImpression,
+                    Observations = referenceViewModel.Observations,
+                    Risk = referenceViewModel.Risk,
+                    AttentionRequired = referenceViewModel.AttentionRequired,
+                    MadeBy = referenceViewModel.MadeBy,
+                    ContactedHf = referenceViewModel.ContactedHf,
+                    ContactId = referenceViewModel.ContactId,
+>>>>>>> Stashed changes
                     Date = referenceViewModel.Date,
                 });
 
@@ -59,6 +85,7 @@ namespace Api.Modules.References
         [HttpPost]
         public async Task Post(ReferenceViewModel referenceViewModel)
         {
+<<<<<<< Updated upstream
             var reference = new Reference
             {
                 Id = referenceViewModel.Id,
@@ -78,6 +105,37 @@ namespace Api.Modules.References
                 Contacted_HF = referenceViewModel.Contacted_HF,
                 Contact_ID = referenceViewModel.Contact_ID,
                 Date = referenceViewModel.Date,
+=======
+            string vitalSignsFormJson;
+            vitalSignsFormJson = JsonSerializer.Serialize(referenceViewModel.VitalSigns);
+
+            string obgynFormJson;
+            obgynFormJson = JsonSerializer.Serialize(referenceViewModel.ObGyn);
+
+            var reference = new Reference
+            {
+                Id = referenceViewModel.Id,
+                    Type = referenceViewModel.Type,
+                    OriginHfId = referenceViewModel.OriginHfId,
+                    DestinationHfId = referenceViewModel.DestinationHfId,
+                    PatientId = referenceViewModel.PatientId,
+                    Motive = referenceViewModel.Motive,
+                    DescriptionMotive = referenceViewModel.DescriptionMotive,
+                    Symptoms = referenceViewModel.Symptoms,
+                    MedicalSummary = referenceViewModel.MedicalSummary,
+                    VitalSigns = vitalSignsFormJson,
+                    ObGyn = obgynFormJson,
+                    PhysicalExamination = referenceViewModel.PhysicalExamination,
+                    ComplementaryExams = referenceViewModel.ComplementaryExams,
+                    DiagnosticImpression = referenceViewModel.DiagnosticImpression,
+                    Observations = referenceViewModel.Observations,
+                    Risk = referenceViewModel.Risk,
+                    AttentionRequired = referenceViewModel.AttentionRequired,
+                    MadeBy = referenceViewModel.MadeBy,
+                    ContactedHf = referenceViewModel.ContactedHf,
+                    ContactId = referenceViewModel.ContactId,
+                    Date = referenceViewModel.Date,
+>>>>>>> Stashed changes
 
             };
 

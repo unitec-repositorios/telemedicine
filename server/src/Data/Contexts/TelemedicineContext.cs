@@ -18,6 +18,10 @@ namespace Data.Contexts
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Hospital> Hospitals { get; set; }
         public DbSet<Reference> References { get; set; }
+<<<<<<< Updated upstream
         public DbSet<ReferenceACS_PS> ReferencesACS_PS { get; set; }
+=======
+        public DbSet<ReferenceCommunityAgentHealthPromoter> ReferencesCommunityAgentHealthPromoter { get; set; }
+>>>>>>> Stashed changes
     }
 }

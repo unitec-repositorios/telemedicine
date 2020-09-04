@@ -9,6 +9,7 @@ namespace Api.Modules.References
     public class ReferenceViewModel
     {
         public int Id { get; set; }
+<<<<<<< Updated upstream
         public string Motive { get; set; }
         public string Description_Motive { get; set; }
         public string Symptoms { get; set; }
@@ -30,6 +31,27 @@ namespace Api.Modules.References
         public string Made_By { get; set; }
         public string Contacted_HF { get; set; }
         public string Contact_ID { get; set; }
+=======
+        public string Type { get; set; }
+        public string OriginHfId { get; set; }
+        public string DestinationHfId { get; set; }
+        public string PatientId { get; set; }
+        public string Motive { get; set; }
+        public string DescriptionMotive { get; set; }
+        public string Symptoms { get; set; }
+        public string MedicalSummary { get; set; }
+        public string VitalSigns { get; set; }
+        public string ObGyn { get; set; }
+        public string PhysicalExamination { get; set; }
+        public string ComplementaryExams { get; set; }
+        public string DiagnosticImpression { get; set; }
+        public string Observations { get; set; }
+        public bool Risk { get; set; }
+        public string AttentionRequired { get; set; }
+        public string MadeBy { get; set; }
+        public string ContactedHf { get; set; }
+        public string ContactId { get; set; }
+>>>>>>> Stashed changes
         public DateTime Date { get; set; }
     }
 }

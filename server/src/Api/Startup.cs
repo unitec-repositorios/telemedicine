@@ -52,8 +52,8 @@ namespace Api
             services.AddScoped<IPatientService, PatientService>();
             services.AddScoped<IReferenceRepository, ReferenceRepository>();
             services.AddScoped<IReferenceService, ReferenceService>();
-            services.AddScoped<IReferenceACS_PSRepository, ReferenceACS_PSRepository>();
-            services.AddScoped<IReferenceACS_PSService, ReferenceACS_PSService>();
+            services.AddScoped<IReferenceCommunityAgentHealthPromoterRepository, ReferenceCommunityAgentHealthPromoterRepository>();
+            services.AddScoped<IReferenceCommunityAgentHealthPromoterService, ReferenceCommunityAgentHealthPromoterService>();
 
         }
 
