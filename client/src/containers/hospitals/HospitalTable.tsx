@@ -1,5 +1,5 @@
 import React, { useEffect, useState, MouseEventHandler } from "react";
-import { Button, Table, Popconfirm, message } from "antd";
+import { Input, Button, Table, Popconfirm, message } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Link, RouteComponentProps, navigate } from "@reach/router";
 
@@ -11,6 +11,7 @@ interface HospitalProps extends RouteComponentProps {}
 
 function HospitalTable(props: HospitalProps) {
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
+	const [filterTable, setFilterTable] = useState<Hospital[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -35,6 +36,15 @@ function HospitalTable(props: HospitalProps) {
       message.error("Ocurrió un error al borrar el Hospital");
     }
   };
+
+	const onSearch = (value: string) => {
+		const filter = hospitals.filter(o => 
+			Object.values(o).some(v =>
+				String(v).toLowerCase().includes(value.toLowerCase())
+			)
+		);
+		setFilterTable(filter);
+	}
 
   const columns = [
     {
@@ -103,8 +113,14 @@ function HospitalTable(props: HospitalProps) {
           Agregar
         </Button>
       </Link>
+			<Input.Search
+				style={{ margin: "0 0 10px 600px", width: "400px" }}
+        placeholder="Buscar"
+        enterButton
+				onSearch={onSearch}
+			/>
       <Table
-        dataSource={hospitals}
+				dataSource={!filterTable.length ? hospitals: filterTable}
         columns={columns}
         rowKey="name"
         locale={{ emptyText: "Sin Informacion." }}

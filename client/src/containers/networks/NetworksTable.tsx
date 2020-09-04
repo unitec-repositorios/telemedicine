@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, message, Popconfirm, Table } from "antd";
+import { Input, Button, message, Popconfirm, Table } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Link, navigate, RouteComponentProps } from "@reach/router";
 
@@ -11,6 +11,7 @@ interface NetworkProps extends RouteComponentProps {}
 
 function NetworksTable(props: NetworkProps) {
   const [networks, setNetworks] = useState<Network[]>([]);
+	const [filterTable, setFilterTable] = useState<Network[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -35,6 +36,15 @@ function NetworksTable(props: NetworkProps) {
       message.error("Ocurrió un error al borrar la red");
     }
   };
+
+	const onSearch = (value: string) => {
+		const filter = networks.filter(o => 
+			Object.values(o).some(v =>
+				String(v).toLowerCase().includes(value.toLowerCase())
+			)
+		);
+		setFilterTable(filter);
+	}
 
   const columns = [
     {
@@ -84,8 +94,14 @@ function NetworksTable(props: NetworkProps) {
           Agregar
         </Button>
       </Link>
+			<Input.Search
+				style={{ margin: "0 0 10px 600px", width: "400px" }}
+        placeholder="Buscar"
+        enterButton
+				onSearch={onSearch}
+			/>
       <Table
-        dataSource={networks}
+				dataSource={!filterTable.length ? networks : filterTable}
         columns={columns}
         rowKey="name"
         locale={{ emptyText: "Sin información" }}

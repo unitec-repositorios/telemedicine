@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Popconfirm, Table, Space, message } from "antd";
+import { Input, Button, Popconfirm, Table, Space, message } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Link, navigate, RouteComponentProps } from "@reach/router";
 import { ColumnType } from "antd/lib/table/interface";
@@ -12,6 +12,7 @@ interface PatientProps extends RouteComponentProps {}
 
 function PatientTable(props: PatientProps) {
   const [patients, setPatients] = useState<Patient[]>([]);
+	const [filterTable, setFilterTable] = useState<Patient[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -36,6 +37,15 @@ function PatientTable(props: PatientProps) {
       message.error("Ocurrió un error al borrar el paciente. ");
     }
   };
+
+	const onSearch = (value: string) => {
+		const filter = patients.filter(o => 
+			Object.values(o).some(v =>
+				String(v).toLowerCase().includes(value.toLowerCase())
+			)
+		);
+		setFilterTable(filter);
+	}
 
   const columns: ColumnType<Patient>[] = [
     {
@@ -136,8 +146,14 @@ function PatientTable(props: PatientProps) {
           Agregar
         </Button>
       </Link>
+			<Input.Search
+				style={{ margin: "0 0 10px 600px", width: "400px" }}
+        placeholder="Buscar"
+        enterButton
+				onSearch={onSearch}
+			/>
       <Table
-        dataSource={patients}
+				dataSource={!filterTable.length ? patients : filterTable}
         columns={columns}
         rowKey="firstName"
         locale={{ emptyText: "Sin información" }}
