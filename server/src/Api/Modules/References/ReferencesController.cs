@@ -70,8 +70,8 @@ namespace Api.Modules.References
             string obGynJSON;
             obGynJSON = JsonSerializer.Serialize(referenceViewModel.ObGyn);
 
-            string physicalExamination;
-            physicalExamination = JsonSerializer.Serialize(referenceViewModel.PhysicalExamination);
+            string physicalExaminationJSON;
+            physicalExaminationJSON = JsonSerializer.Serialize(referenceViewModel.PhysicalExamination);
 
             var reference = new Reference
             {
@@ -86,7 +86,7 @@ namespace Api.Modules.References
                     MedicalSummary = referenceViewModel.MedicalSummary,
                     VitalSigns = vitalSignsJSON,
                     ObGyn = obGynJSON,
-                    PhysicalExamination = referenceViewModel.PhysicalExamination,
+                    PhysicalExamination = physicalExaminationJSON,
                     ComplementaryExams = referenceViewModel.ComplementaryExams,
                     DiagnosticImpression = referenceViewModel.DiagnosticImpression,
                     Observations = referenceViewModel.Observations,

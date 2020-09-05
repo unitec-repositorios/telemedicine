@@ -8,7 +8,7 @@ const { Step } = Steps;
 const steps = [
   {
     title: "First",
-    content: <ReferenceInformation />
+    content: "Second-content"
   },
   {
     title: "Second",
@@ -16,7 +16,7 @@ const steps = [
   },
   {
     title: "Last",
-    content: "Here-content"
+    content: <ReferenceInformation />
   }
 ];
 
@@ -40,8 +40,8 @@ function Stepper(props: any) {
           <Step key={item.title} title={item.title} />
         ))}
       </Steps>
-      <div className="steps-content">{steps[current].content}</div>
-      <div className="steps-action">
+     
+      <div  style={{ marginTop: "20px" }} className="steps-action">
         {current < steps.length - 1 && (
           <Button type="primary" onClick={() => next()}>
             Next
@@ -61,6 +61,7 @@ function Stepper(props: any) {
           </Button>
         )}
       </div>
+      <div className="steps-content">{steps[current].content}</div>
     </>
   );
 }

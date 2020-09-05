@@ -137,10 +137,10 @@ function ReferenceInformation() {
             message: "El campo es requerido."
           }]}
         >
-          <Select defaultValue="Diagnostico">
+          <Select >
             <Select.Option value="Diagnostico">Diagnostico</Select.Option>
             <Select.Option value="Tratamiento">Tratamiento</Select.Option>
-            <Select.Option value="Seguimieto">Seguimieto</Select.Option>
+            <Select.Option value="Seguimiento">Seguimieto</Select.Option>
             <Select.Option value="Rehabilitación">Rehabilitación</Select.Option>
           </Select>
         </Form.Item>
@@ -350,7 +350,6 @@ function ReferenceInformation() {
         >
           <DatePicker
             style={{ width: "100%" }}
-            defaultValue={moment("01-01-2000", "DD-MM-YYYY")}
             format={"DD-MM-YYYY"}
             placeholder="Ingrese fecha"
             disabledDate={(d) =>
@@ -371,7 +370,6 @@ function ReferenceInformation() {
         >
           <DatePicker
             style={{ width: "100%" }}
-            defaultValue={moment("01-01-2000", "DD-MM-YYYY")}
             format={"DD-MM-YYYY"}
             placeholder="Ingrese fecha"
             disabledDate={(d) =>
@@ -734,7 +732,7 @@ function ReferenceInformation() {
             message: "El campo es requerido."
           }]}
         >
-          <Select defaultValue="Sin Riesgo">
+          <Select >
             <Select.Option value="False">Sin Riesgo</Select.Option>
             <Select.Option value="True">Con Riesgo</Select.Option>
           </Select>
@@ -789,7 +787,7 @@ function ReferenceInformation() {
             message: "El campo es requerido."
           }]}
         >
-          <Select defaultValue="Medico General" >
+          <Select>
             <Select.Option value="Medico General">Medico General</Select.Option>
             <Select.Option value="Medico Especialista">Medico Especialista</Select.Option>
             <Select.Option value="Auxiliar Enfermeria">Auxiliar Enfermeria</Select.Option>
@@ -805,7 +803,7 @@ function ReferenceInformation() {
             message: "El campo es requerido."
           }]}
         >
-          <Select defaultValue="Consulta Externa">
+          <Select>
             <Select.Option value="Consulta Externa">Consulta Externa</Select.Option>
             <Select.Option value="Emergencia">Emergencia</Select.Option>
             <Select.Option value="Hospitalizacion">Hospitalizacion</Select.Option>
@@ -820,7 +818,7 @@ function ReferenceInformation() {
             message: "El campo es requerido."
           }]}
         >
-          <Select defaultValue="No">
+          <Select>
             <Select.Option value="False">No</Select.Option>
             <Select.Option value="True">Si</Select.Option>
           </Select>
@@ -856,7 +854,6 @@ function ReferenceInformation() {
         >
           <DatePicker
             style={{ width: "100%" }}
-            defaultValue={moment()}
             format={"DD-MM-YYYY"}
             placeholder="Ingrese fecha"
             disabledDate={(d) =>
