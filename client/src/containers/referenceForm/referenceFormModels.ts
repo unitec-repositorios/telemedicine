@@ -9,7 +9,7 @@ export interface CreateRRForm{
     medicalSummary: string;
     vitalSigns: string;
     obGyn: string;
-    //physicalExamination: JSON;
+    physicalExamination: string;
     complementaryExams: string;
     diagnosticImpression: string;
     observations: string;

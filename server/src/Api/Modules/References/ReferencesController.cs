@@ -70,6 +70,8 @@ namespace Api.Modules.References
             string obGynJSON;
             obGynJSON = JsonSerializer.Serialize(referenceViewModel.ObGyn);
 
+            string physicalExamination;
+            physicalExamination = JsonSerializer.Serialize(referenceViewModel.PhysicalExamination);
 
             var reference = new Reference
             {

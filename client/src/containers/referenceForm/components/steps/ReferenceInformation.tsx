@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Select, message, Divider, Row, DatePicker } from "antd";
+import { Button, Form, Input, Select, message, Divider, Radio, DatePicker, Checkbox } from "antd";
 import moment from "moment";
 import MainTitle from "../../../../components/MainTitle";
 import { create } from "../../referenceFormService"
+import { readlinkSync } from "fs";
 
 
 export interface ReferenceForm {
@@ -12,9 +13,9 @@ export interface ReferenceForm {
 function ReferenceInformation() {
 
   const [form] = Form.useForm();
+  const [hidden, setHidden] = useState(true);
 
 
-  
 
   const onFinish = (values: ReferenceForm) => {
 
@@ -27,7 +28,8 @@ function ReferenceInformation() {
         temperature: values.temperature,
         weight: values.weight,
         sizePerson: values.sizePerson
-      }};
+      }
+    };
 
     const obgynFormJson = {
       obgynJson: {
@@ -43,6 +45,20 @@ function ReferenceInformation() {
       }
     };
 
+    const physicalExamination = {
+      physicalExaminationFormJson: {
+        head: values.head,
+        orl: values.orl,
+        eyes: values.eyes,
+        neck: values.neck,
+        torax: values.torax,
+        abdomen: values.abdomen,
+        genitals: values.genitals,
+        extremities: values.extremities,
+        neurological: values.neurological
+      }
+    };
+
     (async () => {
       try {
         await create({
@@ -52,20 +68,20 @@ function ReferenceInformation() {
           patientId: "NotSet",
           motive: values.motive,
           descriptionMotive: values.descriptionMotive,
-          symptoms: "NotSet",
+          symptoms: values.symptoms,
           medicalSummary: values.medicalSummary,
           vitalSigns: JSON.stringify(vitalSignsFormJson),
           obGyn: JSON.stringify(obgynFormJson),
-          //physicalExamination: JSON.parse(myObjStr),
-          complementaryExams: "NotSet",
-          diagnosticImpression: "NotSet",
-          observations: "NotSet",
-          risk: true,
-          attentionRequired: "NotSet",
-          madeBy: "NotSet",
-          contactedHf: "NotSet",
-          contactId: "NotSet",
-          date: new Date("02-09-2020"),
+          physicalExamination: JSON.stringify(physicalExamination),
+          complementaryExams: values.complementaryExams,
+          diagnosticImpression: values.diagnosticImpression,
+          observations: values.observations,
+          risk: Boolean(values.risk),
+          attentionRequired: values.attentionRequired,
+          madeBy: values.madeBy,
+          contactedHf: values.contactedHf,
+          contactId: values.contactId,
+          date: new Date(values.date),
         });
 
         form.resetFields();
@@ -121,12 +137,33 @@ function ReferenceInformation() {
             message: "El campo es requerido."
           }]}
         >
-          <Select>
-            <Select.Option value="1">Diagnostico</Select.Option>
-            <Select.Option value="2">Tratamiento</Select.Option>
-            <Select.Option value="3">Seguimieto</Select.Option>
-            <Select.Option value="4">Rehabilitación</Select.Option>
+          <Select defaultValue="Diagnostico">
+            <Select.Option value="Diagnostico">Diagnostico</Select.Option>
+            <Select.Option value="Tratamiento">Tratamiento</Select.Option>
+            <Select.Option value="Seguimieto">Seguimieto</Select.Option>
+            <Select.Option value="Rehabilitación">Rehabilitación</Select.Option>
           </Select>
+        </Form.Item>
+
+        <Form.Item
+          name="symptoms"
+          label="Signos y sintomas principales"
+          rules={[
+            {
+              required: true,
+              message: "El campo es requerido.",
+              whitespace: true,
+            },
+            {
+              pattern: /^.{2,150}$/g,
+              message: "Nombre debe tener mínimo 2 letras y máximo 150.",
+            },
+            {
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/])+\s?)+$/g,
+              message: "No se permiten simbolos."
+            }
+          ]}>
+          <Input.TextArea />
         </Form.Item>
 
         <Form.Item
@@ -142,6 +179,10 @@ function ReferenceInformation() {
               pattern: /^.{2,150}$/g,
               message: "Nombre debe tener mínimo 2 letras y máximo 150.",
             },
+            {
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/])+\s?)+$/g,
+              message: "No se permiten simbolos."
+            }
           ]}>
           <Input.TextArea />
         </Form.Item>
@@ -159,6 +200,10 @@ function ReferenceInformation() {
               pattern: /^.{2,150}$/g,
               message: "Nombre debe tener mínimo 2 letras y máximo 150.",
             },
+            {
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/])+\s?)+$/g,
+              message: "No se permiten simbolos."
+            }
           ]}>
           <Input.TextArea />
         </Form.Item>
@@ -200,7 +245,7 @@ function ReferenceInformation() {
         >
           <Input />
         </Form.Item>
-        
+
         <Form.Item
           name="pulse"
           label="Pulso"
@@ -272,7 +317,7 @@ function ReferenceInformation() {
         >
           <Input />
         </Form.Item>
-        
+
         <Form.Item
           name="sizePerson"
           label="Talla"
@@ -313,7 +358,7 @@ function ReferenceInformation() {
             }
           />
         </Form.Item>
-        
+
         <Form.Item
           label="FPP"
           name="fpp"
@@ -406,7 +451,7 @@ function ReferenceInformation() {
         >
           <Input />
         </Form.Item>
-        
+
         <Form.Item
           name="deadChildren"
           label="Hijos Muertos"
@@ -459,7 +504,366 @@ function ReferenceInformation() {
           ]}
         >
           <Input />
-        </Form.Item>   
+        </Form.Item>
+
+        <Divider orientation="left">Examen físico</Divider>
+
+        <Form.Item
+          name="head"
+          label="Cabeza"
+          rules={[
+            {
+              pattern: /^.{2,60}$/g,
+              message: "Nombre debe tener mínimo 2 letras y máximo 60.",
+            },
+            {
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
+              message: "Sólo se permiten letras.",
+            },
+            {
+              required: true,
+              message: "El campo requerido",
+              whitespace: true,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          name="orl"
+          label="ORL"
+          rules={[
+            {
+              pattern: /^.{2,60}$/g,
+              message: "Nombre debe tener mínimo 2 letras y máximo 60.",
+            },
+            {
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
+              message: "Sólo se permiten letras.",
+            },
+            {
+              required: true,
+              message: "El campo requerido",
+              whitespace: true,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          name="eyes"
+          label="Ojos"
+          rules={[
+            {
+              pattern: /^.{2,30}$/g,
+              message: "Nombre debe tener mínimo 2 letras y máximo 30.",
+            },
+            {
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
+              message: "Sólo se permiten letras.",
+            },
+            {
+              required: true,
+              message: "El campo requerido",
+              whitespace: true,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          name="neck"
+          label="Cuello"
+          rules={[
+            {
+              pattern: /^.{2,30}$/g,
+              message: "Nombre debe tener mínimo 2 letras y máximo 30.",
+            },
+            {
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
+              message: "Sólo se permiten letras.",
+            },
+            {
+              required: true,
+              message: "El campo requerido",
+              whitespace: true,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          name="torax"
+          label="Tórax"
+          rules={[
+            {
+              pattern: /^.{2,30}$/g,
+              message: "Nombre debe tener mínimo 2 letras y máximo 30.",
+            },
+            {
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
+              message: "Sólo se permiten letras.",
+            },
+            {
+              required: true,
+              message: "El campo requerido",
+              whitespace: true,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          name="abdomen"
+          label="Abdomen"
+          rules={[
+            {
+              pattern: /^.{2,30}$/g,
+              message: "Nombre debe tener mínimo 2 letras y máximo 30.",
+            },
+            {
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
+              message: "Sólo se permiten letras.",
+            },
+            {
+              required: true,
+              message: "El campo requerido",
+              whitespace: true,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          name="genitals"
+          label="Genitales"
+          rules={[
+            {
+              pattern: /^.{2,30}$/g,
+              message: "Nombre debe tener mínimo 2 letras y máximo 30.",
+            },
+            {
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
+              message: "Sólo se permiten letras.",
+            },
+            {
+              required: true,
+              message: "El campo requerido",
+              whitespace: true,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          name="extremities"
+          label="Extremidades"
+          rules={[
+            {
+              pattern: /^.{2,30}$/g,
+              message: "Nombre debe tener mínimo 2 letras y máximo 30.",
+            },
+            {
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
+              message: "Sólo se permiten letras.",
+            },
+            {
+              required: true,
+              message: "El campo requerido",
+              whitespace: true,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          name="neurological"
+          label="Neurológico"
+          rules={[
+            {
+              pattern: /^.{2,30}$/g,
+              message: "Nombre debe tener mínimo 2 letras y máximo 30.",
+            },
+            {
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
+              message: "Sólo se permiten letras.",
+            },
+            {
+              required: true,
+              message: "El campo requerido",
+              whitespace: true,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          name="complementaryExams"
+          label="Resultados de exámenes complementarios"
+          rules={[
+            {
+              required: true,
+              message: "El campo es requerido.",
+              whitespace: true,
+            },
+            {
+              pattern: /^.{2,150}$/g,
+              message: "Nombre debe tener mínimo 2 letras y máximo 150.",
+            },
+            {
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/])+\s?)+$/g,
+              message: "No se permiten simbolos."
+            }
+          ]}>
+          <Input.TextArea />
+        </Form.Item>
+
+        <Form.Item label="Evaluación de Riesgo"
+          name="risk"
+          rules={[{
+            required: true,
+            message: "El campo es requerido."
+          }]}
+        >
+          <Select defaultValue="Sin Riesgo">
+            <Select.Option value="False">Sin Riesgo</Select.Option>
+            <Select.Option value="True">Con Riesgo</Select.Option>
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          name="diagnosticImpression"
+          label="Impresión Diagnostica"
+          rules={[
+            {
+              required: true,
+              message: "El campo es requerido.",
+              whitespace: true,
+            },
+            {
+              pattern: /^.{2,150}$/g,
+              message: "Nombre debe tener mínimo 2 letras y máximo 150.",
+            },
+            {
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/])+\s?)+$/g,
+              message: "No se permiten simbolos."
+            }
+          ]}>
+          <Input.TextArea />
+        </Form.Item>
+
+        <Form.Item
+          name="observations"
+          label="Recomendaciones/Observaciones"
+          rules={[
+            {
+              required: true,
+              message: "El campo es requerido.",
+              whitespace: true,
+            },
+            {
+              pattern: /^.{2,150}$/g,
+              message: "Nombre debe tener mínimo 2 letras y máximo 150.",
+            },
+            {
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/])+\s?)+$/g,
+              message: "No se permiten simbolos."
+            }
+          ]}>
+          <Input.TextArea />
+        </Form.Item>
+
+        <Form.Item label="Referencia Respuesta elaborada por"
+          name="madeBy"
+          rules={[{
+            required: true,
+            message: "El campo es requerido."
+          }]}
+        >
+          <Select defaultValue="Medico General" >
+            <Select.Option value="Medico General">Medico General</Select.Option>
+            <Select.Option value="Medico Especialista">Medico Especialista</Select.Option>
+            <Select.Option value="Auxiliar Enfermeria">Auxiliar Enfermeria</Select.Option>
+            <Select.Option value="Otros">Otros</Select.Option>
+          </Select>
+        </Form.Item>
+
+
+        <Form.Item label="Amerita atencion en"
+          name="attentionRequired"
+          rules={[{
+            required: true,
+            message: "El campo es requerido."
+          }]}
+        >
+          <Select defaultValue="Consulta Externa">
+            <Select.Option value="Consulta Externa">Consulta Externa</Select.Option>
+            <Select.Option value="Emergencia">Emergencia</Select.Option>
+            <Select.Option value="Hospitalizacion">Hospitalizacion</Select.Option>
+            <Select.Option value="Otros">Otros</Select.Option>
+          </Select>
+        </Form.Item>
+
+        <Form.Item label="Se contacto al Establecimiento de Salud"
+          name="contactedHf"
+          rules={[{
+            required: true,
+            message: "El campo es requerido."
+          }]}
+        >
+          <Select defaultValue="No">
+            <Select.Option value="False">No</Select.Option>
+            <Select.Option value="True">Si</Select.Option>
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          name="contactId"
+          label="Cita al servicio de"
+          rules={[
+            {
+              required: true,
+              message: "El campo es requerido",
+              whitespace: true,
+            },
+            {
+              pattern: /^(\d)+$/g,
+              message: "Sólo se permiten números.",
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          label="Fecha"
+          name="date"
+          rules={[
+            {
+              required: true,
+              message: "Fecha es un campo requerido",
+            },
+          ]}
+        >
+          <DatePicker
+            style={{ width: "100%" }}
+            defaultValue={moment()}
+            format={"DD-MM-YYYY"}
+            placeholder="Ingrese fecha"
+            disabledDate={(d) =>
+              !d || d.isSameOrBefore("1940-01-01") || d.isAfter(moment())
+            }
+          />
+        </Form.Item>
 
         <Form.Item {...tailFormItemLayout}>
           <Button
