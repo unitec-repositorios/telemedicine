@@ -16,7 +16,7 @@ export interface CreateRRForm{
     risk: boolean;
     attentionRequired: string;
     madeBy: string;
-    contactedHf: string;
+    contactedHf: boolean;
     contactId: string;
     date: Date;
 }
@@ -40,7 +40,7 @@ export interface RRForm{
     risk: boolean;
     attentionRequired: string;
     madeBy: string;
-    contactedHf: string;
+    contactedHf: boolean;
     contactId: string;
     date: Date;
 }

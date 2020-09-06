@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Select, message, Divider, Radio, DatePicker, Checkbox } from "antd";
+import { Button, Form, Input, Select, message, Divider, DatePicker } from "antd";
 import moment from "moment";
-import MainTitle from "../../../../components/MainTitle";
-import { create } from "../../referenceFormService"
-import { readlinkSync } from "fs";
+import { create } from "../../referenceFormService";
 
 
 export interface ReferenceForm {
@@ -79,7 +77,7 @@ function ReferenceInformation() {
           risk: Boolean(values.risk),
           attentionRequired: values.attentionRequired,
           madeBy: values.madeBy,
-          contactedHf: values.contactedHf,
+          contactedHf: Boolean(values.contactedHf),
           contactId: values.contactId,
           date: new Date(values.date),
         });
@@ -121,7 +119,6 @@ function ReferenceInformation() {
 
   return (
     <>
-      <MainTitle>Formulario de Referencia</MainTitle>
       <Form
         {...formItemLayout}
         form={form}
@@ -140,7 +137,7 @@ function ReferenceInformation() {
           <Select >
             <Select.Option value="Diagnostico">Diagnostico</Select.Option>
             <Select.Option value="Tratamiento">Tratamiento</Select.Option>
-            <Select.Option value="Seguimiento">Seguimieto</Select.Option>
+            <Select.Option value="Seguimiento">Seguimiento</Select.Option>
             <Select.Option value="Rehabilitación">Rehabilitación</Select.Option>
           </Select>
         </Form.Item>
@@ -220,7 +217,7 @@ function ReferenceInformation() {
               whitespace: true,
             },
             {
-              pattern: /^(\d)+$/g,
+              pattern: /^[0-9/]+$/g,
               message: "Sólo se permiten números.",
             },
           ]}
@@ -373,8 +370,7 @@ function ReferenceInformation() {
             format={"DD-MM-YYYY"}
             placeholder="Ingrese fecha"
             disabledDate={(d) =>
-              !d || d.isSameOrBefore("1940-01-01") || d.isAfter(moment())
-            }
+              !d || d.isSameOrBefore("1940-01-01")}
           />
         </Form.Item>
 
