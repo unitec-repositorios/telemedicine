@@ -185,10 +185,10 @@ function ReferenceInformation() {
             },
             {
               pattern: /^.{2,150}$/g,
-              message: "Nombre debe tener mínimo 2 letras y máximo 150.",
+              message: "El campo debe tener mínimo 2 letras y máximo 150.",
             },
             {
-              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/])+\s?)+$/g,
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/"'])+\s?)+$/g,
               message: "No se permiten simbolos."
             }
           ]}>
@@ -206,10 +206,10 @@ function ReferenceInformation() {
             },
             {
               pattern: /^.{2,150}$/g,
-              message: "Nombre debe tener mínimo 2 letras y máximo 150.",
+              message: "El campo debe tener mínimo 2 letras y máximo 150.",
             },
             {
-              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/])+\s?)+$/g,
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/"'])+\s?)+$/g,
               message: "No se permiten simbolos."
             }
           ]}>
@@ -227,10 +227,10 @@ function ReferenceInformation() {
             },
             {
               pattern: /^.{2,150}$/g,
-              message: "Nombre debe tener mínimo 2 letras y máximo 150.",
+              message: "El campo debe tener mínimo 2 letras y máximo 150.",
             },
             {
-              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/])+\s?)+$/g,
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/"'])+\s?)+$/g,
               message: "No se permiten simbolos."
             }
           ]}>
@@ -540,7 +540,7 @@ function ReferenceInformation() {
           rules={[
             {
               pattern: /^.{2,60}$/g,
-              message: "Nombre debe tener mínimo 2 letras y máximo 60.",
+              message: "El campo debe tener mínimo 2 letras y máximo 60.",
             },
             {
               pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
@@ -562,7 +562,7 @@ function ReferenceInformation() {
           rules={[
             {
               pattern: /^.{2,60}$/g,
-              message: "Nombre debe tener mínimo 2 letras y máximo 60.",
+              message: "El campo debe tener mínimo 2 letras y máximo 60.",
             },
             {
               pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
@@ -584,7 +584,7 @@ function ReferenceInformation() {
           rules={[
             {
               pattern: /^.{2,30}$/g,
-              message: "Nombre debe tener mínimo 2 letras y máximo 30.",
+              message: "El campo debe tener mínimo 2 letras y máximo 30.",
             },
             {
               pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
@@ -606,7 +606,7 @@ function ReferenceInformation() {
           rules={[
             {
               pattern: /^.{2,30}$/g,
-              message: "Nombre debe tener mínimo 2 letras y máximo 30.",
+              message: "El campo debe tener mínimo 2 letras y máximo 30.",
             },
             {
               pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
@@ -628,7 +628,7 @@ function ReferenceInformation() {
           rules={[
             {
               pattern: /^.{2,30}$/g,
-              message: "Nombre debe tener mínimo 2 letras y máximo 30.",
+              message: "El campo debe tener mínimo 2 letras y máximo 30.",
             },
             {
               pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
@@ -650,7 +650,7 @@ function ReferenceInformation() {
           rules={[
             {
               pattern: /^.{2,30}$/g,
-              message: "Nombre debe tener mínimo 2 letras y máximo 30.",
+              message: "El campo debe tener mínimo 2 letras y máximo 30.",
             },
             {
               pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
@@ -672,7 +672,7 @@ function ReferenceInformation() {
           rules={[
             {
               pattern: /^.{2,30}$/g,
-              message: "Nombre debe tener mínimo 2 letras y máximo 30.",
+              message: "El campo debe tener mínimo 2 letras y máximo 30.",
             },
             {
               pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
@@ -694,7 +694,7 @@ function ReferenceInformation() {
           rules={[
             {
               pattern: /^.{2,30}$/g,
-              message: "Nombre debe tener mínimo 2 letras y máximo 30.",
+              message: "El campo debe tener mínimo 2 letras y máximo 30.",
             },
             {
               pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
@@ -716,7 +716,7 @@ function ReferenceInformation() {
           rules={[
             {
               pattern: /^.{2,30}$/g,
-              message: "Nombre debe tener mínimo 2 letras y máximo 30.",
+              message: "El campo debe tener mínimo 2 letras y máximo 30.",
             },
             {
               pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
@@ -743,7 +743,7 @@ function ReferenceInformation() {
             },
             {
               pattern: /^.{2,150}$/g,
-              message: "Nombre debe tener mínimo 2 letras y máximo 150.",
+              message: "El campo debe tener mínimo 2 letras y máximo 150.",
             },
             {
               pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/])+\s?)+$/g,
@@ -777,10 +777,10 @@ function ReferenceInformation() {
             },
             {
               pattern: /^.{2,150}$/g,
-              message: "Nombre debe tener mínimo 2 letras y máximo 150.",
+              message: "El campo debe tener mínimo 2 letras y máximo 150.",
             },
             {
-              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/])+\s?)+$/g,
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/"'])+\s?)+$/g,
               message: "No se permiten simbolos."
             }
           ]}>
@@ -798,10 +798,10 @@ function ReferenceInformation() {
             },
             {
               pattern: /^.{2,150}$/g,
-              message: "Nombre debe tener mínimo 2 letras y máximo 150.",
+              message: "El campo debe tener mínimo 2 letras y máximo 150.",
             },
             {
-              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/])+\s?)+$/g,
+              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/"'])+\s?)+$/g,
               message: "No se permiten simbolos."
             }
           ]}>
