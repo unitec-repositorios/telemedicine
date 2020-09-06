@@ -8,12 +8,27 @@ export interface ReferenceForm {
   [key: string]: string;
 }
 
+
+
 function ReferenceInformation() {
 
   const [form] = Form.useForm();
-  const [hidden, setHidden] = useState(true);
+  const [madeBycurrent, setMadeByCurrent] = useState(false);
+  const [attentionCurrent, setAttentionCurrent] = useState(false);
 
+  const handleSelectReferenceAnswer = (value: string) => {
+    if (value.toLowerCase() == "otros")
+      setMadeByCurrent(true)
+    else
+      setMadeByCurrent(false)
+  }
 
+  const handleSelectAttentionAnswer = (values: string) => {
+    if (values.toLowerCase() == "otros")
+      setAttentionCurrent(true)
+    else
+      setAttentionCurrent(false)
+  }
 
   const onFinish = (values: ReferenceForm) => {
 
@@ -57,6 +72,23 @@ function ReferenceInformation() {
       }
     };
 
+    //Decide whether to get the value from the select or from the input other
+    var madeByValue: string;
+    if (madeBycurrent == true) {
+      madeByValue = values.othersMadeBy
+    }
+    else {
+      madeByValue = values.madeBy
+    }
+    
+    var attentionValue: string;
+    if (attentionCurrent == true) {
+      attentionValue = values.othersAttention
+    }
+    else {
+      attentionValue = values.attentionRequired
+    }
+
     (async () => {
       try {
         await create({
@@ -75,8 +107,8 @@ function ReferenceInformation() {
           diagnosticImpression: values.diagnosticImpression,
           observations: values.observations,
           risk: Boolean(values.risk),
-          attentionRequired: values.attentionRequired,
-          madeBy: values.madeBy,
+          attentionRequired: attentionValue,
+          madeBy: madeByValue,
           contactedHf: Boolean(values.contactedHf),
           contactId: values.contactId,
           date: new Date(values.date),
@@ -127,7 +159,7 @@ function ReferenceInformation() {
         scrollToFirstError
         id="form-register">
 
-        <Form.Item label="Motivo"
+<Form.Item label="Motivo"
           name="motive"
           rules={[{
             required: true,
@@ -783,13 +815,34 @@ function ReferenceInformation() {
             message: "El campo es requerido."
           }]}
         >
-          <Select>
+          <Select onChange={handleSelectReferenceAnswer} >
             <Select.Option value="Medico General">Medico General</Select.Option>
             <Select.Option value="Medico Especialista">Medico Especialista</Select.Option>
             <Select.Option value="Auxiliar Enfermeria">Auxiliar Enfermeria</Select.Option>
             <Select.Option value="Otros">Otros</Select.Option>
           </Select>
         </Form.Item>
+
+        {madeBycurrent === true ?
+          <Form.Item
+            name="othersMadeBy"
+            label="Especificación"
+            rules={[
+              {
+                required: true,
+                message: "El campo es requerido",
+                whitespace: true,
+              },
+              {
+                pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9])+\s?)+$/g,
+                message: "Sólo se permiten números y letras.",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          : null}
+
 
 
         <Form.Item label="Amerita atencion en"
@@ -799,13 +852,33 @@ function ReferenceInformation() {
             message: "El campo es requerido."
           }]}
         >
-          <Select>
+          <Select onChange={handleSelectAttentionAnswer} >
             <Select.Option value="Consulta Externa">Consulta Externa</Select.Option>
             <Select.Option value="Emergencia">Emergencia</Select.Option>
             <Select.Option value="Hospitalizacion">Hospitalizacion</Select.Option>
             <Select.Option value="Otros">Otros</Select.Option>
           </Select>
         </Form.Item>
+
+        {attentionCurrent === true ?
+          <Form.Item
+            name="othersAttention"
+            label="Especifique"
+            rules={[
+              {
+                required: true,
+                message: "El campo es requerido",
+                whitespace: true,
+              },
+              {
+                pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9])+\s?)+$/g,
+                message: "Sólo se permiten números y letras.",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          : null}
 
         <Form.Item label="Se contacto al Establecimiento de Salud"
           name="contactedHf"
@@ -866,6 +939,7 @@ function ReferenceInformation() {
           >
             Guardar
           </Button>
+
           <Button htmlType="button" onClick={() => form.resetFields()}>
             Reiniciar campos
           </Button>
