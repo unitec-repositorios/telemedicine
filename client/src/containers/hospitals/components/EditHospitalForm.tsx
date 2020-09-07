@@ -67,6 +67,7 @@ function EditHospitalForm(props: EditHospitalProps) {
       hospital.contacts = JSON.parse(hospital.contacts);
       setCurrentHospital(hospital);
       form.setFieldsValue(hospital);
+      // setTagsInformation({tags: JSON.parse(hospital.services) as string[]} as ServiceTag)
       setLoading(false);
     })();
   }, []);
