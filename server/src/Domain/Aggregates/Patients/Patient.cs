@@ -20,7 +20,11 @@ namespace Domain.Aggregates.Patients
         public string Gender { get; set; }
         
         public string Address { get; set; }
-        
-        
+
+
+        public string FullName()
+        {
+            return $"{this.Name} {this.FirstLastName} {this.SecondLastName}";
+        }
     }
 }

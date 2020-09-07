@@ -76,30 +76,44 @@ namespace Api.Modules.References
             var reference = new Reference
             {
                 Id = referenceViewModel.Id,
-                    Type = referenceViewModel.Type,
-                    OriginHfId = referenceViewModel.OriginHfId,
-                    DestinationHfId = referenceViewModel.DestinationHfId,
-                    PatientId = referenceViewModel.PatientId,
-                    Motive = referenceViewModel.Motive,
-                    DescriptionMotive = referenceViewModel.DescriptionMotive,
-                    Symptoms = referenceViewModel.Symptoms,
-                    MedicalSummary = referenceViewModel.MedicalSummary,
-                    VitalSigns = vitalSignsJSON,
-                    ObGyn = obGynJSON,
-                    PhysicalExamination = physicalExaminationJSON,
-                    ComplementaryExams = referenceViewModel.ComplementaryExams,
-                    DiagnosticImpression = referenceViewModel.DiagnosticImpression,
-                    Observations = referenceViewModel.Observations,
-                    Risk = referenceViewModel.Risk,
-                    AttentionRequired = referenceViewModel.AttentionRequired,
-                    MadeBy = referenceViewModel.MadeBy,
-                    ContactedHf = referenceViewModel.ContactedHf,
-                    ContactId = referenceViewModel.ContactId,
-                    Date = referenceViewModel.Date,
+                Type = referenceViewModel.Type,
+                OriginHfId = referenceViewModel.OriginHfId,
+                DestinationHfId = referenceViewModel.DestinationHfId,
+                PatientId = referenceViewModel.PatientId,
+                Motive = referenceViewModel.Motive,
+                DescriptionMotive = referenceViewModel.DescriptionMotive,
+                Symptoms = referenceViewModel.Symptoms,
+                MedicalSummary = referenceViewModel.MedicalSummary,
+                VitalSigns = vitalSignsJSON,
+                ObGyn = obGynJSON,
+                PhysicalExamination = physicalExaminationJSON,
+                ComplementaryExams = referenceViewModel.ComplementaryExams,
+                DiagnosticImpression = referenceViewModel.DiagnosticImpression,
+                Observations = referenceViewModel.Observations,
+                Risk = referenceViewModel.Risk,
+                AttentionRequired = referenceViewModel.AttentionRequired,
+                MadeBy = referenceViewModel.MadeBy,
+                ContactedHf = referenceViewModel.ContactedHf,
+                ContactId = referenceViewModel.ContactId,
+                Date = referenceViewModel.Date,
 
             };
 
             await _referenceService.Create(reference);
+        }
+
+        [HttpGet]
+        public async Task<IEnumerable<ReferenceRespondViewModel>> GetAllAsync()
+        {
+            var references = (await this._referenceService.All()).Select(r => new ReferenceRespondViewModel
+            {
+                Id = r.Id,
+                Patient = r.Patient?.FullName(),
+                Origin = r.OriginHfId,
+                Destination = r.DestinationHfId,
+            });
+
+            return references;
         }
 
     }

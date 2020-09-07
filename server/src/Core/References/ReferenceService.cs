@@ -32,6 +32,13 @@ namespace Core.References
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Reference>> All()
+        {
+            return await _referenceRepository
+                .Filter(network => !network.Disabled)
+                .ToListAsync();
+        }
+
         public async Task Remove(int id)
         {
             var reference = await _referenceRepository.FindById(id);
