@@ -21,11 +21,12 @@ namespace Core.Networks
             return await _networkRepository.FindById(id);
         }
 
-        public async Task<IEnumerable<Network>> All(int? id)
+        public async Task<IEnumerable<Network>> All(int? id, string name)
         {
             return await _networkRepository
-                .Filter(network => !network.Disabled)
+                .Filter(patient => !patient.Disabled)
                 .Where(x => id == null || x.Id == id)
+                .Where(x => name == null || x.Name == name)
                 .ToListAsync();
         }
 

@@ -77,6 +77,7 @@ function AddPatientForm(props: AddPatientProps) {
     })();
   };
 
+  const { TextArea } = Input;
   return (
     <>
       <Link to="/patients">
@@ -237,8 +238,8 @@ function AddPatientForm(props: AddPatientProps) {
           label="Dirección"
           rules={[
             {
-              pattern: /^.{8,50}$/g,
-              message: "Dirección debe tener mínimo 8 letras y máximo 50.",
+              pattern: /^.{1,200}$/g,
+              message: "Dirección debe tener máximo 200 letras.",
             },
             {
               pattern: /^[^\d]/g,
@@ -255,7 +256,7 @@ function AddPatientForm(props: AddPatientProps) {
             },
           ]}
         >
-          <Input />
+          <TextArea rows={4} />
         </Form.Item>
         <Form.Item {...tailFormItemLayout}>
           <Button

@@ -26,11 +26,20 @@ namespace Data.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<string>("Address")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Category")
+                        .HasColumnType("text");
+
                     b.Property<string>("City")
                         .HasColumnType("text");
 
                     b.Property<int>("Code")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Contacts")
+                        .HasColumnType("jsonb");
 
                     b.Property<string>("Department")
                         .HasColumnType("text");
@@ -39,9 +48,6 @@ namespace Data.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Neighborhood")
                         .HasColumnType("text");
 
                     b.HasKey("Id");

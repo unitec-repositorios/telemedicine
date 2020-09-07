@@ -30,9 +30,11 @@ namespace Api.Modules.Networks
                     Id = hospital.Id,
                     Code = hospital.Code,
                     Name = hospital.Name,
-                    Neighborhood = hospital.Neighborhood,
+                    Address = hospital.Address,
                     Department = hospital.Department,
                     City = hospital.City,
+                    Category = hospital.Category,
+                    Contacts = hospital.Contacts,
                 });
 
             return Ok(data);
@@ -45,9 +47,11 @@ namespace Api.Modules.Networks
             {
                 Code = hospitalViewModel.Code,
                 Name = hospitalViewModel.Name,
-                Neighborhood = hospitalViewModel.Neighborhood,
+                Address = hospitalViewModel.Address,
                 Department = hospitalViewModel.Department,
                 City = hospitalViewModel.City,
+                Category = hospitalViewModel.Category,
+                Contacts = hospitalViewModel.Contacts,
             };
 
             await _hospitalService.Create(hospital);
@@ -68,9 +72,11 @@ namespace Api.Modules.Networks
                 Id = hospitalViewModel.Id,
                 Code = hospitalViewModel.Code,
                 Name = hospitalViewModel.Name,
-                Neighborhood = hospitalViewModel.Neighborhood,
+                Address = hospitalViewModel.Address,
                 Department = hospitalViewModel.Department,
                 City = hospitalViewModel.City,
+                Category = hospitalViewModel.Category,
+                Contacts = hospitalViewModel.Contacts,
             };
             await _hospitalService.Update(id, hospital);
         }

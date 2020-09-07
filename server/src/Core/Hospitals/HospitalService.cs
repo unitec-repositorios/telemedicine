@@ -43,9 +43,11 @@ namespace Core.Hospitals
             var updateHospital = await _hospitalRepository.FindById(id);
             updateHospital.Code = hospital.Code;
             updateHospital.Name = hospital.Name;
-            updateHospital.Neighborhood = hospital.Neighborhood;
+            updateHospital.Address = hospital.Address;
             updateHospital.Department = hospital.Department;
             updateHospital.City = hospital.City;
+            updateHospital.Category = hospital.Category;
+            updateHospital.Contacts = hospital.Contacts;
             await _hospitalRepository.Update(updateHospital);
         }
 
@@ -55,9 +57,11 @@ namespace Core.Hospitals
             {
                 Code = hospital.Code,
                 Name = hospital.Name,
-                Neighborhood = hospital.Neighborhood,
+                Address = hospital.Address,
                 Department = hospital.Department,
                 City = hospital.City,
+                Category = hospital.Category,
+                Contacts = hospital.Contacts
             };
 
             await _hospitalRepository.Add(newHospital);
