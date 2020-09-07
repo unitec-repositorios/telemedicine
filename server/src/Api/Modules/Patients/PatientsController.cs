@@ -32,7 +32,8 @@ namespace Api.Modules.Patients
                     DateOfBirth = patient.DateOfBirth,
                     Email = patient.Email,
                     Gender = patient.Gender,
-                    Address = patient.Address
+                    Address = patient.Address,
+                    Contacts = patient.Contacts
                 });
 
             return Ok(data);
@@ -50,7 +51,8 @@ namespace Api.Modules.Patients
                 DateOfBirth = patientViewModel.DateOfBirth,
                 Email = patientViewModel.Email,
                 Gender = patientViewModel.Gender,
-                Address = patientViewModel.Address
+                Address = patientViewModel.Address,
+                Contacts = patientViewModel.Contacts
             };
 
             await _patientService.Create(patient);
@@ -76,7 +78,8 @@ namespace Api.Modules.Patients
                 DateOfBirth = patientViewModel.DateOfBirth,
                 Email = patientViewModel.Email,
                 Gender = patientViewModel.Gender,
-                Address = patientViewModel.Address
+                Address = patientViewModel.Address,
+                Contacts = patientViewModel.Contacts
             };
             await _patientService.Update(id, patient);
         }

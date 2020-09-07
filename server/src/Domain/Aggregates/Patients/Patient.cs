@@ -1,5 +1,6 @@
 ﻿using Domain.Contracts;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Aggregates.Patients
 {
@@ -20,7 +21,10 @@ namespace Domain.Aggregates.Patients
         public string Gender { get; set; }
         
         public string Address { get; set; }
-        
-        
+
+        [Column(TypeName = "jsonb")]
+        public string Contacts { get; set; }
+
+
     }
 }

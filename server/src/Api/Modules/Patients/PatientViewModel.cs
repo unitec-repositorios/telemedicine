@@ -13,5 +13,6 @@ namespace Api.Modules.Patients
         public string Email { get; set; }
         public string Gender { get; set; }
         public string Address { get; set; }
+        public string Contacts { get; set; }
     }
 }
