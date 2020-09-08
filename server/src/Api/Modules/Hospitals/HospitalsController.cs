@@ -35,6 +35,8 @@ namespace Api.Modules.Networks
                     City = hospital.City,
                     Category = hospital.Category,
                     Contacts = hospital.Contacts,
+                    Services = hospital.Services,
+                    Network = hospital.Network
                 });
 
             return Ok(data);
@@ -52,6 +54,8 @@ namespace Api.Modules.Networks
                 City = hospitalViewModel.City,
                 Category = hospitalViewModel.Category,
                 Contacts = hospitalViewModel.Contacts,
+                Services = hospitalViewModel.Services,
+                Network = hospitalViewModel.Network
             };
 
             await _hospitalService.Create(hospital);
@@ -77,6 +81,8 @@ namespace Api.Modules.Networks
                 City = hospitalViewModel.City,
                 Category = hospitalViewModel.Category,
                 Contacts = hospitalViewModel.Contacts,
+                Services = hospitalViewModel.Services,
+                Network = hospitalViewModel.Network
             };
             await _hospitalService.Update(id, hospital);
         }

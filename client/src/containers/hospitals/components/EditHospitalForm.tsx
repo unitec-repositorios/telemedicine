@@ -1,4 +1,14 @@
-import { Button, Form, Input, Select, message, Spin, Space } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  Select,
+  message,
+  Spin,
+  Space,
+  Tag,
+  Tooltip,
+} from "antd";
 import {
   ArrowLeftOutlined,
   PlusOutlined,
@@ -8,10 +18,12 @@ import { RouteComponentProps, Link } from "@reach/router";
 import MainTitle from "../../../components/MainTitle";
 import { findById, update, rupsCodeExists } from "../hospitalService";
 import { RuleObject, StoreValue } from "rc-field-form/lib/interface";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import departmentsLocations from "../../../departmentsLocations";
 import { Hospital } from "../hospitalModels";
 import MaskedInput from "antd-mask-input/build/main/lib/MaskedInput";
+import { Network } from "../../networks/networkModels";
+import { all } from "../../networks/networkService";
 interface EditHospitalRouterParams {
   id: number;
 }
@@ -51,6 +63,14 @@ const tailFormItemLayout = {
 
 const { Option } = Select;
 
+interface ServiceTagsState {
+  tags: string[];
+  inputVisible: boolean;
+  inputValue: string;
+  editInputIndex: number;
+  editInputValue: string;
+}
+
 function EditHospitalForm(props: EditHospitalProps) {
   const [form] = Form.useForm();
 
@@ -58,16 +78,127 @@ function EditHospitalForm(props: EditHospitalProps) {
     departmentsLocations.departments[0]
   );
 
+  const [tagsInformation, setTagsInformation] = useState({
+    tags: [] as string[],
+  } as ServiceTagsState);
+  const input = useRef<Input>(null);
+  const editInput = useRef<Input>(null);
+
+  const handleClose = (removedTag: string) => {
+    const tags = tagsInformation.tags.filter((tag) => tag !== removedTag);
+
+    setTagsInformation({ ...tagsInformation, tags });
+  };
+
+  useEffect(() => {
+    if (editInput.current) {
+      editInput.current?.focus();
+    } else {
+      input.current?.focus();
+    }
+  }, [tagsInformation]);
+
+  const showInput = () => {
+    setTagsInformation({
+      ...tagsInformation,
+      inputVisible: true,
+      inputValue: "",
+    });
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTagsInformation({ ...tagsInformation, inputValue: event.target.value });
+  };
+
+  const handleInputConfirm = () => {
+    const { inputValue } = tagsInformation;
+    let { tags } = tagsInformation;
+    var regex = /^([a-zA-Z]\s?)+$/g;
+    if (regex.test(inputValue)) {
+      if (inputValue && tags.indexOf(inputValue) === -1) {
+        tags = [...tags, inputValue];
+      }
+
+      setTagsInformation({
+        ...tagsInformation,
+        tags,
+        inputValue: "",
+        inputVisible: false,
+      });
+    } else {
+      setTagsInformation({
+        ...tagsInformation,
+        inputValue: "",
+        inputVisible: false,
+      });
+    }
+  };
+
+  const handleEditInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setTagsInformation({
+      ...tagsInformation,
+      editInputValue: event.target.value,
+    });
+  };
+
+  const handleEditInputConfirm = () => {
+    const newTags = [...tagsInformation.tags];
+    const { editInputIndex, editInputValue } = tagsInformation;
+    newTags[editInputIndex] = editInputValue;
+    var regex = /^([a-zA-Z]\s?)+$/g;
+    if (regex.test(editInputValue)) {
+      var prueba = tagsInformation.tags;
+      if (prueba.includes(editInputValue) === false) {
+        setTagsInformation({
+          ...tagsInformation,
+          tags: newTags,
+          editInputIndex: -1,
+          editInputValue: "",
+        });
+      } else {
+        setTagsInformation({
+          ...tagsInformation,
+          editInputIndex: -1,
+          editInputValue: "",
+        });
+      }
+    }
+  };
+
+  const [networks, setNetworks] = useState<Network[]>([]);
+  const [network, setNetwork] = useState<Network>();
+
+  useEffect(() => {
+    (async () => {
+      const data = await all();
+      setNetworks(data);
+    })();
+  }, []);
   const [loading, setLoading] = useState(true);
 
   const [currentHospital, setCurrentHospital] = useState({} as Hospital);
   useEffect(() => {
     (async () => {
       const hospital = await findById(props.id ?? 1);
-      hospital.contacts = JSON.parse(hospital.contacts);
+      if (hospital.contacts == undefined) {
+        hospital.contacts = JSON.parse("[]");
+      } else {
+        hospital.contacts = JSON.parse(hospital.contacts);
+      }
       setCurrentHospital(hospital);
       form.setFieldsValue(hospital);
-      // setTagsInformation({tags: JSON.parse(hospital.services) as string[]} as ServiceTag)
+      setTagsInformation({
+        tags: JSON.parse(hospital.services) as string[],
+      } as ServiceTagsState);
+
+      setDepartment(
+        departmentsLocations.departments.find(
+          (d) => d.name === hospital.department
+        ) || departmentsLocations.departments[0]
+      );
+
       setLoading(false);
     })();
   }, []);
@@ -93,6 +224,8 @@ function EditHospitalForm(props: EditHospitalProps) {
           city: currentHospital.city,
           category: values.category,
           contacts: JSON.stringify(values.contacts),
+          services: JSON.stringify(tagsInformation.tags),
+          network: values.network,
         });
 
         message.success("El hospital ha sido editado existosamente");
@@ -103,6 +236,13 @@ function EditHospitalForm(props: EditHospitalProps) {
   };
 
   const { TextArea } = Input;
+  const {
+    tags,
+    inputVisible,
+    inputValue,
+    editInputIndex,
+    editInputValue,
+  } = tagsInformation;
   return (
     <>
       <Link to="/hospitals">
@@ -247,6 +387,31 @@ function EditHospitalForm(props: EditHospitalProps) {
             </Select>
           </Form.Item>
           <Form.Item
+            name="network"
+            label="Red"
+            rules={[
+              {
+                required: true,
+                message: "Red es un campo requerido",
+              },
+            ]}
+          >
+            <Select
+              showSearch
+              placeholder="Selecciona una Red."
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+            >
+              {networks.map((l: any) => (
+                <Option key={l.name} value={l.name} label={l.name}>
+                  {l.name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item
             name="address"
             label="Dirección"
             rules={[
@@ -337,6 +502,116 @@ function EditHospitalForm(props: EditHospitalProps) {
                 );
               }}
             </Form.List>
+          </Form.Item>
+          <Form.Item label="Servicios">
+            {tags.map((tag, index) => {
+              if (editInputIndex === index) {
+                return (
+                  <Form.Item
+                    name="tag"
+                    rules={[
+                      {
+                        required: true,
+                        // type : "regexp",
+                        pattern: /^([a-zA-Z]\s?)+$/g,
+                        message: "Solo se permiten letras",
+                      },
+                    ]}
+                  >
+                    <Input
+                      ref={editInput}
+                      key={tag}
+                      size="small"
+                      className="tag-input"
+                      value={editInputValue}
+                      onChange={handleEditInputChange}
+                      onBlur={handleEditInputConfirm}
+                      onPressEnter={handleEditInputConfirm}
+                      maxLength={30}
+                      // required
+                    />
+                  </Form.Item>
+                );
+              }
+
+              const isLongTag = tag.length > 30;
+
+              const tagElem = (
+                <Tag
+                  className="edit-tag"
+                  key={tag}
+                  closable={true}
+                  onClose={() => handleClose(tag)}
+                >
+                  <span
+                    onDoubleClick={(e) => {
+                      // debugger;
+                      setTagsInformation({
+                        ...tagsInformation,
+                        editInputIndex: index,
+                        editInputValue: tag,
+                        inputVisible: false,
+                        // inputValue: "",
+                      });
+                      editInput.current?.focus();
+                      form.resetFields(["tag"]);
+                      e.preventDefault();
+                    }}
+                  >
+                    {isLongTag ? `${tag.slice(0, 30)}...` : tag}
+                  </span>
+                </Tag>
+              );
+              return isLongTag ? (
+                <Tooltip
+                  title={tag}
+                  key={tag}
+                  style={{ display: "inline-block" }}
+                >
+                  {tagElem}
+                </Tooltip>
+              ) : (
+                tagElem
+              );
+            })}
+            {inputVisible && (
+              <Form.Item
+                name="tag"
+                rules={[
+                  {
+                    required: true,
+                    // type : "regexp",
+                    pattern: /^([a-zA-Z]\s?)+$/g,
+                    message: "Solo se permiten letras",
+                  },
+                ]}
+              >
+                <Input
+                  ref={input}
+                  type="text"
+                  size="small"
+                  className="tag-input"
+                  value={inputValue}
+                  onChange={handleInputChange}
+                  onBlur={handleInputConfirm}
+                  onPressEnter={handleInputConfirm}
+                  maxLength={30}
+                  // required
+                />
+              </Form.Item>
+            )}
+            {!inputVisible && (
+              <Tag
+                className="site-tag-plus"
+                onClick={() => {
+                  showInput();
+                  form.resetFields(["tag"]);
+                }}
+              >
+                <PlusOutlined />
+                Nuevo Servicio
+              </Tag>
+            )}
           </Form.Item>
           <Form.Item {...tailFormItemLayout}>
             <Button

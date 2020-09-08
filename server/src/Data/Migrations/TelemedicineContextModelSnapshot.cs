@@ -50,6 +50,12 @@ namespace Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
+                    b.Property<string>("Network")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Services")
+                        .HasColumnType("jsonb");
+
                     b.HasKey("Id");
 
                     b.ToTable("Hospitals");

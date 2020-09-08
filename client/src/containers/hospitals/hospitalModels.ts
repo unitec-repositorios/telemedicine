@@ -7,6 +7,7 @@ export interface CreateHospital {
   category: string;
   contacts: string;
   services: string;
+  network: string;
 }
 
 export interface Hospital {
@@ -18,4 +19,6 @@ export interface Hospital {
   city: string;
   category: string;
   contacts: string;
+  services: string;
+  network: string;
 }

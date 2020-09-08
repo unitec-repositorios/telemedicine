@@ -15,8 +15,12 @@ namespace Api.Modules.Hospitals
         public string Department { get; set; }
 
         public string Category { get; set; }
-        [Column(TypeName = "jsonb")]
 
         public string Contacts { get; set; }
+
+
+        public string Services { get; set; }
+
+        public string Network { get; set; }
     }
 }

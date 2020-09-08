@@ -16,5 +16,11 @@ namespace Domain.Aggregates.Hospitals
         public string Category { get; set; }
         [Column(TypeName = "jsonb")]
         public string Contacts { get; set; }
+
+        [Column(TypeName = "jsonb")]
+        public string Services { get; set; }
+
+        public string Network { get; set; }
+
     }
 }

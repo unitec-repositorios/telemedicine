@@ -48,6 +48,8 @@ namespace Core.Hospitals
             updateHospital.City = hospital.City;
             updateHospital.Category = hospital.Category;
             updateHospital.Contacts = hospital.Contacts;
+            updateHospital.Services = hospital.Services;
+            updateHospital.Network = hospital.Network;
             await _hospitalRepository.Update(updateHospital);
         }
 
@@ -61,7 +63,9 @@ namespace Core.Hospitals
                 Department = hospital.Department,
                 City = hospital.City,
                 Category = hospital.Category,
-                Contacts = hospital.Contacts
+                Contacts = hospital.Contacts,
+                Services = hospital.Services,
+                Network = hospital.Network
             };
 
             await _hospitalRepository.Add(newHospital);
