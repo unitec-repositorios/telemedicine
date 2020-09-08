@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Core.Hospitals;
 using Core.Hospitals.Dtos;
+using Core.Networks;
 using Domain.Aggregates.Hospitals;
 using Microsoft.AspNetCore.Mvc;
 
@@ -61,9 +63,17 @@ namespace Api.Modules.Hospitals
 
 
         [HttpDelete("{id}")]
-        public async Task Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            await _hospitalService.Remove(id);
+            try
+            {
+                await _hospitalService.Remove(id);
+                return Ok();
+            }
+            catch (NetworkIsBeingUsedException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPut("{id:int}")]
