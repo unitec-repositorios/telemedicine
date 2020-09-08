@@ -1,15 +1,15 @@
-﻿
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Api.Modules.Hospitals
+﻿namespace Core.Hospitals.Dtos
 {
-    public class HospitalViewModel
+    public class GetHospital
     {
         public int Id { get; set; }
 
         public int Code { get; set; }
+
         public string Name { get; set; }
+
         public string Address { get; set; }
+
         public string City { get; set; }
 
         public string Department { get; set; }
@@ -18,8 +18,9 @@ namespace Api.Modules.Hospitals
 
         public string Contacts { get; set; }
 
-
         public string Services { get; set; }
+
+        public int NetworkId { get; set; }
 
         public string Network { get; set; }
     }
