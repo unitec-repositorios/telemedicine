@@ -7,7 +7,7 @@ export interface CreateHospital {
   category: string;
   contacts: string;
   services: string;
-  network: string;
+  networkId: number;
 }
 
 export interface Hospital {
@@ -20,5 +20,5 @@ export interface Hospital {
   category: string;
   contacts: string;
   services: string;
-  network: string;
+  networkId: number;
 }

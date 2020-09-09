@@ -6,6 +6,7 @@ import { Link, navigate, RouteComponentProps } from "@reach/router";
 import { Network } from "./networkModels";
 import MainTitle from "../../components/MainTitle";
 import { all, remove } from "./networkService";
+import { AxiosError } from "axios";
 
 interface NetworkProps extends RouteComponentProps {}
 
@@ -34,7 +35,11 @@ function NetworksTable(props: NetworkProps) {
         networks.filter((currentNetwork) => currentNetwork.id !== id)
       );
     } catch (error) {
-      message.error("Ocurrió un error al borrar la red");
+      if (error.response.data === "The network is being used by a hospital") {
+        message.error("Hay hospitales vinculados a esta red.");
+      } else {
+        message.error("Ocurrió un error al borrar la red");
+      }
     }
   };
 

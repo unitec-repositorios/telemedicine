@@ -66,15 +66,10 @@ namespace Api.Modules.Hospitals
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            try
-            {
+
                 await _hospitalService.Remove(id);
                 return Ok();
-            }
-            catch (NetworkIsBeingUsedException e)
-            {
-                return BadRequest(e.Message);
-            }
+
         }
 
         [HttpPut("{id:int}")]

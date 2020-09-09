@@ -181,6 +181,7 @@ function AddHospitalForm(props: AddHospitalProps) {
     (async () => {
       console.log(values);
       try {
+        debugger;
         await create({
           code: parseInt(values.code),
           name: values.name,
@@ -194,7 +195,7 @@ function AddHospitalForm(props: AddHospitalProps) {
           category: values.category,
           contacts: JSON.stringify(values.contacts),
           services: JSON.stringify(tagsInformation.tags),
-          network: values.network,
+          networkId: parseInt(values.networkId),
         });
         form.resetFields();
         message.success("El hospital ha sido creado existosamente.");
@@ -363,7 +364,7 @@ function AddHospitalForm(props: AddHospitalProps) {
           </Select>
         </Form.Item>
         <Form.Item
-          name="network"
+          name="networkId"
           label="Red"
           rules={[
             {
@@ -381,7 +382,7 @@ function AddHospitalForm(props: AddHospitalProps) {
             }
           >
             {networks.map((l: any) => (
-              <Option key={l.name} value={l.name} label={l.name}>
+              <Option key={l.name} value={l.id} label={l.name}>
                 {l.name}
               </Option>
             ))}
@@ -402,7 +403,6 @@ function AddHospitalForm(props: AddHospitalProps) {
             {
               required: true,
               message: "Dirección es un campo requerido",
-              whitespace: true,
             },
           ]}
         >

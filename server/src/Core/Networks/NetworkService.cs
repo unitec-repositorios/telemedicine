@@ -32,9 +32,11 @@ namespace Core.Networks
 
         public async Task Remove(int id)
         {
-            var network = await _networkRepository.FindById(id);
+            var network = await _networkRepository.All().Include(x => x.Hospitals).FirstOrDefaultAsync(x => x.Id == id);
+            var hospitals = network.Hospitals.Where(x => !x.Disabled);
+            
 
-            if (network.Hospitals.Count > 0)
+            if (hospitals.Count() > 0 )
             {
                 throw new NetworkIsBeingUsedException();
             }

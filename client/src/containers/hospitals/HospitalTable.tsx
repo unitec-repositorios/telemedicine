@@ -61,6 +61,11 @@ function HospitalTable(props: HospitalProps) {
       key: "city",
     },
     {
+      title: "Red",
+      dataIndex: "network",
+      key: "network",
+    },
+    {
       title: "Acciones",
       dataIndex: "actions",
       key: "actions",

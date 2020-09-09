@@ -33,9 +33,18 @@ namespace Api.Modules.Networks
 
 
         [HttpDelete("{id}")]
-        public async Task Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            await _networkService.Remove(id);
+            try
+            {
+                await _networkService.Remove(id);
+                return Ok();
+            }
+            catch (NetworkIsBeingUsedException e)
+            {
+                return BadRequest(e.Message);
+            }
+            
         }
 
         [HttpPost]

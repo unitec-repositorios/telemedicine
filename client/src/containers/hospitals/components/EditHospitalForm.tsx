@@ -168,7 +168,6 @@ function EditHospitalForm(props: EditHospitalProps) {
   };
 
   const [networks, setNetworks] = useState<Network[]>([]);
-  const [network, setNetwork] = useState<Network>();
 
   useEffect(() => {
     (async () => {
@@ -187,6 +186,7 @@ function EditHospitalForm(props: EditHospitalProps) {
       } else {
         hospital.contacts = JSON.parse(hospital.contacts);
       }
+      console.log(hospital);
       setCurrentHospital(hospital);
       form.setFieldsValue(hospital);
       setTagsInformation({
@@ -215,6 +215,7 @@ function EditHospitalForm(props: EditHospitalProps) {
   const onFinish = (values: HospitalForm) => {
     (async () => {
       try {
+        debugger;
         await update({
           id: currentHospital.id,
           code: parseInt(values.code),
@@ -225,7 +226,7 @@ function EditHospitalForm(props: EditHospitalProps) {
           category: values.category,
           contacts: JSON.stringify(values.contacts),
           services: JSON.stringify(tagsInformation.tags),
-          network: values.network,
+          networkId: parseInt(values.networkId),
         });
 
         message.success("El hospital ha sido editado existosamente");
@@ -316,6 +317,12 @@ function EditHospitalForm(props: EditHospitalProps) {
             ]}
           >
             <Select
+              showSearch
+              placeholder="Selecciona un Departamento."
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
               onSelect={(value) => {
                 const selectedDepartment =
                   departmentsLocations.departments.find(
@@ -324,19 +331,17 @@ function EditHospitalForm(props: EditHospitalProps) {
 
                 setDepartment(selectedDepartment);
 
-                setCurrentHospital({
-                  ...currentHospital,
-                  department: selectedDepartment.name,
-                });
-
                 form.resetFields(["city"]);
               }}
             >
-              {departmentsLocations.departments.map((l: any) => (
-                <Option key={l.name} value={l.id}>
-                  {l.name}
-                </Option>
-              ))}
+              {departmentsLocations.departments.map(
+                (l: any) => (
+                  <Option key={l.name} value={l.id} label={l.name}>
+                    {l.name}
+                  </Option>
+                )
+                // form.resetFields(["city"])
+              )}
             </Select>
           </Form.Item>
           <Form.Item
@@ -350,12 +355,12 @@ function EditHospitalForm(props: EditHospitalProps) {
             ]}
           >
             <Select
-              onSelect={(value) => {
-                setCurrentHospital({
-                  ...currentHospital,
-                  city: department.cities.find((x) => x.id === value)!.name,
-                });
-              }}
+              showSearch
+              placeholder="Selecciona un municipio."
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
             >
               {department.cities.map((l: any) => (
                 <Option key={l.name} value={l.id}>
@@ -364,6 +369,7 @@ function EditHospitalForm(props: EditHospitalProps) {
               ))}
             </Select>
           </Form.Item>
+
           <Form.Item
             name="category"
             label="Categorización"
@@ -387,7 +393,7 @@ function EditHospitalForm(props: EditHospitalProps) {
             </Select>
           </Form.Item>
           <Form.Item
-            name="network"
+            name="networkId"
             label="Red"
             rules={[
               {
@@ -405,7 +411,7 @@ function EditHospitalForm(props: EditHospitalProps) {
               }
             >
               {networks.map((l: any) => (
-                <Option key={l.name} value={l.name} label={l.name}>
+                <Option key={l.name} value={l.id} label={l.name}>
                   {l.name}
                 </Option>
               ))}
@@ -426,7 +432,6 @@ function EditHospitalForm(props: EditHospitalProps) {
               {
                 required: true,
                 message: "Dirección es un campo requerido",
-                whitespace: true,
               },
             ]}
           >
