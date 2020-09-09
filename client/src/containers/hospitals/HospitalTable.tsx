@@ -7,7 +7,6 @@ import { Hospital } from "./hospitalModels";
 import MainTitle from "../../components/MainTitle";
 import { all, remove } from "./hospitalService";
 import { table } from "console";
-import { prototype } from "events";
 
 interface HospitalProps extends RouteComponentProps {}
 

@@ -36,7 +36,8 @@ namespace Api.Modules.Hospitals
                     Category = hospital.Category,
                     Contacts = hospital.Contacts,
                     Services = hospital.Services,
-                    Network = hospital.Network.Name
+                    Network = hospital.Network.Name,
+                    NetworkId = hospital.Network.Id
                 });
 
             return Ok(data);
