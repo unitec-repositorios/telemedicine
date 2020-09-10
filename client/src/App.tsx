@@ -11,7 +11,8 @@ import AddNetworkForm from "./containers/networks/components/AddNetworkForm";
 import EditNetworkForm from "./containers/networks/components/EditNetworkForm";
 import AddPatientForm from "./containers/patients/components/AddPatientForm";
 import EditPatientForm from "./containers/patients/components/EditPatientForm";
-
+import AddRRForm from "./containers/referenceForm/components/AddReferenceForm";
+import ReferenceTable from "./containers/referenceForm/components/ReferenceTable";
 function App() {
   return (
     <div className="App">
@@ -26,6 +27,8 @@ function App() {
           <EditPatientForm path="patients/edit/:id" />
           <AddNetworkForm path="networks/add" />
           <EditNetworkForm path="networks/edit/:id" />
+          <AddRRForm path="rrform/add" />
+          <ReferenceTable path = "rrform"/>
         </Dashboard>
       </Router>
     </div>
