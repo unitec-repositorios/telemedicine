@@ -6,7 +6,7 @@ import MainTitle from "../../../components/MainTitle";
 import { create, rupsCodeExists } from "../hospitalService";
 import departmentsLocations from "../../../departmentsLocations";
 import { RuleObject, StoreValue } from "rc-field-form/lib/interface";
-export interface AddHospitalProps extends RouteComponentProps {}
+export interface AddHospitalProps extends RouteComponentProps { }
 
 export interface HospitalForm {
   [key: string]: string;
@@ -170,7 +170,7 @@ function AddHospitalForm(props: AddHospitalProps) {
             onSelect={(value) =>
               setDepartment(
                 departmentsLocations.departments.find((d) => d.id === value) ||
-                  departmentsLocations.departments[0]
+                departmentsLocations.departments[0]
               )
             }
           >

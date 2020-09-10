@@ -8,6 +8,7 @@ namespace Domain.Aggregates.Patients
     {
         
         public string IdNumber { get; set; }
+
         public string Name { get; set; }
         
         public string FirstLastName { get; set; }
@@ -21,6 +22,8 @@ namespace Domain.Aggregates.Patients
         public string Gender { get; set; }
         
         public string Address { get; set; }
+
+        public string Nationality { get; set; }
 
         [Column(TypeName = "jsonb")]
         public string Contacts { get; set; }

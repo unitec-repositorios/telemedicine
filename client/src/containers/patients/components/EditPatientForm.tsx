@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import MainTitle from "../../../components/MainTitle";
-import { Button, Form, Input, Radio, DatePicker, message } from "antd";
-import { findById, update, IdNumberExists } from "../patientService";
+import { Button, Form, Input, Radio, DatePicker, message, Space } from "antd";
+import { findById, update, IdNumberExists, EmailExists } from "../patientService";
 import { PatientForm } from "./AddPatientForm";
 import { Link, RouteComponentProps } from "@reach/router";
-import { ArrowLeftOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import MaskedInput from "antd-mask-input";
 import moment from "moment";
 import { Patient } from "../patientModels";
@@ -16,24 +16,59 @@ interface EditPatientRouteParams {
 }
 
 interface EditPatientFormProps
-  extends RouteComponentProps<EditPatientRouteParams> {}
+  extends RouteComponentProps<EditPatientRouteParams> { }
 
 function EditPatientForm(props: EditPatientFormProps) {
   const [form] = Form.useForm();
 
   const [currentDate, setCurrentDate] = useState(moment());
-
   const [patient, setPatient] = useState({} as Patient);
 
+  const [Hidden, setHidden] = useState(false);
+  const [Required, setRequired] = useState(false);
+  const [phoneRequired, setPhoneRequired] = useState(false);
   const dateFormat = "DD-MM-YYYY";
+
+  const changeHidden = () => {
+    if (Hidden) {
+      form.resetFields(["foreignIdNumber"])
+    } else {
+      form.resetFields(["idNumber"])
+    }
+    setHidden(!Hidden)
+    setRequired(!Required)
+  }
 
   const validateIdNumber = async (rule: RuleObject, value: StoreValue) => {
     const IdNumber = value;
     const exists = await IdNumberExists(IdNumber);
 
-    if (exists && patient.idNumber !== IdNumber) {
+    if (exists && Required === false && patient.idNumber !== IdNumber) {
       throw new Error(
         `Ya existe un paciente con ese número de identidad. ${IdNumber}`
+      );
+    }
+  };
+
+  const ForeignIdNumberExists = async (rule: RuleObject, value: StoreValue) => {
+    const ForeignIdNumber = value;
+    const exists = await IdNumberExists(ForeignIdNumber);
+
+    if (exists && Required === true && patient.idNumber !== ForeignIdNumber) {
+      throw new Error(
+        `Ya existe un paciente con ese número de identidad. ${ForeignIdNumber}`
+      );
+    }
+  };
+
+  const validateEmail = async (rule: RuleObject, value: StoreValue) => {
+    const Email = value;
+    const exists = await EmailExists(Email);
+
+
+    if (exists && patient.email !== Email) {
+      throw new Error(
+        `Ya existe un paciente con ese correo electrónico. ${Email}`
       );
     }
   };
@@ -42,7 +77,12 @@ function EditPatientForm(props: EditPatientFormProps) {
     (async () => {
       const patient = await findById(props.id ?? 1);
       setPatient({ ...patient, dateOfBirth: patient.dateOfBirth.toDate() });
+      patient.contacts = JSON.parse(patient.contacts);
       setCurrentDate(patient.dateOfBirth);
+      if (patient.nationality === "extranjero") {
+        // form.setFieldsValue()
+        //gerardo setea el form.foreignIdNumber el patient.idNumber que llega ok bai
+      }
       form.setFieldsValue(patient);
     })();
   }, []);
@@ -60,7 +100,10 @@ function EditPatientForm(props: EditPatientFormProps) {
           email: values.email,
           gender: values.gender,
           address: values.address,
+          contacts: JSON.stringify(values.contacts),
+          nationality: values.nationality
         });
+        setPhoneRequired(true);
         message.success("El paciente ha sido editado existosamente");
       } catch (error) {
         message.error("Ocurrió un error al editar el paciente");
@@ -114,15 +157,31 @@ function EditPatientForm(props: EditPatientFormProps) {
         scrollToFirstError
       >
         <Form.Item
+          name="nationality"
+          label="Nacionalidad"
+          rules={[
+            {
+              required: true,
+              message: "Nacionalidad es un campo requerido"
+            },
+          ]}
+        >
+          <Radio.Group buttonStyle="solid" onChange={changeHidden}>
+            <Radio.Button value="hondureño">Hondureño</Radio.Button>
+            <Radio.Button value="extranjero">Extranjero</Radio.Button>
+          </Radio.Group>
+        </Form.Item>
+        <Form.Item
           name="idNumber"
           label="Número de Identidad"
+          hidden={Hidden}
           rules={[
             {
               pattern: /\d{5}/,
               message: "Número de Identidad incompleto. ",
             },
             {
-              required: true,
+              required: !Required,
               message: "Número de Identidad es un campo requerido",
               whitespace: true,
             },
@@ -132,6 +191,31 @@ function EditPatientForm(props: EditPatientFormProps) {
           ]}
         >
           <MaskedInput mask="1111 1111 11111" />
+        </Form.Item>
+        <Form.Item
+          name="foreignIdNumber"
+          label="Número de Identidad"
+          hidden={!Hidden}
+          rules={[
+            {
+              pattern: /^[A-Za-z0-9]+$/g,
+              message: "Número de Identidad debe ser alfanumérico.",
+            },
+            {
+              min: 8,
+              max: 20,
+              message: "Número de Identidad debe tener mínimo 8 y máximo 20 caracteres."
+            },
+            {
+              required: Required,
+              message: "Número de Identidad es un campo requerido"
+            },
+            {
+              validator: ForeignIdNumberExists,
+            },
+          ]}
+        >
+          <Input />
         </Form.Item>
         <Form.Item
           name="name"
@@ -231,6 +315,9 @@ function EditPatientForm(props: EditPatientFormProps) {
               type: "email",
               message: "Correo debe estar en formato: ejemplo@ejemplo.com",
             },
+            {
+              validator: validateEmail
+            }
           ]}
         >
           <Input />
@@ -246,7 +333,7 @@ function EditPatientForm(props: EditPatientFormProps) {
             },
           ]}
         >
-          <Radio.Group defaultValue="a" buttonStyle="solid">
+          <Radio.Group buttonStyle="solid">
             <Radio.Button value="Femenino">Femenino</Radio.Button>
             <Radio.Button value="Masculino">Masculino</Radio.Button>
           </Radio.Group>
@@ -275,6 +362,69 @@ function EditPatientForm(props: EditPatientFormProps) {
           ]}
         >
           <Input />
+        </Form.Item>
+        <Form.Item
+          name="phoneContacts"
+          label="Números de teléfono:"
+          rules={[
+            {
+              required: phoneRequired,
+              message: "El campo número de teléfono es requerido.",
+            },
+          ]}
+        >
+          <Form.List name="contacts">
+            {(fields, { add, remove }) => {
+              return (
+                <div>
+                  {fields.map((field) => (
+                    <Space
+                      key={field.key}
+                      align="start"
+                    >
+                      <Form.Item
+                        {...field}
+                        rules={[
+                          {
+                            pattern: /-\d{4}/,
+                            message: "Número de teléfono incompleto. ",
+                          },
+                          {
+                            required: true,
+                            message: "Ingresar número o eliminar el campo",
+                          },
+                        ]}
+                      >
+                        <MaskedInput mask="+(111) 1111-1111" />
+                      </Form.Item>
+
+                      <MinusCircleOutlined
+                        onClick={() => {
+                          if (fields.length === 1) {
+                            setPhoneRequired(true);
+                          }
+                          remove(field.name);
+                        }}
+                      />
+                    </Space>
+                  ))}
+
+                  <Form.Item style={{ marginBottom: "0px" }}>
+                    <Button
+                      type="dashed"
+                      onClick={() => {
+                        add();
+                        setPhoneRequired(false);
+                      }}
+                      block
+                    >
+                      <PlusOutlined /> Agregar número de teléfono
+                    </Button>
+                  </Form.Item>
+                </div>
+              );
+            }}
+          </Form.List>
         </Form.Item>
         <Form.Item {...tailFormItemLayout}>
           <Button
