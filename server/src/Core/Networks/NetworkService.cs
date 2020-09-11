@@ -21,17 +21,26 @@ namespace Core.Networks
             return await _networkRepository.FindById(id);
         }
 
-        public async Task<IEnumerable<Network>> All(int? id)
+        public async Task<IEnumerable<Network>> All(int? id, string name)
         {
             return await _networkRepository
-                .Filter(network => !network.Disabled)
+                .Filter(patient => !patient.Disabled)
                 .Where(x => id == null || x.Id == id)
+                .Where(x => name == null || x.Name == name)
                 .ToListAsync();
         }
 
         public async Task Remove(int id)
         {
-            var network = await _networkRepository.FindById(id);
+            var network = await _networkRepository.All().Include(x => x.Hospitals).FirstOrDefaultAsync(x => x.Id == id);
+            var hospitals = network.Hospitals.Where(x => !x.Disabled);
+            
+
+            if (hospitals.Count() > 0 )
+            {
+                throw new NetworkIsBeingUsedException();
+            }
+
             await _networkRepository.Disable(network);
         }
 

@@ -26,3 +26,18 @@ export async function update(network: Network) {
 export async function remove(id: number) {
   await axios.delete(`${baseUrl}/${id}`);
 }
+
+export async function networkNameExists(name: string) {
+  try {
+    const response = await axios.get(baseUrl, {
+      params: {
+        name,
+      },
+    });
+
+    const data = response.data as Network[];
+    return data.length > 0;
+  } catch (e) {
+    console.log(e);
+  }
+}

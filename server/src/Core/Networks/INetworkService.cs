@@ -12,7 +12,7 @@ namespace Core.Networks
 
         public Task Create(Network network);
 
-        public Task<IEnumerable<Network>> All(int? id);
+        public Task<IEnumerable<Network>> All(int? id, string name);
 
         public Task Remove(int id);
 

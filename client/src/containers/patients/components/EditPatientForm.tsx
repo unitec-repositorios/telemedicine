@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import MainTitle from "../../../components/MainTitle";
-import { Button, Form, Input, Radio, DatePicker, message } from "antd";
+import { Button, Form, Input, Radio, DatePicker, message, Spin } from "antd";
 import { findById, update, IdNumberExists } from "../patientService";
 import { PatientForm } from "./AddPatientForm";
 import { Link, RouteComponentProps } from "@reach/router";
@@ -27,6 +27,8 @@ function EditPatientForm(props: EditPatientFormProps) {
 
   const dateFormat = "DD-MM-YYYY";
 
+  const [loading, setLoading] = useState(true);
+
   const validateIdNumber = async (rule: RuleObject, value: StoreValue) => {
     const IdNumber = value;
     const exists = await IdNumberExists(IdNumber);
@@ -44,6 +46,7 @@ function EditPatientForm(props: EditPatientFormProps) {
       setPatient({ ...patient, dateOfBirth: patient.dateOfBirth.toDate() });
       setCurrentDate(patient.dateOfBirth);
       form.setFieldsValue(patient);
+      setLoading(false);
     })();
   }, []);
 
@@ -94,6 +97,7 @@ function EditPatientForm(props: EditPatientFormProps) {
     },
   };
 
+  const { TextArea } = Input;
   return (
     <>
       <Link to="/patients">
@@ -106,189 +110,188 @@ function EditPatientForm(props: EditPatientFormProps) {
         ></Button>
       </Link>
       <MainTitle>Editar paciente</MainTitle>
-      <Form
-        {...formItemLayout}
-        form={form}
-        name="register"
-        onFinish={onFinish}
-        scrollToFirstError
-      >
-        <Form.Item
-          name="idNumber"
-          label="Número de Identidad"
-          rules={[
-            {
-              pattern: /\d{5}/,
-              message: "Número de Identidad incompleto. ",
-            },
-            {
-              required: true,
-              message: "Número de Identidad es un campo requerido",
-              whitespace: true,
-            },
-            {
-              validator: validateIdNumber,
-            },
-          ]}
+      <Spin spinning={loading}>
+        <Form
+          {...formItemLayout}
+          form={form}
+          name="register"
+          onFinish={onFinish}
+          scrollToFirstError
         >
-          <MaskedInput mask="1111 1111 11111" />
-        </Form.Item>
-        <Form.Item
-          name="name"
-          label="Nombre"
-          rules={[
-            {
-              pattern: /^.{2,30}$/g,
-              message: "Nombre debe tener mínimo 2 letras y máximo 30.",
-            },
-            {
-              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
-              message: "Sólo se permiten letras, números, puntos y comas.",
-            },
-            {
-              required: true,
-              message: "Nombre es un campo requerido",
-              whitespace: true,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="firstLastName"
-          label="Primer Apellido"
-          rules={[
-            {
-              pattern: /^.{2,30}$/g,
-              message: "Apellido debe tener mínimo 2 letras y máximo 30.",
-            },
-            {
-              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
-              message: "Solo se permiten letras.",
-            },
-            {
-              required: true,
-              message: "Nombre es un campo requerido",
-              whitespace: true,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="secondLastName"
-          label="Segundo Apellido"
-          rules={[
-            {
-              pattern: /^.{2,30}$/g,
-              message:
-                "Segundo apellido debe tener mínimo 2 letras y máximo 30.",
-            },
-            {
-              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
-              message: "Solo se permiten letras.",
-            },
-            {
-              required: true,
-              message: "Segundo apellido es un campo requerido",
-              whitespace: true,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="Fecha Nacimiento"
-          name="dateOfBirth"
-          rules={[
-            {
-              required: true,
-              message: "Fecha nacimiento es un campo requerido",
-            },
-          ]}
-        >
-          <DatePicker
-            name="dateOfBirth"
-            placeholder="Ingrese fecha"
-            format={dateFormat}
-            value={currentDate}
-            onChange={(value) => setCurrentDate(value!)}
-            disabledDate={(d) =>
-              !d || d.isSameOrBefore("1940-01-01") || d.isAfter(moment())
-            }
-          />
-        </Form.Item>
-        <Form.Item
-          name="email"
-          label="Correo electrónico"
-          rules={[
-            {
-              required: true,
-              message: "Correo electrónico es un campo requerido",
-              whitespace: true,
-            },
-            {
-              type: "email",
-              message: "Correo debe estar en formato: ejemplo@ejemplo.com",
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="gender"
-          label="Género"
-          rules={[
-            {
-              required: true,
-              message: "Género es un campo requerido",
-              whitespace: true,
-            },
-          ]}
-        >
-          <Radio.Group defaultValue="a" buttonStyle="solid">
-            <Radio.Button value="Femenino">Femenino</Radio.Button>
-            <Radio.Button value="Masculino">Masculino</Radio.Button>
-          </Radio.Group>
-        </Form.Item>
-        <Form.Item
-          name="address"
-          label="Dirección"
-          rules={[
-            {
-              pattern: /^.{8,50}$/g,
-              message: "Dirección debe tener mínimo 8 letras y máximo 50.",
-            },
-            {
-              pattern: /^[^\d]/g,
-              message: "No puede empezar con un número.",
-            },
-            {
-              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ.,])+\s?)+([0-9])*$/g,
-              message: "No se permiten caracteres especiales.",
-            },
-            {
-              required: true,
-              message: "Dirección es un campo requerido",
-              whitespace: true,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item {...tailFormItemLayout}>
-          <Button
-            type="primary"
-            htmlType="submit"
-            style={{ marginRight: "8px" }}
+          <Form.Item
+            name="idNumber"
+            label="Número de Identidad"
+            rules={[
+              {
+                pattern: /\d{5}/,
+                message: "Número de Identidad incompleto. ",
+              },
+              {
+                required: true,
+                message: "Número de Identidad es un campo requerido",
+                whitespace: true,
+              },
+              {
+                validator: validateIdNumber,
+              },
+            ]}
           >
-            Guardar
-          </Button>
-          <Button htmlType="button" onClick={() => form.resetFields()}>
-            Reiniciar campo
-          </Button>
-        </Form.Item>
-      </Form>
+            <MaskedInput mask="1111 1111 11111" />
+          </Form.Item>
+          <Form.Item
+            name="name"
+            label="Nombre"
+            rules={[
+              {
+                pattern: /^.{2,30}$/g,
+                message: "Nombre debe tener mínimo 2 letras y máximo 30.",
+              },
+              {
+                pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
+                message: "Sólo se permiten letras, números, puntos y comas.",
+              },
+              {
+                required: true,
+                message: "Nombre es un campo requerido",
+                whitespace: true,
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="firstLastName"
+            label="Primer Apellido"
+            rules={[
+              {
+                pattern: /^.{2,30}$/g,
+                message: "Apellido debe tener mínimo 2 letras y máximo 30.",
+              },
+              {
+                pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
+                message: "Solo se permiten letras.",
+              },
+              {
+                required: true,
+                message: "Nombre es un campo requerido",
+                whitespace: true,
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="secondLastName"
+            label="Segundo Apellido"
+            rules={[
+              {
+                pattern: /^.{2,30}$/g,
+                message:
+                  "Segundo apellido debe tener mínimo 2 letras y máximo 30.",
+              },
+              {
+                pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
+                message: "Solo se permiten letras.",
+              },
+              {
+                required: true,
+                message: "Segundo apellido es un campo requerido",
+                whitespace: true,
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Fecha Nacimiento"
+            name="dateOfBirth"
+            rules={[
+              {
+                required: true,
+                message: "Fecha nacimiento es un campo requerido",
+              },
+            ]}
+          >
+            <DatePicker
+              name="dateOfBirth"
+              placeholder="Ingrese fecha"
+              format={dateFormat}
+              value={currentDate}
+              onChange={(value) => setCurrentDate(value!)}
+              disabledDate={(d) =>
+                !d || d.isSameOrBefore("1940-01-01") || d.isAfter(moment())
+              }
+            />
+          </Form.Item>
+          <Form.Item
+            name="email"
+            label="Correo electrónico"
+            rules={[
+              {
+                required: true,
+                message: "Correo electrónico es un campo requerido",
+                whitespace: true,
+              },
+              {
+                type: "email",
+                message: "Correo debe estar en formato: ejemplo@ejemplo.com",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="gender"
+            label="Género"
+            rules={[
+              {
+                required: true,
+                message: "Género es un campo requerido",
+                whitespace: true,
+              },
+            ]}
+          >
+            <Radio.Group defaultValue="a" buttonStyle="solid">
+              <Radio.Button value="Femenino">Femenino</Radio.Button>
+              <Radio.Button value="Masculino">Masculino</Radio.Button>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item
+            name="address"
+            label="Dirección"
+            rules={[
+              {
+                pattern: /^.{1,200}$/g,
+                message: "Dirección debe tener máximo 200 letras.",
+              },
+              {
+                pattern: /^[^\d]/g,
+                message: "No puede empezar con un número.",
+              },
+              {
+                pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ.,])+\s?)+([0-9])*$/g,
+                message: "No se permiten caracteres especiales.",
+              },
+              {
+                required: true,
+                message: "Dirección es un campo requerido",
+                whitespace: true,
+              },
+            ]}
+          >
+            <TextArea rows={4} />
+          </Form.Item>
+          <Form.Item {...tailFormItemLayout}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ marginRight: "8px" }}
+            >
+              Guardar
+            </Button>
+          </Form.Item>
+        </Form>
+      </Spin>
     </>
   );
 }
