@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Props } from "react";
 import { Button, Form, Input, Select, message, Divider, DatePicker } from "antd";
 import moment from "moment";
 import { create } from "../../referenceFormService";
@@ -10,7 +10,8 @@ export interface ReferenceForm {
 
 
 
-function ReferenceInformation() {
+function ReferenceInformation(props: any) {
+  const { current, length, changeCurrent } = props;
 
   const [form] = Form.useForm();
   const [madeBycurrent, setMadeByCurrent] = useState(false);
@@ -29,6 +30,11 @@ function ReferenceInformation() {
     else
       setAttentionCurrent(false)
   }
+
+  const prev = () => {
+    let value = current - 1;
+    changeCurrent(value);
+  };
 
   const onFinish = (values: ReferenceForm) => {
 
@@ -80,7 +86,7 @@ function ReferenceInformation() {
     else {
       madeByValue = values.madeBy
     }
-    
+
     var attentionValue: string;
     if (attentionCurrent == true) {
       attentionValue = values.othersAttention
@@ -159,7 +165,7 @@ function ReferenceInformation() {
         scrollToFirstError
         id="form-register">
 
-<Form.Item label="Motivo"
+        <Form.Item label="Motivo"
           name="motive"
           rules={[{
             required: true,
@@ -943,6 +949,11 @@ function ReferenceInformation() {
           <Button htmlType="button" onClick={() => form.resetFields()}>
             Reiniciar campos
           </Button>
+          {current > 0 && (
+            <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+              Anterior
+            </Button>
+          )}
         </Form.Item>
       </Form>
     </>

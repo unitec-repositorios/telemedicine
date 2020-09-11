@@ -8,25 +8,31 @@ export interface ReferenceACSPSForm {
   [key: string]: string;
 }
 
-function ReferenceACSPSInformation() {
+function ReferenceACSPSInformation(props: any) {
 
+  const { current, length, changeCurrent } = props;
   const [form] = Form.useForm();
+
+  const prev = () => {
+    let value = current - 1;
+    changeCurrent(value);
+  };
 
   const onFinish = (values: ReferenceACSPSForm) => {
 
     (async () => {
       try {
         await create({
-            date: new Date("09/03/2020"),
-            community:"Not Set",
-            patientId: "Not Set",
-            motive: values.motive,
-            referrer: values.referrer,
-            referrerPhone: values.phone,
-            referrerEmail: values.email,
-            actionTaken: values.action,
-            originHfId: "Not Set",
-            destinationHfId: "Not Set"
+          date: new Date("09/03/2020"),
+          community: "Not Set",
+          patientId: "Not Set",
+          motive: values.motive,
+          referrer: values.referrer,
+          referrerPhone: values.phone,
+          referrerEmail: values.email,
+          actionTaken: values.action,
+          originHfId: "Not Set",
+          destinationHfId: "Not Set"
         });
 
         form.resetFields();
@@ -148,8 +154,8 @@ function ReferenceACSPSInformation() {
               whitespace: true,
             },
             {
-                pattern: /\d{4}/,
-                message: "Número de Teléfono incompleto. "
+              pattern: /\d{4}/,
+              message: "Número de Teléfono incompleto. "
             },
           ]}
         >
@@ -185,6 +191,11 @@ function ReferenceACSPSInformation() {
           <Button htmlType="button" onClick={() => form.resetFields()}>
             Reiniciar campos
           </Button>
+          {current > 0 && (
+            <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+              Anterior
+            </Button>
+          )}
         </Form.Item>
       </Form>
     </>
