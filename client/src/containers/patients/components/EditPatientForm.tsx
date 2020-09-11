@@ -30,11 +30,6 @@ function EditPatientForm(props: EditPatientFormProps) {
   const dateFormat = "DD-MM-YYYY";
 
   const changeHidden = () => {
-    if (Hidden) {
-      form.resetFields(["foreignIdNumber"])
-    } else {
-      form.resetFields(["idNumber"])
-    }
     setHidden(!Hidden)
     setRequired(!Required)
   }
@@ -80,8 +75,12 @@ function EditPatientForm(props: EditPatientFormProps) {
       patient.contacts = JSON.parse(patient.contacts);
       setCurrentDate(patient.dateOfBirth);
       if (patient.nationality === "extranjero") {
-        // form.setFieldsValue()
-        //gerardo setea el form.foreignIdNumber el patient.idNumber que llega ok bai
+        form.setFieldsValue({
+          foreignIdNumber: patient.idNumber,
+        });
+        patient.idNumber = "";
+        setHidden(true);
+        setRequired(true);
       }
       form.setFieldsValue(patient);
     })();
@@ -90,9 +89,13 @@ function EditPatientForm(props: EditPatientFormProps) {
   const onFinish = (values: PatientForm) => {
     (async () => {
       try {
+        var newId = values.idNumber;
+        if (Hidden) {
+          newId = values.foreignIdNumber;
+        }
         await update({
           id: patient.id,
-          idNumber: values.idNumber,
+          idNumber: newId,
           name: values.name,
           firstLastName: values.firstLastName,
           secondLastName: values.secondLastName,
@@ -137,6 +140,7 @@ function EditPatientForm(props: EditPatientFormProps) {
     },
   };
 
+  const { TextArea } = Input;
   return (
     <>
       <Link to="/patients">
@@ -190,7 +194,7 @@ function EditPatientForm(props: EditPatientFormProps) {
             },
           ]}
         >
-          <MaskedInput mask="1111 1111 11111" />
+          <MaskedInput mask="1111-1111-11111" />
         </Form.Item>
         <Form.Item
           name="foreignIdNumber"
@@ -199,7 +203,7 @@ function EditPatientForm(props: EditPatientFormProps) {
           rules={[
             {
               pattern: /^[A-Za-z0-9]+$/g,
-              message: "Número de Identidad debe ser alfanumérico.",
+              message: "Sólo se aceptan números y letras.",
             },
             {
               min: 8,
@@ -343,25 +347,20 @@ function EditPatientForm(props: EditPatientFormProps) {
           label="Dirección"
           rules={[
             {
-              pattern: /^.{8,50}$/g,
-              message: "Dirección debe tener mínimo 8 letras y máximo 50.",
-            },
-            {
-              pattern: /^[^\d]/g,
-              message: "No puede empezar con un número.",
+              pattern: /^.{1,200}$/g,
+              message: "Dirección debe tener máximo 200 letras.",
             },
             {
               pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ.,])+\s?)+([0-9])*$/g,
-              message: "No se permiten caracteres especiales.",
+              message: "Sólo se permiten letras, números, puntos y comas.",
             },
             {
               required: true,
               message: "Dirección es un campo requerido",
-              whitespace: true,
             },
           ]}
         >
-          <Input />
+          <TextArea rows={4} />
         </Form.Item>
         <Form.Item
           name="phoneContacts"

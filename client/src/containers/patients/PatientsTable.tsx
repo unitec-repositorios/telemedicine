@@ -87,12 +87,6 @@ function PatientTable(props: PatientProps) {
       key: "gender",
     },
     {
-      title: "Dirección",
-      dataIndex: "address",
-      key: "address",
-      width: 200,
-    },
-    {
       title: "Acciones",
       dataIndex: "actions",
       key: "actions",

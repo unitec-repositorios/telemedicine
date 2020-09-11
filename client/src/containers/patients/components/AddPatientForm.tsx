@@ -98,7 +98,6 @@ function AddPatientForm(props: AddPatientProps) {
       if (Hidden) {
         newId = values.foreignIdNumber;
       }
-      console.log(values)
       try {
         await create({
           idNumber: newId,
@@ -121,6 +120,7 @@ function AddPatientForm(props: AddPatientProps) {
     })();
   };
 
+  const { TextArea } = Input;
   return (
     <>
       <Link to="/patients">
@@ -175,7 +175,7 @@ function AddPatientForm(props: AddPatientProps) {
             },
           ]}
         >
-          <MaskedInput mask="1111 1111 11111" />
+          <MaskedInput mask="1111-1111-11111" />
         </Form.Item>
         <Form.Item
           name="foreignIdNumber"
@@ -184,7 +184,7 @@ function AddPatientForm(props: AddPatientProps) {
           rules={[
             {
               pattern: /^[A-Za-z0-9]+$/g,
-              message: "Número de Identidad debe ser alfanumérico.",
+              message: "Sólo se aceptan números y letras.",
             },
             {
               min: 8,
@@ -326,25 +326,20 @@ function AddPatientForm(props: AddPatientProps) {
           label="Dirección"
           rules={[
             {
-              pattern: /^.{8,50}$/g,
-              message: "Dirección debe tener mínimo 8 letras y máximo 50.",
-            },
-            {
-              pattern: /^[^\d]/g,
-              message: "No puede empezar con un número.",
+              pattern: /^.{1,200}$/g,
+              message: "Dirección debe tener máximo 200 letras.",
             },
             {
               pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ.,])+\s?)+([0-9])*$/g,
-              message: "No se permiten caracteres especiales.",
+              message: "Sólo se permiten letras, números, puntos y comas.",
             },
             {
               required: true,
               message: "Dirección es un campo requerido",
-              whitespace: true,
             },
           ]}
         >
-          <Input />
+          <TextArea rows={4} />
         </Form.Item>
         <Form.Item
           name="phoneContacts"
