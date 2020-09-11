@@ -7,16 +7,6 @@ const { Step } = Steps;
 function Stepper(props: any) {
   const [current, setCurrent] = useState(0);
 
-  const next = () => {
-    let nextVal = current + 1;
-    setCurrent(nextVal);
-  };
-
-  const prev = () => {
-    const prevVal = current - 1;
-    setCurrent(prevVal);
-  };
-
   const changeCurrent = (current: number) => {
     setCurrent(current);
   };
