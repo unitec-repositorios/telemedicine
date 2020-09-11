@@ -17,16 +17,16 @@ function ReferenceACSPSInformation() {
     (async () => {
       try {
         await create({
-            date: new Date("09/03/2020"),
-            community:"Not Set",
-            patientId: "Not Set",
-            motive: values.motive,
-            referrer: values.referrer,
-            referrerPhone: values.phone,
-            referrerEmail: values.email,
-            actionTaken: values.action,
-            originHfId: "Not Set",
-            destinationHfId: "Not Set"
+          date: new Date("09/03/2020"),
+          community: "Not Set",
+          patientId: "Not Set",
+          motive: values.motive,
+          referrer: values.referrer,
+          referrerPhone: values.phone,
+          referrerEmail: values.email,
+          actionTaken: values.action,
+          originHfId: "Not Set",
+          destinationHfId: "Not Set"
         });
 
         form.resetFields();
@@ -148,8 +148,8 @@ function ReferenceACSPSInformation() {
               whitespace: true,
             },
             {
-                pattern: /\d{4}/,
-                message: "Número de Teléfono incompleto. "
+              pattern: /\d{4}/,
+              message: "Número de Teléfono incompleto. "
             },
           ]}
         >

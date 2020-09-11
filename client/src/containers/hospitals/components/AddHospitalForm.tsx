@@ -24,7 +24,7 @@ import { ok } from "assert";
 import { all } from "../../networks/networkService";
 import { Network } from "../../networks/networkModels";
 
-export interface AddHospitalProps extends RouteComponentProps {}
+export interface AddHospitalProps extends RouteComponentProps { }
 
 export interface HospitalForm {
   [key: string]: string;
@@ -224,7 +224,7 @@ function AddHospitalForm(props: AddHospitalProps) {
           shape="circle"
           htmlType="submit"
           icon={<ArrowLeftOutlined />}
-          style={{ marginLeft: "-20%" }}
+          style={{ marginLeft: "-20" }}
         />
       </Link>
       <MainTitle>Registrar Establecimiento de Salud</MainTitle>
@@ -508,7 +508,7 @@ function AddHospitalForm(props: AddHospitalProps) {
                     onBlur={handleEditInputConfirm}
                     onPressEnter={handleEditInputConfirm}
                     maxLength={30}
-                    // required
+                  // required
                   />
                 </Form.Item>
               );
@@ -551,8 +551,8 @@ function AddHospitalForm(props: AddHospitalProps) {
                 {tagElem}
               </Tooltip>
             ) : (
-              tagElem
-            );
+                tagElem
+              );
           })}
           {inputVisible && (
             <Form.Item
@@ -576,7 +576,7 @@ function AddHospitalForm(props: AddHospitalProps) {
                 onBlur={handleInputConfirm}
                 onPressEnter={handleInputConfirm}
                 maxLength={30}
-                // required
+              // required
               />
             </Form.Item>
           )}
@@ -598,7 +598,7 @@ function AddHospitalForm(props: AddHospitalProps) {
             type="primary"
             htmlType="submit"
             style={{ marginRight: "8px" }}
-            onClick={() => {}}
+            onClick={() => { }}
           >
             Guardar
           </Button>

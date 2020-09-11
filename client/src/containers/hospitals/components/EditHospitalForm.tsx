@@ -29,7 +29,7 @@ interface EditHospitalRouterParams {
 }
 
 interface EditHospitalProps
-  extends RouteComponentProps<EditHospitalRouterParams> {}
+  extends RouteComponentProps<EditHospitalRouterParams> { }
 
 export interface HospitalForm {
   [key: string]: string;
@@ -252,7 +252,7 @@ function EditHospitalForm(props: EditHospitalProps) {
           shape="circle"
           htmlType="submit"
           icon={<ArrowLeftOutlined />}
-          style={{ marginLeft: "-20%" }}
+          style={{ marginLeft: "-20" }}
         />
       </Link>
       <MainTitle>Editar Establecimiento de Salud</MainTitle>
@@ -533,7 +533,7 @@ function EditHospitalForm(props: EditHospitalProps) {
                       onBlur={handleEditInputConfirm}
                       onPressEnter={handleEditInputConfirm}
                       maxLength={30}
-                      // required
+                    // required
                     />
                   </Form.Item>
                 );
@@ -576,8 +576,8 @@ function EditHospitalForm(props: EditHospitalProps) {
                   {tagElem}
                 </Tooltip>
               ) : (
-                tagElem
-              );
+                  tagElem
+                );
             })}
             {inputVisible && (
               <Form.Item
@@ -601,7 +601,7 @@ function EditHospitalForm(props: EditHospitalProps) {
                   onBlur={handleInputConfirm}
                   onPressEnter={handleInputConfirm}
                   maxLength={30}
-                  // required
+                // required
                 />
               </Form.Item>
             )}

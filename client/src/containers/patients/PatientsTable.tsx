@@ -8,7 +8,7 @@ import { Patient } from "./patientModels";
 import MainTitle from "../../components/MainTitle";
 import { all, remove } from "./patientService";
 
-interface PatientProps extends RouteComponentProps {}
+interface PatientProps extends RouteComponentProps { }
 
 function PatientTable(props: PatientProps) {
   const [patients, setPatients] = useState<Patient[]>([]);
