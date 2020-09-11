@@ -1,6 +1,8 @@
 ﻿using Domain.Aggregates.Hospitals;
 using Domain.Aggregates.Networks;
 using Domain.Aggregates.Patients;
+using Domain.Aggregates.Reference;
+using Domain.Aggregates.ReferencesACS_PS;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Contexts
@@ -14,6 +16,8 @@ namespace Data.Contexts
         public DbSet<Network> Networks { get; set; }
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Hospital> Hospitals { get; set; }
+        public DbSet<Reference> References { get; set; }
+        public DbSet<ReferenceCommunityAgentHealthPromoter> ReferencesCommunityAgentHealthPromoter { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
