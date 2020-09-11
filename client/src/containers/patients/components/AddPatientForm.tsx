@@ -129,7 +129,7 @@ function AddPatientForm(props: AddPatientProps) {
           shape="circle"
           htmlType="submit"
           icon={<ArrowLeftOutlined />}
-          style={{ marginLeft: "-20%" }}
+          style={{ marginLeft: "-20" }}
         ></Button>
       </Link>
       <MainTitle>Registrar paciente</MainTitle>

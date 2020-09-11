@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import MainTitle from "../../../components/MainTitle";
-import { Button, Form, Input, Radio, DatePicker, message, Space } from "antd";
-import { Button, Form, Input, Radio, DatePicker, message, Spin } from "antd";
+import { Button, Form, Input, Radio, DatePicker, message, Space, Spin } from "antd";
 import { findById, update, IdNumberExists, EmailExists } from "../patientService";
 import { PatientForm } from "./AddPatientForm";
 import { Link, RouteComponentProps } from "@reach/router";
@@ -153,295 +152,157 @@ function EditPatientForm(props: EditPatientFormProps) {
           shape="circle"
           htmlType="submit"
           icon={<ArrowLeftOutlined />}
-          style={{ marginLeft: "-20%" }}
-        ></Button>
+          style={{ marginLeft: "-20" }}
+        />
       </Link>
       <MainTitle>Editar paciente</MainTitle>
       <Spin spinning={loading}>
-      <Form
-        {...formItemLayout}
-        form={form}
-        name="register"
-        onFinish={onFinish}
-        scrollToFirstError
-      >
-        <Form.Item
-          name="nationality"
-          label="Nacionalidad"
-          rules={[
-            {
-              required: true,
-              message: "Nacionalidad es un campo requerido"
-            },
-          ]}
+        <Form
+          {...formItemLayout}
+          form={form}
+          name="register"
+          onFinish={onFinish}
+          scrollToFirstError
         >
-          <Radio.Group buttonStyle="solid" onChange={changeHidden}>
-            <Radio.Button value="hondureño">Hondureño</Radio.Button>
-            <Radio.Button value="extranjero">Extranjero</Radio.Button>
-          </Radio.Group>
-        </Form.Item>
-        <Form.Item
-          name="idNumber"
-          label="Número de Identidad"
-          hidden={Hidden}
-          rules={[
-            {
-              pattern: /\d{5}/,
-              message: "Número de Identidad incompleto. ",
-            },
-            {
-              required: !Required,
-              message: "Número de Identidad es un campo requerido",
-              whitespace: true,
-            },
-            {
-              validator: validateIdNumber,
-            },
-          ]}
-        >
-          <MaskedInput mask="1111-1111-11111" />
-        </Form.Item>
-        <Form.Item
-          name="foreignIdNumber"
-          label="Número de Identidad"
-          hidden={!Hidden}
-          rules={[
-            {
-              pattern: /^[A-Za-z0-9]+$/g,
-              message: "Sólo se aceptan números y letras.",
-            },
-            {
-              min: 8,
-              max: 20,
-              message: "Número de Identidad debe tener mínimo 8 y máximo 20 caracteres."
-            },
-            {
-              required: Required,
-              message: "Número de Identidad es un campo requerido"
-            },
-            {
-              validator: ForeignIdNumberExists,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="name"
-          label="Nombre"
-          rules={[
-            {
-              pattern: /^.{2,30}$/g,
-              message: "Nombre debe tener mínimo 2 letras y máximo 30.",
-            },
-            {
-              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
-              message: "Sólo se permiten letras, números, puntos y comas.",
-            },
-            {
-              required: true,
-              message: "Nombre es un campo requerido",
-              whitespace: true,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="firstLastName"
-          label="Primer Apellido"
-          rules={[
-            {
-              pattern: /^.{2,30}$/g,
-              message: "Apellido debe tener mínimo 2 letras y máximo 30.",
-            },
-            {
-              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
-              message: "Solo se permiten letras.",
-            },
-            {
-              required: true,
-              message: "Nombre es un campo requerido",
-              whitespace: true,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="secondLastName"
-          label="Segundo Apellido"
-          rules={[
-            {
-              pattern: /^.{2,30}$/g,
-              message:
-                "Segundo apellido debe tener mínimo 2 letras y máximo 30.",
-            },
-            {
-              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
-              message: "Solo se permiten letras.",
-            },
-            {
-              required: true,
-              message: "Segundo apellido es un campo requerido",
-              whitespace: true,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="Fecha Nacimiento"
-          name="dateOfBirth"
-          rules={[
-            {
-              required: true,
-              message: "Fecha nacimiento es un campo requerido",
-            },
-          ]}
-        >
-          <DatePicker
+          <Form.Item
+            name="nationality"
+            label="Nacionalidad"
+            rules={[
+              {
+                required: true,
+                message: "Nacionalidad es un campo requerido"
+              },
+            ]}
+          >
+            <Radio.Group buttonStyle="solid" onChange={changeHidden}>
+              <Radio.Button value="hondureño">Hondureño</Radio.Button>
+              <Radio.Button value="extranjero">Extranjero</Radio.Button>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item
+            name="idNumber"
+            label="Número de Identidad"
+            hidden={Hidden}
+            rules={[
+              {
+                pattern: /\d{5}/,
+                message: "Número de Identidad incompleto. ",
+              },
+              {
+                required: !Required,
+                message: "Número de Identidad es un campo requerido",
+                whitespace: true,
+              },
+              {
+                validator: validateIdNumber,
+              },
+            ]}
+          >
+            <MaskedInput mask="1111-1111-11111" />
+          </Form.Item>
+          <Form.Item
+            name="foreignIdNumber"
+            label="Número de Identidad"
+            hidden={!Hidden}
+            rules={[
+              {
+                pattern: /^[A-Za-z0-9]+$/g,
+                message: "Sólo se aceptan números y letras.",
+              },
+              {
+                min: 8,
+                max: 20,
+                message: "Número de Identidad debe tener mínimo 8 y máximo 20 caracteres."
+              },
+              {
+                required: Required,
+                message: "Número de Identidad es un campo requerido"
+              },
+              {
+                validator: ForeignIdNumberExists,
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="name"
+            label="Nombre"
+            rules={[
+              {
+                pattern: /^.{2,30}$/g,
+                message: "Nombre debe tener mínimo 2 letras y máximo 30.",
+              },
+              {
+                pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
+                message: "Sólo se permiten letras, números, puntos y comas.",
+              },
+              {
+                required: true,
+                message: "Nombre es un campo requerido",
+                whitespace: true,
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="firstLastName"
+            label="Primer Apellido"
+            rules={[
+              {
+                pattern: /^.{2,30}$/g,
+                message: "Apellido debe tener mínimo 2 letras y máximo 30.",
+              },
+              {
+                pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
+                message: "Solo se permiten letras.",
+              },
+              {
+                required: true,
+                message: "Nombre es un campo requerido",
+                whitespace: true,
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="secondLastName"
+            label="Segundo Apellido"
+            rules={[
+              {
+                pattern: /^.{2,30}$/g,
+                message:
+                  "Segundo apellido debe tener mínimo 2 letras y máximo 30.",
+              },
+              {
+                pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
+                message: "Solo se permiten letras.",
+              },
+              {
+                required: true,
+                message: "Segundo apellido es un campo requerido",
+                whitespace: true,
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Fecha Nacimiento"
             name="dateOfBirth"
-            placeholder="Ingrese fecha"
-            format={dateFormat}
-            value={currentDate}
-            onChange={(value) => setCurrentDate(value!)}
-            disabledDate={(d) =>
-              !d || d.isSameOrBefore("1940-01-01") || d.isAfter(moment())
-            }
-          />
-        </Form.Item>
-        <Form.Item
-          name="email"
-          label="Correo electrónico"
-          rules={[
-            {
-              required: true,
-              message: "Correo electrónico es un campo requerido",
-              whitespace: true,
-            },
-            {
-              type: "email",
-              message: "Correo debe estar en formato: ejemplo@ejemplo.com",
-            },
-            {
-              validator: validateEmail
-            }
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="gender"
-          label="Género"
-          rules={[
-            {
-              required: true,
-              message: "Género es un campo requerido",
-              whitespace: true,
-            },
-          ]}
-        >
-          <Radio.Group buttonStyle="solid">
-            <Radio.Button value="Femenino">Femenino</Radio.Button>
-            <Radio.Button value="Masculino">Masculino</Radio.Button>
-          </Radio.Group>
-        </Form.Item>
-        <Form.Item
-          name="address"
-          label="Dirección"
-          rules={[
-            {
-              pattern: /^.{1,200}$/g,
-              message: "Dirección debe tener máximo 200 letras.",
-            },
-            {
-              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ.,])+\s?)+([0-9])*$/g,
-              message: "Sólo se permiten letras, números, puntos y comas.",
-            },
-            {
-              required: true,
-              message: "Dirección es un campo requerido",
-            },
-          ]}
-        >
-          <TextArea rows={4} />
-        </Form.Item>
-        <Form.Item
-          name="phoneContacts"
-          label="Números de teléfono:"
-          rules={[
-            {
-              required: phoneRequired,
-              message: "El campo número de teléfono es requerido.",
-            },
-          ]}
-        >
-          <Form.List name="contacts">
-            {(fields, { add, remove }) => {
-              return (
-                <div>
-                  {fields.map((field) => (
-                    <Space
-                      key={field.key}
-                      align="start"
-                    >
-                      <Form.Item
-                        {...field}
-                        rules={[
-                          {
-                            pattern: /-\d{4}/,
-                            message: "Número de teléfono incompleto. ",
-                          },
-                          {
-                            required: true,
-                            message: "Ingresar número o eliminar el campo",
-                          },
-                        ]}
-                      >
-                        <MaskedInput mask="+(111) 1111-1111" />
-                      </Form.Item>
-
-                      <MinusCircleOutlined
-                        onClick={() => {
-                          if (fields.length === 1) {
-                            setPhoneRequired(true);
-                          }
-                          remove(field.name);
-                        }}
-                      />
-                    </Space>
-                  ))}
-
-                  <Form.Item style={{ marginBottom: "0px" }}>
-                    <Button
-                      type="dashed"
-                      onClick={() => {
-                        add();
-                        setPhoneRequired(false);
-                      }}
-                      block
-                    >
-                      <PlusOutlined /> Agregar número de teléfono
-                    </Button>
-                  </Form.Item>
-                </div>
-              );
-            }}
-          </Form.List>
-        </Form.Item>
-        <Form.Item {...tailFormItemLayout}>
-          <Button
-            type="primary"
-            htmlType="submit"
-            style={{ marginRight: "8px" }}
+            rules={[
+              {
+                required: true,
+                message: "Fecha nacimiento es un campo requerido",
+              },
+            ]}
           >
             <DatePicker
-              name="dateOfBirth"
               placeholder="Ingrese fecha"
-              format={dateFormat}
-              value={currentDate}
-              onChange={(value) => setCurrentDate(value!)}
+              defaultPickerValue={moment("15-01-1995", "DD-MM-YYYY")}
+              format={"DD-MM-YYYY"}
               disabledDate={(d) =>
                 !d || d.isSameOrBefore("1940-01-01") || d.isAfter(moment())
               }
@@ -460,6 +321,9 @@ function EditPatientForm(props: EditPatientFormProps) {
                 type: "email",
                 message: "Correo debe estar en formato: ejemplo@ejemplo.com",
               },
+              {
+                validator: validateEmail
+              }
             ]}
           >
             <Input />
@@ -475,7 +339,7 @@ function EditPatientForm(props: EditPatientFormProps) {
               },
             ]}
           >
-            <Radio.Group defaultValue="a" buttonStyle="solid">
+            <Radio.Group buttonStyle="solid">
               <Radio.Button value="Femenino">Femenino</Radio.Button>
               <Radio.Button value="Masculino">Masculino</Radio.Button>
             </Radio.Group>
@@ -489,21 +353,79 @@ function EditPatientForm(props: EditPatientFormProps) {
                 message: "Dirección debe tener máximo 200 letras.",
               },
               {
-                pattern: /^[^\d]/g,
-                message: "No puede empezar con un número.",
-              },
-              {
                 pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ.,])+\s?)+([0-9])*$/g,
-                message: "No se permiten caracteres especiales.",
+                message: "Sólo se permiten letras, números, puntos y comas.",
               },
               {
                 required: true,
                 message: "Dirección es un campo requerido",
-                whitespace: true,
               },
             ]}
           >
             <TextArea rows={4} />
+          </Form.Item>
+          <Form.Item
+            name="phoneContacts"
+            label="Números de teléfono:"
+            rules={[
+              {
+                required: phoneRequired,
+                message: "El campo número de teléfono es requerido.",
+              },
+            ]}
+          >
+            <Form.List name="contacts">
+              {(fields, { add, remove }) => {
+                return (
+                  <div>
+                    {fields.map((field) => (
+                      <Space
+                        key={field.key}
+                        align="start"
+                      >
+                        <Form.Item
+                          {...field}
+                          rules={[
+                            {
+                              pattern: /-\d{4}/,
+                              message: "Número de teléfono incompleto. ",
+                            },
+                            {
+                              required: true,
+                              message: "Ingresar número o eliminar el campo",
+                            },
+                          ]}
+                        >
+                          <MaskedInput mask="+(111) 1111-1111" />
+                        </Form.Item>
+
+                        <MinusCircleOutlined
+                          onClick={() => {
+                            if (fields.length === 1) {
+                              setPhoneRequired(true);
+                            }
+                            remove(field.name);
+                          }}
+                        />
+                      </Space>
+                    ))}
+
+                    <Form.Item style={{ marginBottom: "0px" }}>
+                      <Button
+                        type="dashed"
+                        onClick={() => {
+                          add();
+                          setPhoneRequired(false);
+                        }}
+                        block
+                      >
+                        <PlusOutlined /> Agregar número de teléfono
+                    </Button>
+                    </Form.Item>
+                  </div>
+                );
+              }}
+            </Form.List>
           </Form.Item>
           <Form.Item {...tailFormItemLayout}>
             <Button

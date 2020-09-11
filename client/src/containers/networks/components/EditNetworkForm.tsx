@@ -11,7 +11,7 @@ interface EditNetworkRouteParams {
 }
 
 interface EditNetworkFormProps
-  extends RouteComponentProps<EditNetworkRouteParams> {}
+  extends RouteComponentProps<EditNetworkRouteParams> { }
 
 function EditNetworkForm(props: EditNetworkFormProps) {
   const [form] = Form.useForm();
@@ -75,7 +75,7 @@ function EditNetworkForm(props: EditNetworkFormProps) {
           shape="circle"
           htmlType="submit"
           icon={<ArrowLeftOutlined />}
-          style={{ marginLeft: "-20%" }}
+          style={{ marginLeft: "-20" }}
         ></Button>
       </Link>
       <MainTitle>Editar red</MainTitle>

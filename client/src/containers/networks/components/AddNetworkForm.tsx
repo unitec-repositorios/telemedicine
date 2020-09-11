@@ -6,7 +6,7 @@ import { create, networkNameExists } from "../networkService";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { RuleObject } from "antd/lib/form";
 import { StoreValue } from "antd/lib/form/interface";
-export interface AddNetworkProps extends RouteComponentProps {}
+export interface AddNetworkProps extends RouteComponentProps { }
 
 export interface NetworkForm {
   [key: string]: string;
@@ -75,7 +75,7 @@ function AddNetworkForm(props: AddNetworkProps) {
           shape="circle"
           htmlType="submit"
           icon={<ArrowLeftOutlined />}
-          style={{ marginLeft: "-20%" }}
+          style={{ marginLeft: "-20" }}
         ></Button>
       </Link>
       <MainTitle>Registrar red</MainTitle>
