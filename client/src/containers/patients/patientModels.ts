@@ -8,6 +8,8 @@ export interface Patient {
   email: string;
   gender: string;
   address: string;
+  contacts: string;
+  nationality: string;
 }
 
 export interface CreatePatient {
@@ -19,6 +21,8 @@ export interface CreatePatient {
   email: string;
   gender: string;
   address: string;
+  contacts: string;
+  nationality: string;
 }
 
 export interface UpdatePatient {
@@ -30,4 +34,6 @@ export interface UpdatePatient {
   email: string;
   gender: string;
   address: string;
+  contacts: string;
+  nationality: string
 }

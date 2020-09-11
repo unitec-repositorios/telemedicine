@@ -38,9 +38,20 @@ function Stepper(props: any) {
           <Step key={item.title} title={item.title} />
         ))}
       </Steps>
-      
+
       <div className="steps-content" >{steps[current].content}</div>
-      
+      <div style={{ marginTop: "20px" }} className="steps-action">
+        {current < steps.length - 1 && (
+          <Button type="primary" onClick={() => next()}>
+            Siguiente
+          </Button>
+        )}
+        {current > 0 && (
+          <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+            Anterior
+          </Button>
+        )}
+      </div>
     </>
   );
 }

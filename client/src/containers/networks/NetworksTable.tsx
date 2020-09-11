@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { Button, message, Popconfirm, Table } from "antd";
+import { Button, message, Popconfirm, Table, Spin } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Link, navigate, RouteComponentProps } from "@reach/router";
 
 import { Network } from "./networkModels";
 import MainTitle from "../../components/MainTitle";
 import { all, remove } from "./networkService";
+import { AxiosError } from "axios";
 
 interface NetworkProps extends RouteComponentProps {}
 
 function NetworksTable(props: NetworkProps) {
   const [networks, setNetworks] = useState<Network[]>([]);
 
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     (async () => {
       const data = await all();
       setNetworks(data);
+      setLoading(false);
     })();
   }, []);
 
@@ -32,7 +35,11 @@ function NetworksTable(props: NetworkProps) {
         networks.filter((currentNetwork) => currentNetwork.id !== id)
       );
     } catch (error) {
-      message.error("Ocurrió un error al borrar la red");
+      if (error.response.data === "The network is being used by a hospital") {
+        message.error("Hay hospitales vinculados a esta red.");
+      } else {
+        message.error("Ocurrió un error al borrar la red");
+      }
     }
   };
 
@@ -84,12 +91,15 @@ function NetworksTable(props: NetworkProps) {
           Agregar
         </Button>
       </Link>
-      <Table
-        dataSource={networks}
-        columns={columns}
-        rowKey="name"
-        locale={{ emptyText: "Sin información" }}
-      />
+      <Spin spinning={loading}>
+        <Table
+          pagination={{ defaultPageSize: 10 }}
+          dataSource={networks}
+          columns={columns}
+          rowKey="name"
+          locale={{ emptyText: "Sin información" }}
+        />
+      </Spin>
     </div>
   );
 }
