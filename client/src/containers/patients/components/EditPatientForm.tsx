@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import MainTitle from "../../../components/MainTitle";
 import { Button, Form, Input, Radio, DatePicker, message, Space } from "antd";
+import { Button, Form, Input, Radio, DatePicker, message, Spin } from "antd";
 import { findById, update, IdNumberExists, EmailExists } from "../patientService";
 import { PatientForm } from "./AddPatientForm";
 import { Link, RouteComponentProps } from "@reach/router";
@@ -28,6 +29,8 @@ function EditPatientForm(props: EditPatientFormProps) {
   const [Required, setRequired] = useState(false);
   const [phoneRequired, setPhoneRequired] = useState(false);
   const dateFormat = "DD-MM-YYYY";
+
+  const [loading, setLoading] = useState(true);
 
   const changeHidden = () => {
     setHidden(!Hidden)
@@ -83,6 +86,7 @@ function EditPatientForm(props: EditPatientFormProps) {
         setRequired(true);
       }
       form.setFieldsValue(patient);
+      setLoading(false);
     })();
   }, []);
 
@@ -153,6 +157,7 @@ function EditPatientForm(props: EditPatientFormProps) {
         ></Button>
       </Link>
       <MainTitle>Editar paciente</MainTitle>
+      <Spin spinning={loading}>
       <Form
         {...formItemLayout}
         form={form}
@@ -431,13 +436,86 @@ function EditPatientForm(props: EditPatientFormProps) {
             htmlType="submit"
             style={{ marginRight: "8px" }}
           >
-            Guardar
-          </Button>
-          <Button htmlType="button" onClick={() => form.resetFields()}>
-            Reiniciar campo
-          </Button>
-        </Form.Item>
-      </Form>
+            <DatePicker
+              name="dateOfBirth"
+              placeholder="Ingrese fecha"
+              format={dateFormat}
+              value={currentDate}
+              onChange={(value) => setCurrentDate(value!)}
+              disabledDate={(d) =>
+                !d || d.isSameOrBefore("1940-01-01") || d.isAfter(moment())
+              }
+            />
+          </Form.Item>
+          <Form.Item
+            name="email"
+            label="Correo electrónico"
+            rules={[
+              {
+                required: true,
+                message: "Correo electrónico es un campo requerido",
+                whitespace: true,
+              },
+              {
+                type: "email",
+                message: "Correo debe estar en formato: ejemplo@ejemplo.com",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="gender"
+            label="Género"
+            rules={[
+              {
+                required: true,
+                message: "Género es un campo requerido",
+                whitespace: true,
+              },
+            ]}
+          >
+            <Radio.Group defaultValue="a" buttonStyle="solid">
+              <Radio.Button value="Femenino">Femenino</Radio.Button>
+              <Radio.Button value="Masculino">Masculino</Radio.Button>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item
+            name="address"
+            label="Dirección"
+            rules={[
+              {
+                pattern: /^.{1,200}$/g,
+                message: "Dirección debe tener máximo 200 letras.",
+              },
+              {
+                pattern: /^[^\d]/g,
+                message: "No puede empezar con un número.",
+              },
+              {
+                pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ.,])+\s?)+([0-9])*$/g,
+                message: "No se permiten caracteres especiales.",
+              },
+              {
+                required: true,
+                message: "Dirección es un campo requerido",
+                whitespace: true,
+              },
+            ]}
+          >
+            <TextArea rows={4} />
+          </Form.Item>
+          <Form.Item {...tailFormItemLayout}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ marginRight: "8px" }}
+            >
+              Guardar
+            </Button>
+          </Form.Item>
+        </Form>
+      </Spin>
     </>
   );
 }

@@ -16,7 +16,6 @@ export async function all() {
 export async function findById(id: number) {
   const response = await axios.get(`${baseUrl}/${id}`);
   return (response.data as Hospital[])[0];
-  // return response.data as Hospital;
 }
 
 export async function update(hospital: Hospital) {
