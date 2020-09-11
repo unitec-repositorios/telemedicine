@@ -8,9 +8,15 @@ export interface ReferenceACSPSForm {
   [key: string]: string;
 }
 
-function ReferenceACSPSInformation() {
+function ReferenceACSPSInformation(props: any) {
 
+  const { current, length, changeCurrent } = props;
   const [form] = Form.useForm();
+
+  const prev = () => {
+    let value = current - 1;
+    changeCurrent(value);
+  };
 
   const onFinish = (values: ReferenceACSPSForm) => {
 
@@ -185,6 +191,11 @@ function ReferenceACSPSInformation() {
           <Button htmlType="button" onClick={() => form.resetFields()}>
             Reiniciar campos
           </Button>
+          {current > 0 && (
+            <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+              Anterior
+            </Button>
+          )}
         </Form.Item>
       </Form>
     </>
