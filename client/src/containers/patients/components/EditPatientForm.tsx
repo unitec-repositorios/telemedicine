@@ -27,6 +27,7 @@ function EditPatientForm(props: EditPatientFormProps) {
   const [Hidden, setHidden] = useState(false);
   const [Required, setRequired] = useState(false);
   const [phoneRequired, setPhoneRequired] = useState(false);
+  const [currentIdNumber, setCurrentIdNumber] = useState("");
   const dateFormat = "DD-MM-YYYY";
 
   const [loading, setLoading] = useState(true);
@@ -40,7 +41,7 @@ function EditPatientForm(props: EditPatientFormProps) {
     const IdNumber = value;
     const exists = await IdNumberExists(IdNumber);
 
-    if (exists && Required === false && patient.idNumber !== IdNumber) {
+    if (exists && Required === false && currentIdNumber !== IdNumber) {
       throw new Error(
         `Ya existe un paciente con ese número de identidad. ${IdNumber}`
       );
@@ -51,7 +52,7 @@ function EditPatientForm(props: EditPatientFormProps) {
     const ForeignIdNumber = value;
     const exists = await IdNumberExists(ForeignIdNumber);
 
-    if (exists && Required === true && patient.idNumber !== ForeignIdNumber) {
+    if (exists && Required === true && currentIdNumber !== ForeignIdNumber) {
       throw new Error(
         `Ya existe un paciente con ese número de identidad. ${ForeignIdNumber}`
       );
@@ -76,13 +77,14 @@ function EditPatientForm(props: EditPatientFormProps) {
       setPatient({ ...patient, dateOfBirth: patient.dateOfBirth.toDate() });
       patient.contacts = JSON.parse(patient.contacts);
       setCurrentDate(patient.dateOfBirth);
+      setCurrentIdNumber(patient.idNumber);
       if (patient.nationality === "extranjero") {
         form.setFieldsValue({
           foreignIdNumber: patient.idNumber,
         });
-        patient.idNumber = "";
         setHidden(true);
         setRequired(true);
+        patient.idNumber = "";
       }
       form.setFieldsValue(patient);
       setLoading(false);
@@ -109,7 +111,7 @@ function EditPatientForm(props: EditPatientFormProps) {
           contacts: JSON.stringify(values.contacts),
           nationality: values.nationality
         });
-        setPhoneRequired(true);
+        setCurrentIdNumber(newId);
         message.success("El paciente ha sido editado existosamente");
       } catch (error) {
         message.error("Ocurrió un error al editar el paciente");
@@ -359,6 +361,7 @@ function EditPatientForm(props: EditPatientFormProps) {
               {
                 required: true,
                 message: "Dirección es un campo requerido",
+                whitespace: true
               },
             ]}
           >

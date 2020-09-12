@@ -336,6 +336,7 @@ function AddPatientForm(props: AddPatientProps) {
             {
               required: true,
               message: "Dirección es un campo requerido",
+              whitespace: true
             },
           ]}
         >
