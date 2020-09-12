@@ -11,6 +11,16 @@ function Stepper(props: any) {
     setCurrent(current);
   };
 
+  const next = () => {
+    let nextVal = current + 1;
+    setCurrent(nextVal);
+  };
+
+  const prev = () => {
+    const prevVal = current - 1;
+    setCurrent(prevVal);
+  };
+
   const steps = [
     {
       title: "Paciente",
@@ -22,10 +32,10 @@ function Stepper(props: any) {
     },
     {
       title: "Diagnostico",
-      content: <ReferenceACSPSInformation 
-      length={3}
-      current={current}
-      changeCurrent={changeCurrent}
+      content: <ReferenceACSPSInformation
+        length={3}
+        current={current}
+        changeCurrent={changeCurrent}
       />
     }
   ];
