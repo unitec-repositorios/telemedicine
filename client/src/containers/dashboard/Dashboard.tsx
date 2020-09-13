@@ -10,6 +10,7 @@ import {
   HomeOutlined,
 } from "@ant-design/icons";
 import { Link, RouteComponentProps } from "@reach/router";
+import MenuItem from "antd/lib/menu/MenuItem";
 
 const { Header, Sider, Content } = Layout;
 
@@ -46,6 +47,9 @@ function Dashboard(props: DashboardProps) {
           </Menu.Item>
           <Menu.Item key="/rrform" icon={<ApartmentOutlined />}>
             <Link to="rrform">Form</Link>
+          </Menu.Item>
+          <Menu.Item key="/racpsform" icon={<ApartmentOutlined />}>
+            <Link to="racpsform">RACPS</Link>
           </Menu.Item>
         </Menu>
       </Sider>

@@ -13,6 +13,8 @@ import AddPatientForm from "./containers/patients/components/AddPatientForm";
 import EditPatientForm from "./containers/patients/components/EditPatientForm";
 import AddRRForm from "./containers/referenceForm/components/AddReferenceForm";
 import ReferenceTable from "./containers/referenceForm/components/ReferenceTable";
+import RACPSForm from "./containers/rrform/components/racpsTable";
+import AddRACPSForm from "./containers/rrform/components/AddRRForm";
 function App() {
   return (
     <div className="App">
@@ -29,6 +31,8 @@ function App() {
           <EditNetworkForm path="networks/edit/:id" />
           <AddRRForm path="rrform/add" />
           <ReferenceTable path = "rrform"/>
+          <RACPSForm path = "racpsform"/>
+          <AddRACPSForm path = "racpsform/add"/>
         </Dashboard>
       </Router>
     </div>

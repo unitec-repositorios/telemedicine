@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CreateRRForm, RRForm } from "./rrFormModels";
+import { CreateRRForm, RRForm, Reference } from "./rrFormModels";
 
 const baseUrl: string = `${process.env.REACT_APP_BASE_URL}/references`;
 
@@ -21,4 +21,9 @@ export async function findById(id: number) {
 
 export async function remove(id: number) {
   await axios.delete(`${baseUrl}/${id}`);
+}
+
+export async function allR(){
+  const response = await axios.get(baseUrl);
+  return response.data as Reference[];
 }

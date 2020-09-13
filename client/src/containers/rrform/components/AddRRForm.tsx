@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "antd/dist/antd.css";
 import { Steps, Button, message } from "antd";
-
+import HospitalSearching from "./steps/HospitalSearching";
 const { Step } = Steps;
 
 const steps = [
@@ -11,7 +11,7 @@ const steps = [
   },
   {
     title: "Second",
-    content: "Second-content"
+    content: <HospitalSearching/>
   },
   {
     title: "Last",

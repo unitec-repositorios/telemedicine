@@ -1,3 +1,5 @@
+import { StringLiteral } from "typescript";
+
 export interface CreateRRForm{
     Type : string;
     Origin_HF_ID: string;
@@ -43,4 +45,10 @@ export interface RRForm{
     Contacted_HF: string;
     Contact_ID: string;
     Date: Date;
+}
+
+export interface Reference{
+    codeform: number;
+    origin: string;
+    destination: string;
 }
