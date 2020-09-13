@@ -30,5 +30,8 @@ namespace Api.Modules.References
         public bool ContactedHf { get; set; }
         public string ContactId { get; set; }
         public DateTime Date { get; set; }
+        public string Companion { get; set;}
+        public string Relationship { get; set; }
+        public string AddressorPhone { get; set; }
     }
 }
