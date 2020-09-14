@@ -49,8 +49,8 @@ namespace Core.Patients
             updatePatient.Email = patient.Email;
             updatePatient.Gender = patient.Gender;
             updatePatient.Address = patient.Address;
-            updatePatient.Nationality = patient.Nationality;
-            updatePatient.Contacts = patient.Contacts;
+            /*updatePatient.Nationality = patient.Nationality;
+            updatePatient.Contacts = patient.Contacts;*/
             await _patientRepository.Update(updatePatient);
         }
 
@@ -66,11 +66,16 @@ namespace Core.Patients
                 Email = patient.Email,
                 Gender = patient.Gender,
                 Address = patient.Address,
-                Nationality = patient.Nationality,
-                Contacts = patient.Contacts
+         /*       Nationality = patient.Nationality,
+                Contacts = patient.Contacts*/
             };
 
             await _patientRepository.Add(newPatient);
+        }
+
+        public Task<IEnumerable<Patient>> All(int? id, string idNumber)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

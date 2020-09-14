@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using System.Text.Json.Serialization;
+using Domain.Aggregates.Patients;
 using Domain.Contracts;
 
 namespace Domain.Aggregates.Reference
@@ -11,7 +12,7 @@ namespace Domain.Aggregates.Reference
     {
         public string Type { get; set; }
         public string OriginHfId { get; set; }
-        public string DestinationHfId { get; set; }
+        public string DestinationHfId { get; set; } 
         public string PatientId { get; set; }
         public string Motive { get; set; }
         public string DescriptionMotive { get; set; }
@@ -35,7 +36,5 @@ namespace Domain.Aggregates.Reference
         public bool ContactedHf { get; set; }
         public string ContactId { get; set; }
         public DateTime Date { get; set; }
-
-
     }
 }

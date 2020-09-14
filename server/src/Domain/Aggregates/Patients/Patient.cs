@@ -29,5 +29,11 @@ namespace Domain.Aggregates.Patients
         public string Contacts { get; set; }
 
 
+
+
+        public string FullName()
+        {
+            return $"{this.Name} {this.FirstLastName} {this.SecondLastName}";
+        }
     }
 }

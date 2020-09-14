@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Api.Modules.ReferencesCommunityAgentHealthPromoter;
 using Core.ReferencesACS_PS;
+using Domain.Aggregates.Patients;
+using Domain.Aggregates.Reference;
 using Domain.Aggregates.ReferencesACS_PS;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +18,14 @@ namespace Api.Modules.ReferencesACS_PS
     {
 
         private readonly IReferenceCommunityAgentHealthPromoterService _referenceACS_PSService;
+        private readonly IPatientRepository patientRepository;
 
-        public ReferencesCommunityAgentHealthPromoterController(IReferenceCommunityAgentHealthPromoterService referenceACS_PSService)
+        public ReferencesCommunityAgentHealthPromoterController(
+            IReferenceCommunityAgentHealthPromoterService referenceACS_PSService,
+            IPatientRepository patientRepository)
         {
             _referenceACS_PSService = referenceACS_PSService;
+            this.patientRepository = patientRepository;
         }
 
 
@@ -73,6 +80,25 @@ namespace Api.Modules.ReferencesACS_PS
             await _referenceACS_PSService.Create(reference);
         }
 
+
+        [HttpGet]
+        public async Task<IEnumerable<ReferenceCommunityAgentHealthPromoterViewModel>> GetAllAsync()
+        {
+            var patients = this.patientRepository.All();
+            var references = await this._referenceACS_PSService.All();
+
+            var result = references.Join(patients, r => r.PatientId, p => p.Id.ToString(), (r, p) => new { r, p });
+
+            var referencesResult = result.Select(r => new ReferenceCommunityAgentAndHealthPromoterViewModel
+            {
+                Id = r.r.Id,
+                Patient = r.p.FullName(),
+                Origin = r.r.OriginHfId,
+                Destination = r.r.DestinationHfId,
+            });
+
+            return (IEnumerable<ReferenceCommunityAgentHealthPromoterViewModel>)referencesResult;
+        }
 
     }
 }
