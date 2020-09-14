@@ -36,9 +36,5 @@ namespace Domain.Aggregates.Reference
         public bool ContactedHf { get; set; }
         public string ContactId { get; set; }
         public DateTime Date { get; set; }
-
-        public Patient  Patient { get; set; }
-
-
     }
 }
