@@ -3,6 +3,8 @@ import { Steps, Button } from "antd";
 import ReferenceInformation from "./steps/ReferenceInformation";
 import HospitalSearching from "./steps/HospitalSearching";
 import { RRForm } from "./../referenceFormModels";
+import PatientReference from "./steps/PatientReference";
+
 const { Step } = Steps;
 
 function Stepper(props: any) {
@@ -37,7 +39,9 @@ function Stepper(props: any) {
   const steps = [
     {
       title: "Paciente",
-      content: "First-Content",
+      content: (
+        <PatientReference current={current} changeCurrent={changeCurrent} />
+      ),
     },
     {
       title: "Establecimiento de Salud",
