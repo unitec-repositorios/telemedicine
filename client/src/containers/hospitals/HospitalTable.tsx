@@ -1,21 +1,24 @@
 import React, { useEffect, useState, MouseEventHandler } from "react";
-import { Button, Table, Popconfirm, message } from "antd";
+import { Button, Table, Popconfirm, message, Pagination, Spin } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Link, RouteComponentProps, navigate } from "@reach/router";
-
+import { TableProps } from "antd/lib/table";
 import { Hospital } from "./hospitalModels";
 import MainTitle from "../../components/MainTitle";
 import { all, remove } from "./hospitalService";
+import { table } from "console";
 
 interface HospitalProps extends RouteComponentProps {}
 
 function HospitalTable(props: HospitalProps) {
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
 
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     (async () => {
       const data = await all();
       setHospitals(data);
+      setLoading(false);
     })();
   }, []);
 
@@ -48,9 +51,9 @@ function HospitalTable(props: HospitalProps) {
       key: "name",
     },
     {
-      title: "Colonia",
-      dataIndex: "neighborhood",
-      key: "neigborhood",
+      title: "Departamento",
+      dataIndex: "department",
+      key: "department",
     },
     {
       title: "Municipio",
@@ -58,9 +61,9 @@ function HospitalTable(props: HospitalProps) {
       key: "city",
     },
     {
-      title: "Departamento",
-      dataIndex: "department",
-      key: "department",
+      title: "Red",
+      dataIndex: "network",
+      key: "network",
     },
     {
       title: "Acciones",
@@ -97,18 +100,21 @@ function HospitalTable(props: HospitalProps) {
   ];
   return (
     <div>
-      <MainTitle>Hospitales</MainTitle>
+      <MainTitle>Establecimientos de Salud</MainTitle>
       <Link to="/hospitals/add">
         <Button type="primary" style={{ marginBottom: "20px" }}>
           Agregar
         </Button>
       </Link>
-      <Table
-        dataSource={hospitals}
-        columns={columns}
-        rowKey="name"
-        locale={{ emptyText: "Sin Informacion." }}
-      />
+      <Spin spinning={loading}>
+        <Table
+          dataSource={hospitals}
+          pagination={{ defaultPageSize: 10 }}
+          columns={columns}
+          rowKey="code"
+          locale={{ emptyText: "Sin Informacion." }}
+        />
+      </Spin>
     </div>
   );
 }

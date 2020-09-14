@@ -10,7 +10,7 @@ namespace Core.Patients
 
         public Task Create(Patient patient);
 
-        public Task<IEnumerable<Patient>> All(int? id, string idNumber);
+        public Task<IEnumerable<Patient>> All(int? id, string idNumber, string foreignIdNumber, string email);
 
         public Task Remove(int id);
 

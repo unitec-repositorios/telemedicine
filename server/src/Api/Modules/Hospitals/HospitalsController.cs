@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Api.Modules.Hospitals;
 using Core.Hospitals;
+using Core.Hospitals.Dtos;
+using Core.Networks;
 using Domain.Aggregates.Hospitals;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Api.Modules.Networks
+namespace Api.Modules.Hospitals
 {
     [ApiController]
     [Route("[controller]")]
@@ -19,35 +20,43 @@ namespace Api.Modules.Networks
             _hospitalService = hospitalService;
         }
 
-        
 
         [HttpGet("{id:int?}")]
-        public async Task<IActionResult> Get(int? id, [FromQuery] int? code)
+        public async Task<ActionResult<GetHospital>> Get(int? id, [FromQuery] int? code)
         {
             var data = (await _hospitalService.All(id, code))
-                .Select(hospital => new HospitalViewModel
+                .Select(hospital => new GetHospital
                 {
                     Id = hospital.Id,
                     Code = hospital.Code,
                     Name = hospital.Name,
-                    Neighborhood = hospital.Neighborhood,
+                    Address = hospital.Address,
                     Department = hospital.Department,
                     City = hospital.City,
+                    Category = hospital.Category,
+                    Contacts = hospital.Contacts,
+                    Services = hospital.Services,
+                    Network = hospital.Network.Name,
+                    NetworkId = hospital.Network.Id
                 });
 
             return Ok(data);
         }
 
         [HttpPost]
-        public async Task Post(HospitalViewModel hospitalViewModel)
+        public async Task Post(CreateHospital createHospital)
         {
             var hospital = new Hospital
             {
-                Code = hospitalViewModel.Code,
-                Name = hospitalViewModel.Name,
-                Neighborhood = hospitalViewModel.Neighborhood,
-                Department = hospitalViewModel.Department,
-                City = hospitalViewModel.City,
+                Code = createHospital.Code,
+                Name = createHospital.Name,
+                Address = createHospital.Address,
+                Department = createHospital.Department,
+                City = createHospital.City,
+                Category = createHospital.Category,
+                Contacts = createHospital.Contacts,
+                Services = createHospital.Services,
+                NetworkId = createHospital.NetworkId
             };
 
             await _hospitalService.Create(hospital);
@@ -55,23 +64,30 @@ namespace Api.Modules.Networks
 
 
         [HttpDelete("{id}")]
-        public async Task Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            await _hospitalService.Remove(id);
+
+                await _hospitalService.Remove(id);
+                return Ok();
+
         }
 
         [HttpPut("{id:int}")]
-        public async Task Put(int id, [FromBody] HospitalViewModel hospitalViewModel)
+        public async Task Put(int id, [FromBody] CreateHospital updateHospital)
         {
             var hospital = new Hospital
             {
-                Id = hospitalViewModel.Id,
-                Code = hospitalViewModel.Code,
-                Name = hospitalViewModel.Name,
-                Neighborhood = hospitalViewModel.Neighborhood,
-                Department = hospitalViewModel.Department,
-                City = hospitalViewModel.City,
+                Code = updateHospital.Code,
+                Name = updateHospital.Name,
+                Address = updateHospital.Address,
+                Department = updateHospital.Department,
+                City = updateHospital.City,
+                Category = updateHospital.Category,
+                Contacts = updateHospital.Contacts,
+                Services = updateHospital.Services,
+                NetworkId = updateHospital.NetworkId
             };
+
             await _hospitalService.Update(id, hospital);
         }
     }

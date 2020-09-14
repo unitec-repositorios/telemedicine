@@ -48,3 +48,33 @@ export async function IdNumberExists(idNumber: string) {
     console.log(e);
   }
 }
+
+export async function ForeignIdNumberExists(foreignIdNumber: string) {
+  try {
+    const response = await axios.get(baseUrl, {
+      params: {
+        foreignIdNumber,
+      },
+    });
+
+    const data = response.data as Patient[];
+    return data.length > 0;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export async function EmailExists(email: string) {
+  try {
+    const response = await axios.get(baseUrl, {
+      params: {
+        email,
+      },
+    });
+
+    const data = response.data as Patient[];
+    return data.length > 0;
+  } catch (e) {
+    console.log(e);
+  }
+}

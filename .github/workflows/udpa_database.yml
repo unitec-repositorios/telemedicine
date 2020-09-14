@@ -29,5 +29,5 @@ jobs:
         working-directory: server/src/Data
         run: |
           dotnet tool install --global dotnet-ef
-          dotnet ef migrations add InitialCreate
-          dotnet ef database update
+          dotnet ef migrations add InitialCreate --startup-project ../Api/Api.csproj
+          dotnet ef database update --startup-project ../Api/Api.csproj

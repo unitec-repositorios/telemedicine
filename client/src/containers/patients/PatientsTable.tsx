@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Popconfirm, Table, Space, message } from "antd";
+import { Button, Popconfirm, Table, Space, message, Spin } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Link, navigate, RouteComponentProps } from "@reach/router";
 import { ColumnType } from "antd/lib/table/interface";
@@ -8,15 +8,18 @@ import { Patient } from "./patientModels";
 import MainTitle from "../../components/MainTitle";
 import { all, remove } from "./patientService";
 
-interface PatientProps extends RouteComponentProps {}
+interface PatientProps extends RouteComponentProps { }
 
 function PatientTable(props: PatientProps) {
   const [patients, setPatients] = useState<Patient[]>([]);
+
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
       const data = await all();
       setPatients(data);
+      setLoading(false);
     })();
   }, []);
 
@@ -87,12 +90,6 @@ function PatientTable(props: PatientProps) {
       key: "gender",
     },
     {
-      title: "Dirección",
-      dataIndex: "address",
-      key: "address",
-      width: 200,
-    },
-    {
       title: "Acciones",
       dataIndex: "actions",
       key: "actions",
@@ -128,6 +125,7 @@ function PatientTable(props: PatientProps) {
       ),
     },
   ];
+
   return (
     <div>
       <MainTitle>Pacientes</MainTitle>
@@ -136,13 +134,16 @@ function PatientTable(props: PatientProps) {
           Agregar
         </Button>
       </Link>
-      <Table
-        dataSource={patients}
-        columns={columns}
-        rowKey="firstName"
-        locale={{ emptyText: "Sin información" }}
-        scroll={{ x: 1300 }}
-      />
+      <Spin spinning={loading}>
+        <Table
+          pagination={{ defaultPageSize: 10 }}
+          dataSource={patients}
+          columns={columns}
+          rowKey="idNumber"
+          locale={{ emptyText: "Sin información" }}
+          scroll={{ x: 1300 }}
+        />
+      </Spin>
     </div>
   );
 }

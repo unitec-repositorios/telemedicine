@@ -2,9 +2,11 @@ import React from "react";
 import { Button, Form, Input, message } from "antd";
 import { RouteComponentProps, Link } from "@reach/router";
 import MainTitle from "../../../components/MainTitle";
-import { create } from "../networkService";
+import { create, networkNameExists } from "../networkService";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-export interface AddNetworkProps extends RouteComponentProps {}
+import { RuleObject } from "antd/lib/form";
+import { StoreValue } from "antd/lib/form/interface";
+export interface AddNetworkProps extends RouteComponentProps { }
 
 export interface NetworkForm {
   [key: string]: string;
@@ -57,6 +59,14 @@ function AddNetworkForm(props: AddNetworkProps) {
     })();
   };
 
+  const validateName = async (rule: RuleObject, value: StoreValue) => {
+    const name = value;
+    const exists = await networkNameExists(name);
+    if (exists) {
+      throw new Error(`Ya existe una red con el nombre ${name}`);
+    }
+  };
+
   return (
     <>
       <Link to="/networks">
@@ -65,7 +75,7 @@ function AddNetworkForm(props: AddNetworkProps) {
           shape="circle"
           htmlType="submit"
           icon={<ArrowLeftOutlined />}
-          style={{ marginLeft: "-20%" }}
+          style={{ marginLeft: "-20" }}
         ></Button>
       </Link>
       <MainTitle>Registrar red</MainTitle>
@@ -92,6 +102,9 @@ function AddNetworkForm(props: AddNetworkProps) {
               required: true,
               message: "Nombre de red es un campo requerido",
               whitespace: true,
+            },
+            {
+              validator: validateName,
             },
           ]}
         >
