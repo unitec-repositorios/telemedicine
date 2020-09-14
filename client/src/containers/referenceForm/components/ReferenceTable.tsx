@@ -39,8 +39,8 @@ function ReferenceTable(props: ReferenceProps){
       ]
       return (
         <div>
-          <MainTitle>Referencia</MainTitle>
-          <Link to="/rrform/add">
+          <MainTitle>Referencia Respuesta</MainTitle>
+          <Link to="/referenceForm/add">
             <Button type="primary" style={{ marginBottom: "20px" }}>
               Agregar
             </Button>

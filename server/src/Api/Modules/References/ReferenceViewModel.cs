@@ -26,7 +26,7 @@ namespace Api.Modules.References
         public bool Risk { get; set; }
         public string AttentionRequired { get; set; }
         public string MadeBy { get; set; }
-        public string ContactedHf { get; set; }
+        public bool ContactedHf { get; set; }
         public string ContactId { get; set; }
         public DateTime Date { get; set; }
     }

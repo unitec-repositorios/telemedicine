@@ -1,15 +1,11 @@
 import React, {useState} from "react";
-import {Form, Input, Select, message,Divider, Radio, Checkbox} from "antd";
-import moment from "moment";
-import MainTitle from "../../../../components/MainTitle";
-import { create } from "../../referenceFormService"
-import {readlinkSync} from "fs";
+import {Form, Input, Select} from "antd";
 
 export interface SearchForm{
     [key: string]: string;
 }
 
-function HospitalSearching(){
+function HospitalSearching(props: any){
 
     const[form] = Form.useForm();
     const [hidden, setHidden]= useState(true);

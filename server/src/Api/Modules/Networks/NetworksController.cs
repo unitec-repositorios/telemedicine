@@ -19,9 +19,9 @@ namespace Api.Modules.Networks
 
 
         [HttpGet("{id:int?}")]
-        public async Task<IActionResult> Get(int? id)
+        public async Task<IActionResult> Get(int? id, [FromQuery] string name)
         {
-            var data = (await _networkService.All(id))
+            var data = (await _networkService.All(id, name))
                 .Select(network => new NetworkViewModel
                 {
                     Id = network.Id,
@@ -33,9 +33,18 @@ namespace Api.Modules.Networks
 
 
         [HttpDelete("{id}")]
-        public async Task Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            await _networkService.Remove(id);
+            try
+            {
+                await _networkService.Remove(id);
+                return Ok();
+            }
+            catch (NetworkIsBeingUsedException e)
+            {
+                return BadRequest(e.Message);
+            }
+            
         }
 
         [HttpPost]

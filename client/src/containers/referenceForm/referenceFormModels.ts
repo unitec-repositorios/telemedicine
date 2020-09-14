@@ -16,7 +16,7 @@ export interface CreateRRForm{
     risk: boolean;
     attentionRequired: string;
     madeBy: string;
-    contactedHf: string;
+    contactedHf: boolean;
     contactId: string;
     date: Date;
 }
@@ -40,21 +40,10 @@ export interface RRForm{
     risk: boolean;
     attentionRequired: string;
     madeBy: string;
-    contactedHf: string;
+    contactedHf: boolean;
     contactId: string;
     date: Date;
 }
-
-export interface OriginHospital{
-    name: string; 
-    code: number;
-}
-
-export interface DestinationHospital{
-    name: string;
-    code: number;
-}
-
 export interface Reference{
     codeform: number;
     patientname: string;

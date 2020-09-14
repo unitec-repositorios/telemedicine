@@ -21,12 +21,14 @@ namespace Core.Patients
             return await _patientRepository.FindById(id);
         }
 
-        public async Task<IEnumerable<Patient>> All(int? id, string idNumber)
+        public async Task<IEnumerable<Patient>> All(int? id, string idNumber, string foreignIdNumber, string email)
         {
-            return await _patientRepository
+            return await _patientRepository 
                 .Filter(patient => !patient.Disabled)
                 .Where(x => id == null || x.Id == id)
                 .Where(x => idNumber == null || x.IdNumber == idNumber)
+                .Where(x => foreignIdNumber == null || x.IdNumber == foreignIdNumber)
+                .Where(x => email == null || x.Email == email)
                 .ToListAsync();
         }
 
@@ -47,6 +49,8 @@ namespace Core.Patients
             updatePatient.Email = patient.Email;
             updatePatient.Gender = patient.Gender;
             updatePatient.Address = patient.Address;
+            updatePatient.Nationality = patient.Nationality;
+            updatePatient.Contacts = patient.Contacts;
             await _patientRepository.Update(updatePatient);
         }
 
@@ -61,7 +65,9 @@ namespace Core.Patients
                 DateOfBirth = patient.DateOfBirth,
                 Email = patient.Email,
                 Gender = patient.Gender,
-                Address = patient.Address
+                Address = patient.Address,
+                Nationality = patient.Nationality,
+                Contacts = patient.Contacts
             };
 
             await _patientRepository.Add(newPatient);

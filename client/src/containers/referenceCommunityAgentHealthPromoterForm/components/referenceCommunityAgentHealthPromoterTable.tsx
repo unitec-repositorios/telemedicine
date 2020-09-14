@@ -1,13 +1,12 @@
 import React, { useEffect, useState, MouseEventHandler } from "react";
 import { Button, Table, Popconfirm, message } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Link, RouteComponentProps, navigate } from "@reach/router";
-import{Reference} from "../rrFormModels";
+import{Reference} from "../referenceCommunityAgentHealthPromoterModel";
 import MainTitle from "../../../components/MainTitle";
-import {allR} from "../rrFormService"
+import {allR} from "../referenceCommunityAgentHealthPromoterService"
 interface ReferenceProps extends RouteComponentProps {}
 
-function RACPSTable(props: ReferenceProps){
+function ReferenceACPSTable(props: ReferenceProps){
     const [reference, setReference] = useState<Reference[]>([]);
     useEffect(() => {
         (async () => {
@@ -39,8 +38,8 @@ function RACPSTable(props: ReferenceProps){
       ]
       return (
         <div>
-          <MainTitle>Referencia</MainTitle>
-          <Link to="/racpsform/add">
+          <MainTitle>Referencia Agente Comunitario - Promotor de Salud</MainTitle>
+          <Link to="/referenceACSPSForm/add">
             <Button type="primary" style={{ marginBottom: "20px" }}>
               Agregar
             </Button>
@@ -55,4 +54,4 @@ function RACPSTable(props: ReferenceProps){
       );
 
 }
-export default RACPSTable;
+export default ReferenceACPSTable;

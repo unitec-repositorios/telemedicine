@@ -22,11 +22,6 @@ export async function findById(id: number) {
 export async function remove(id: number) {
   await axios.delete(`${baseUrl}/${id}`);
 }
-//Seleccion de hospital
-export async function findHospital(){
- const response = await axios.get(`${baseUrl}`);
- return (response.data as RRForm[]);
-}
 
 export async function allR(){
   const response = await axios.get(baseUrl);
