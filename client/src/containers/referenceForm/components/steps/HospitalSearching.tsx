@@ -9,6 +9,14 @@ function HospitalSearching(props: any){
 
     const[form] = Form.useForm();
     const [hidden, setHidden]= useState(true);
+  const [hospitals, setHospitals] = useState<Hospital[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const data = await all();
+      setHospitals(data);
+    })();
+  }, []);
 
     const formItemLayout = {
         labelCol: {
@@ -47,6 +55,13 @@ function HospitalSearching(props: any){
             <Select.Option value = "La Lima"> La Lima</Select.Option>
             <Select.Option value = "Progreso"> Progreso</Select.Option>
             <Select.Option value = "Villanueva"> Villanueva</Select.Option>
+						{hospitals.map(
+							(h: any) => (
+								<Option key={h.name} value={h.name} label={h.name}>
+									{h.name}
+								</Option>
+							)
+						)}
         </Select>
 
         </Form.Item>
@@ -83,6 +98,13 @@ function HospitalSearching(props: any){
             <Select.Option value = "La Lima"> La Lima</Select.Option>
             <Select.Option value = "Progreso"> Progreso</Select.Option>
             <Select.Option value = "Villanueva"> Villanueva</Select.Option>
+						{hospitals.map(
+							(h: any) => (
+								<Option key={h.name} value={h.name} label={h.name}>
+									{h.name}
+								</Option>
+							)
+						)}
         </Select>
 
         </Form.Item>
