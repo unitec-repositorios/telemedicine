@@ -136,3 +136,10 @@ client/.idea/
 server/src/Data/Migrations/
 
 server/src/Api/appsettings.json
+server/.vs/Telemedicine/v16/
+
+server/src/Api/bin/Debug/netcoreapp3.1/
+
+*.dll
+
+*.pdb

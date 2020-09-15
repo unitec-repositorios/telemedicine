@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Steps, Button, message } from "antd";
 import ReferenceInformation from "./steps/ReferenceInformation";
+import PatientReference from "./steps/PatientReference";
 
 const { Step } = Steps;
 
@@ -24,20 +25,24 @@ function Stepper(props: any) {
   const steps = [
     {
       title: "Paciente",
-      content: "First-Content"
+      content: (
+        <PatientReference current={current} changeCurrent={changeCurrent} />
+      ),
     },
     {
       title: "Establecimiento de Salud",
-      content: "Second-Content"
+      content: "Second-Content",
     },
     {
       title: "Diagnostico",
-      content: <ReferenceInformation
-        length={3}
-        current={current}
-        changeCurrent={changeCurrent}
-      />
-    }
+      content: (
+        <ReferenceInformation
+          length={3}
+          current={current}
+          changeCurrent={changeCurrent}
+        />
+      ),
+    },
   ];
 
   return (
@@ -48,7 +53,7 @@ function Stepper(props: any) {
         ))}
       </Steps>
 
-      <div className="steps-content" >{steps[current].content}</div>
+      <div className="steps-content">{steps[current].content}</div>
       <div style={{ marginTop: "20px" }} className="steps-action">
         {current < steps.length - 1 && (
           <Button type="primary" onClick={() => next()}>

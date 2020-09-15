@@ -43,5 +43,11 @@ namespace Core.ReferencesACS_PS
             await _referenceACS_PSRepository.Add(reference);
         }
 
+        public async Task<IEnumerable<ReferenceCommunityAgentHealthPromoter>> All()
+        {
+            return await _referenceACS_PSRepository
+                .Filter(network => !network.Disabled)
+                .ToListAsync();
+        }
     }
 }
