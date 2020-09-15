@@ -31,6 +31,7 @@ namespace Api.Modules.References
         public DateTime Date { get; set; }
         public string Companion { get; set;}
         public string Relationship { get; set; }
-        public string AddressorPhone { get; set; }
+        public string Address { get; set; }
+        public string Phone { get; set; }
     }
 }

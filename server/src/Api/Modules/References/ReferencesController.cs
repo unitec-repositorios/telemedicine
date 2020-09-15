@@ -51,7 +51,8 @@ namespace Api.Modules.References
                     Date = referenceViewModel.Date,
                     Companion =  referenceViewModel.Companion,
                     Relationship = referenceViewModel.Relationship,
-                    AddressorPhone = referenceViewModel.AddressorPhone,
+                    Address = referenceViewModel.Address,
+                    Phone = referenceViewModel.Phone,
                 });
 
             return Ok(data);
@@ -101,7 +102,8 @@ namespace Api.Modules.References
                     Date = referenceViewModel.Date,
                     Companion =  referenceViewModel.Companion,
                     Relationship = referenceViewModel.Relationship,
-                    AddressorPhone = referenceViewModel.AddressorPhone,
+                    Address = referenceViewModel.Address,
+                    Phone = referenceViewModel.Phone,
 
             };
 
