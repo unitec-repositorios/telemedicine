@@ -6,7 +6,7 @@ export interface SearchForm{
 }
 
 function HospitalSearching(props: any){
-
+    const { Option } = Select;
     const[form] = Form.useForm();
     const [hidden, setHidden]= useState(true);
 

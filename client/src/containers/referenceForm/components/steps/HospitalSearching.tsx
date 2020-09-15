@@ -1,14 +1,24 @@
-import React, {useState} from "react";
 import {Form, Input, Select} from "antd";
-
+import { Hospital } from '../../../hospitals/hospitalModels';
+import React, { useState, useRef, useEffect } from "react";
+import { all } from "../../../hospitals/hospitalService";
 export interface SearchForm{
     [key: string]: string;
 }
 
 function HospitalSearching(props: any){
+  const { Option } = Select;
+  const[form] = Form.useForm();
+  const [hidden, setHidden]= useState(true);
+  const [hospitals, setHospitals] = useState<Hospital[]>([]);
 
-    const[form] = Form.useForm();
-    const [hidden, setHidden]= useState(true);
+  useEffect(() => {
+    (async () => {
+      const data = await all();
+      setHospitals(data);
+      console.log(data);
+    })();
+  }, []);
 
     const formItemLayout = {
         labelCol: {
@@ -43,10 +53,13 @@ function HospitalSearching(props: any){
          }]}
         >
         <Select>
-            <Select.Option value = "Choloma"> Choloma</Select.Option>
-            <Select.Option value = "La Lima"> La Lima</Select.Option>
-            <Select.Option value = "Progreso"> Progreso</Select.Option>
-            <Select.Option value = "Villanueva"> Villanueva</Select.Option>
+						{hospitals.map(
+							(h: any) => (
+								<Option key={h.name} value={h.name} label={h.name}>
+									{h.name}
+								</Option>
+							)
+						)}
         </Select>
 
         </Form.Item>
@@ -79,10 +92,13 @@ function HospitalSearching(props: any){
          }]}
         >
         <Select>
-            <Select.Option value = "Choloma"> Choloma</Select.Option>
-            <Select.Option value = "La Lima"> La Lima</Select.Option>
-            <Select.Option value = "Progreso"> Progreso</Select.Option>
-            <Select.Option value = "Villanueva"> Villanueva</Select.Option>
+						{hospitals.map(
+							(h: any) => (
+								<Option key={h.name} value={h.name} label={h.name}>
+									{h.name}
+								</Option>
+							)
+						)}
         </Select>
 
         </Form.Item>
