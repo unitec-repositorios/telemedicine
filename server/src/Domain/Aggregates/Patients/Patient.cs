@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Aggregates.Patients
 {
-    public class Patient:BaseEntity, IAggregateRoot
+    public class Patient : BaseEntity, IAggregateRoot
     {
 
         public string IdNumber { get; set; }
@@ -25,8 +25,7 @@ namespace Domain.Aggregates.Patients
 
         public string Nationality { get; set; }
 
-        [Column(TypeName = "jsonb")]
-        public string Contacts { get; set; }
+        [Column(TypeName = "jsonb")] public string Contacts { get; set; }
 
 
     }
