@@ -29,4 +29,5 @@ export interface Reference {
   id: number;
   originHfId: number;
   destinationHfId: number;
+	patientId: number;
 }

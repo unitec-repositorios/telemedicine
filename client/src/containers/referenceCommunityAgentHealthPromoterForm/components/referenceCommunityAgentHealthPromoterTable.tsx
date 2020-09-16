@@ -5,6 +5,7 @@ import{Reference} from "../referenceCommunityAgentHealthPromoterModel";
 import MainTitle from "../../../components/MainTitle";
 import {allR} from "../referenceCommunityAgentHealthPromoterService"
 import {all} from "../../hospitals/hospitalService"
+import {all as allPatients} from "../../patients/patientService"
 interface ReferenceProps extends RouteComponentProps {}
 
 interface Table {
@@ -22,10 +23,11 @@ function ReferenceACPSTable(props: ReferenceProps){
         (async () => {
           const data = await allR();
 					const hospital = await all();
+					const patients = await allPatients();
 					
 					let newTable:Table[] = [];
 
-					data.forEach(reg => newTable.push({id: reg.id, patient: "prueba", origin: hospital.find(h => h.id === reg.originHfId)?.name||" ", destination: hospital.find(h => h.id === reg.destinationHfId)?.name||" " }));
+					data.forEach(reg => newTable.push({id: reg.id, patient: patients.find(p => p.id === reg.patientId)?.name||" ", origin: hospital.find(h => h.id === reg.originHfId)?.name||" ", destination: hospital.find(h => h.id === reg.destinationHfId)?.name||" " }));
 
 					setTable(newTable);
         })();
