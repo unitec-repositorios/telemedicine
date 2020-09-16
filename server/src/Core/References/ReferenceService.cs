@@ -49,6 +49,7 @@ namespace Core.References
 							Type = reference.Type,
 							PatientId = reference.PatientId,
 							Motive = reference.Motive,
+							Institution = reference.Institution,
 							DescriptionMotive = reference.DescriptionMotive,
 							Symptoms = reference.Symptoms,
 							MedicalSummary = reference.MedicalSummary,

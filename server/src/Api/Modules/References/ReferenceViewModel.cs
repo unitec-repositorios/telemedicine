@@ -13,6 +13,7 @@ namespace Api.Modules.References
         public int OriginHfId { get; set; }
         public int DestinationHfId { get; set; }
         public string PatientId { get; set; }
+				public string Institution { get; set; }
         public string Motive { get; set; }
         public string DescriptionMotive { get; set; }
         public string Symptoms { get; set; }

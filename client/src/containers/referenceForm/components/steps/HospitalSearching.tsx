@@ -13,6 +13,7 @@ function HospitalSearching(props: any){
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
 	const [selectedOrigin, setSelectedOrigin] = useState(0);
 	const [selectedDestination, setSelectedDestination] = useState(0);
+	const [selectedInstitution, setSelectedInstitution] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -58,6 +59,7 @@ function HospitalSearching(props: any){
 					showSearch
 					placeholder="Seleccione un establecimiento de salud"
 					onSelect={(value) => {
+						props.onOrigin(+value);
 						setSelectedOrigin(+value);
 						console.log(+value)
 					}}
@@ -82,7 +84,15 @@ function HospitalSearching(props: any){
                 message: "El campo es requerido."
             }]}
         >
-           <Select>
+           <Select
+						showSearch
+						placeholder="Seleccione una institucion"
+						onSelect={(value:any) => {
+							props.onInstitution(value);
+							setSelectedInstitution(value);
+							console.log(value)
+						}}
+					 >
                <Select.Option value = "SESAL"> SESAL</Select.Option>
                <Select.Option value = "Privado"> Privado</Select.Option>
                <Select.Option value = "IHSS"> IHSS</Select.Option>
@@ -104,6 +114,7 @@ function HospitalSearching(props: any){
 					showSearch
 					placeholder="Seleccione un establecimiento de salud"
 					onSelect={(value) => {
+						props.onDestination(+value);
 						setSelectedDestination(+value);
 						console.log(+value)
 					}}

@@ -12,9 +12,18 @@ function Stepper(props: any) {
     setCurrent(current);
   };
 
-  const hospitalHandler = ( originHfId: number, destinationHfId: number, institution: string) =>{
-    setReference({...reference, originHfId, destinationHfId, institution});
-  };
+	const originHandler = (originHfId: number) => {
+		setReference({...reference, originHfId});
+	}
+
+	const destinationHandler = (destinationHfId: number) => {
+		setReference({...reference, destinationHfId});
+	}
+
+	const institutionHandler = (institution: string) => {
+		setReference({...reference, institution});
+	}
+
   const next = () => {
     let nextVal = current + 1;
     setCurrent(nextVal);
@@ -33,7 +42,9 @@ function Stepper(props: any) {
     {
       title: "Establecimiento de Salud",
       content: <HospitalSearching
-      onChange = {hospitalHandler}
+			onOrigin = {originHandler}
+			onDestination = {destinationHandler}
+			onInstitution = {institutionHandler}
       length={3}
       current={current}
       changeCurrent={changeCurrent}
@@ -45,6 +56,7 @@ function Stepper(props: any) {
         length={3}
         current={current}
         changeCurrent={changeCurrent}
+				referenceState = {reference}
       />
     }
   ];
