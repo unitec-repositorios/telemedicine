@@ -2,15 +2,19 @@ import React, { useState } from "react";
 import { Steps, Button, message } from "antd";
 import ReferenceInformation from "./steps/ReferenceInformation";
 import HospitalSearching from "./steps/HospitalSearching";
+import {RRForm} from "./../referenceFormModels";
 const { Step } = Steps;
 
 function Stepper(props: any) {
   const [current, setCurrent] = useState(0);
-
+  const [reference, setReference] = useState({} as RRForm) ;
   const changeCurrent = (current: number) => {
     setCurrent(current);
   };
 
+  const hospitalHandler = ( originHfId: number, destinationHfId: number, institution: string) =>{
+    setReference({...reference, originHfId, destinationHfId, institution});
+  };
   const next = () => {
     let nextVal = current + 1;
     setCurrent(nextVal);
@@ -29,6 +33,7 @@ function Stepper(props: any) {
     {
       title: "Establecimiento de Salud",
       content: <HospitalSearching
+      onChange = {hospitalHandler}
       length={3}
       current={current}
       changeCurrent={changeCurrent}

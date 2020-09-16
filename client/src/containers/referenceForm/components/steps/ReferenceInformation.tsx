@@ -99,8 +99,8 @@ function ReferenceInformation(props: any) {
       try {
         await create({
           type: "NotSet",
-          originHfId: 10,
-          destinationHfId: 11,
+          originHfId: 0,
+          destinationHfId: 0,
           patientId: "NotSet",
           motive: values.motive,
           descriptionMotive: values.descriptionMotive,

@@ -1,4 +1,4 @@
-import {Form, Input, Select, message,Divider, Radio, Checkbox} from "antd";
+import {Form, Button, Input, Select, message,Divider, Radio, Checkbox} from "antd";
 import { Hospital } from '../../../hospitals/hospitalModels'
 import React, { useState, useRef, useEffect } from "react";
 import { all } from "../../../hospitals/hospitalService";
@@ -12,7 +12,18 @@ function HospitalSearching(props: any){
     const [hidden, setHidden]= useState(true);
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
 	const [selectedOrigin, setSelectedOrigin] = useState(0);
-	const [selectedDestination, setSelectedDestination] = useState(0);
+    const [selectedDestination, setSelectedDestination] = useState(0);
+    const [current, setCurrent] = useState(0);
+    
+    const prev = () => {
+        const prevVal = current - 1;
+        setCurrent(prevVal);
+      };
+
+    const onFinish=(values: any) =>{
+        props.onChange(values.origin,values.destination,values.institution);
+        
+    };
 
     const formItemLayout = {
         labelCol: {
@@ -26,6 +37,18 @@ function HospitalSearching(props: any){
           md: { span: 8 },
         },
       };
+    const tailFormItemLayout = {
+        wrapperCol: {
+          xs: {
+            span: 24,
+            offset: 0,
+          },
+          sm: {
+            span: 16,
+            offset: 8,
+          },
+        },
+    };
     
       return (
         <>
@@ -34,7 +57,8 @@ function HospitalSearching(props: any){
             form = {form}   
             name ="register"
             scrollToFirstError
-            id= "HospitalDestination"     
+            id= "HospitalDestination" 
+            onFinish = {onFinish}    
         >
        
 
@@ -109,7 +133,25 @@ function HospitalSearching(props: any){
 							)
 						)}
         </Select>
+        
+        </Form.Item>
+        <Form.Item {...tailFormItemLayout}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={{ marginRight: "8px" }}
+          >
+            Siguiente
+          </Button>
 
+          <Button htmlType="button" onClick={() => form.resetFields()}>
+            Reiniciar campos
+          </Button>
+          {current > 0 && (
+            <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+              Anterior
+            </Button>
+          )}
         </Form.Item>
         </Form>
 

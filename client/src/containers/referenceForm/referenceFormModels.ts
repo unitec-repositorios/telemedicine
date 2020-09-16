@@ -26,6 +26,7 @@ export interface RRForm{
     type : string;
     originHfId: number;
     destinationHfId: number;
+    institution:string;
     patientId: string;
     motive: string;
     descriptionMotive: string;
