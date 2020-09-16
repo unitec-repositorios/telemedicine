@@ -9,6 +9,9 @@ function HospitalSearching(props: any){
     const { Option } = Select;
     const[form] = Form.useForm();
     const [hidden, setHidden]= useState(true);
+  const [hospitals, setHospitals] = useState<Hospital[]>([]);
+	const [selectedOrigin, setSelectedOrigin] = useState(0);
+	const [selectedDestination, setSelectedDestination] = useState(0);
 
     const formItemLayout = {
         labelCol: {
@@ -42,11 +45,21 @@ function HospitalSearching(props: any){
              message: "El campo es requerido."
          }]}
         >
-        <Select>
-            <Select.Option value = "Choloma"> Choloma</Select.Option>
-            <Select.Option value = "La Lima"> La Lima</Select.Option>
-            <Select.Option value = "Progreso"> Progreso</Select.Option>
-            <Select.Option value = "Villanueva"> Villanueva</Select.Option>
+        <Select
+					showSearch
+					placeholder="Seleccione un establecimiento de salud"
+					onSelect={(value) => {
+						setSelectedOrigin(+value);
+						console.log(+value)
+					}}
+				>
+						{hospitals.map(
+							(h: any) => (
+								<Option key={h.name} value={h.id} label={h.name}>
+									{h.name}
+								</Option>
+							)
+						)}
         </Select>
 
         </Form.Item>
@@ -78,11 +91,21 @@ function HospitalSearching(props: any){
              message: "El campo es requerido."
          }]}
         >
-        <Select>
-            <Select.Option value = "Choloma"> Choloma</Select.Option>
-            <Select.Option value = "La Lima"> La Lima</Select.Option>
-            <Select.Option value = "Progreso"> Progreso</Select.Option>
-            <Select.Option value = "Villanueva"> Villanueva</Select.Option>
+        <Select
+					showSearch
+					placeholder="Seleccione un establecimiento de salud"
+					onSelect={(value) => {
+						setSelectedOrigin(+value);
+						console.log(+value)
+					}}
+				>
+						{hospitals.map(
+							(h: any) => (
+								<Option key={h.name} value={h.id} label={h.name}>
+									{h.name}
+								</Option>
+							)
+						)}
         </Select>
 
         </Form.Item>

@@ -11,22 +11,14 @@ function HospitalSearching(props: any){
   const[form] = Form.useForm();
   const [hidden, setHidden]= useState(true);
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
+	const [selectedOrigin, setSelectedOrigin] = useState(0);
+	const [selectedDestination, setSelectedDestination] = useState(0);
 
-<<<<<<< HEAD
-=======
-    const[form] = Form.useForm();
-    const [hidden, setHidden]= useState(true);
-  const [hospitals, setHospitals] = useState<Hospital[]>([]);
-
->>>>>>> b0af20fdd67bca44ecf176e2566d38a3d22135fc
   useEffect(() => {
     (async () => {
       const data = await all();
       setHospitals(data);
-<<<<<<< HEAD
       console.log(data);
-=======
->>>>>>> b0af20fdd67bca44ecf176e2566d38a3d22135fc
     })();
   }, []);
 
@@ -62,17 +54,17 @@ function HospitalSearching(props: any){
              message: "El campo es requerido."
          }]}
         >
-        <Select>
-<<<<<<< HEAD
-=======
-            <Select.Option value = "Choloma"> Choloma</Select.Option>
-            <Select.Option value = "La Lima"> La Lima</Select.Option>
-            <Select.Option value = "Progreso"> Progreso</Select.Option>
-            <Select.Option value = "Villanueva"> Villanueva</Select.Option>
->>>>>>> b0af20fdd67bca44ecf176e2566d38a3d22135fc
+        <Select
+					showSearch
+					placeholder="Seleccione un establecimiento de salud"
+					onSelect={(value) => {
+						setSelectedOrigin(+value);
+						console.log(+value)
+					}}
+				>
 						{hospitals.map(
 							(h: any) => (
-								<Option key={h.name} value={h.name} label={h.name}>
+								<Option key={h.name} value={h.id} label={h.name}>
 									{h.name}
 								</Option>
 							)
@@ -108,17 +100,17 @@ function HospitalSearching(props: any){
              message: "El campo es requerido."
          }]}
         >
-        <Select>
-<<<<<<< HEAD
-=======
-            <Select.Option value = "Choloma"> Choloma</Select.Option>
-            <Select.Option value = "La Lima"> La Lima</Select.Option>
-            <Select.Option value = "Progreso"> Progreso</Select.Option>
-            <Select.Option value = "Villanueva"> Villanueva</Select.Option>
->>>>>>> b0af20fdd67bca44ecf176e2566d38a3d22135fc
+        <Select
+					showSearch
+					placeholder="Seleccione un establecimiento de salud"
+					onSelect={(value) => {
+						setSelectedDestination(+value);
+						console.log(+value)
+					}}
+				>
 						{hospitals.map(
 							(h: any) => (
-								<Option key={h.name} value={h.name} label={h.name}>
+								<Option key={h.name} value={h.id} label={h.name}>
 									{h.name}
 								</Option>
 							)

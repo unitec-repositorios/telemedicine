@@ -12,10 +12,12 @@ namespace Core.References
     {
 
         private readonly IReferenceRepository _referenceRepository;
+				private readonly IHospitalRepository _hospitalRepository;
 
-        public ReferenceService(IReferenceRepository referenceRepository)
+        public ReferenceService(IReferenceRepository referenceRepository, IHospitalRepository hospitalRepository)
         {
             _referenceRepository = referenceRepository;
+						_hospitalRepository = hospitalRepository;
         }
 
 
@@ -40,7 +42,33 @@ namespace Core.References
 
         public async Task Create(Reference reference)
         {
-            await _referenceRepository.Add(reference);
+						var newOriginHF = await _hospitalRepository.FIndById(reference.OriginHfId);
+						var newDestinationHF = await _hospitalRepository.FIndById(reference.DestinationHfId);
+
+						var newReference = new Reference {
+							Type = reference.Type,
+							PatientId = reference.PatientId,
+							Motive = reference.Motive,
+							DescriptionMotive = reference.DescriptionMotive,
+							Symptoms = reference.Symptoms,
+							MedicalSummary = reference.MedicalSummary,
+							VitalSigns = reference.VitalSigns,
+							ObGyn = reference.ObGyn,
+							PhysicalExamination = reference.PhysicalExamination,
+							ComplementaryExams = reference.ComplementaryExams,
+							DiagnosticImpression = reference.DiagnosticImpression,
+							Observations = reference.Observations,
+							Risk = reference.Risk,
+							AttentionRequired = reference.AttentionRequired,
+							MadeBy = reference.MadeBy,
+							ContactedHf = reference.ContactedHf,
+							ContactId = reference.ContactId,
+							Date = reference.Date,
+							OriginHF = newOriginHF,
+							DestinationHF = newDestinationHF
+						};
+
+            await _referenceRepository.Add(newReference);
         }
     }
 }

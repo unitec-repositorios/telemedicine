@@ -1,7 +1,7 @@
 export interface CreateRRForm{
     type : string;
-    originHfId: string;
-    destinationHfId: string;
+    originHfId: number;
+    destinationHfId: number;
     patientId: string;
     motive: string;
     descriptionMotive: string;
@@ -24,8 +24,8 @@ export interface CreateRRForm{
 export interface RRForm{
     id: number;
     type : string;
-    originHfId: string;
-    destinationHfId: string;
+    originHfId: number;
+    destinationHfId: number;
     patientId: string;
     motive: string;
     descriptionMotive: string;

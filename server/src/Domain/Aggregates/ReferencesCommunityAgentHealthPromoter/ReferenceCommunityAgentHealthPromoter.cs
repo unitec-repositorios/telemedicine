@@ -15,9 +15,12 @@ namespace Domain.Aggregates.ReferencesACS_PS
         public string ReferrerPhone { get; set; }
         public string ReferrerEmail { get; set; }
         public string ActionTaken { get; set; }
-        public string OriginHfId { get; set; }
-        public string DestinationHfId { get; set; }
 
+        public int OriginHfId { get; set; }
+        public int DestinationHfId { get; set; }
+
+				public Hospital OriginHF { get; set; }
+				public Hospital DestinationHF { get; set; }
 
     }
 }

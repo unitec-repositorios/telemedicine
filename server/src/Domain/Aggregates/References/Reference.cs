@@ -4,14 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using System.Text.Json.Serialization;
 using Domain.Contracts;
+using Domain.Aggregates.Hospitals;
 
 namespace Domain.Aggregates.Reference
 {
     public class Reference : BaseEntity, IAggregateRoot
     {
         public string Type { get; set; }
-        public string OriginHfId { get; set; }
-        public string DestinationHfId { get; set; }
         public string PatientId { get; set; }
         public string Motive { get; set; }
         public string DescriptionMotive { get; set; }
@@ -36,6 +35,11 @@ namespace Domain.Aggregates.Reference
         public string ContactId { get; set; }
         public DateTime Date { get; set; }
 
+        public int OriginHfId { get; set; }
+        public int DestinationHfId { get; set; }
+
+				public Hospital OriginHF { get; set; }
+				public Hospital DestinationHF { get; set; }
 
     }
 }

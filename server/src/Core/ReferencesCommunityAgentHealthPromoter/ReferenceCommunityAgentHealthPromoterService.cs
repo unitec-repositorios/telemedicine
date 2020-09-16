@@ -12,10 +12,12 @@ namespace Core.ReferencesACS_PS
     {
 
         private readonly IReferenceCommunityAgentHealthPromoterRepository _referenceACS_PSRepository;
+				private readonly IHospitalRepository _hospitalRepository;
 
-        public ReferenceCommunityAgentHealthPromoterService(IReferenceCommunityAgentHealthPromoterRepository referenceACS_PSRepository)
+        public ReferenceCommunityAgentHealthPromoterService(IReferenceCommunityAgentHealthPromoterRepository referenceACS_PSRepository, IHospitalRepository hospitalRepository)
         {
             _referenceACS_PSRepository = referenceACS_PSRepository;
+						_hospitalRepository = hospitalRepository;
         }
 
 
@@ -40,6 +42,21 @@ namespace Core.ReferencesACS_PS
 
         public async Task Create(ReferenceCommunityAgentHealthPromoter reference)
         {
+						var newOriginHF = await _hospitalRepository.FIndById(reference.OriginHfId);
+						var newDestinationHF = await _hospitalRepository.FIndById(reference.DestinationHfId);
+
+						var newReference = new ReferenceCommunityAgentHealthPromoter {
+							Community = reference.Community,
+							Referrer = reference.Referrer,
+							ReferrerPhone = reference.ReferrerPhone,
+							ReferrerEmail = reference.ReferrerEmail,
+							ActionTaken = reference.ActionTaken,
+							PatientId = reference.PatientId,
+							Motive = reference.Motive,
+							Date = reference.Date,
+							OriginHF = newOriginHF,
+							DestinationHF = newDestinationHF
+						};
             await _referenceACS_PSRepository.Add(reference);
         }
 
