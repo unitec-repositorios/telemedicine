@@ -22,7 +22,8 @@ namespace Core.Patients
         }
 
         public async Task<IEnumerable<Patient>> All(int? id, string idNumber, string foreignIdNumber, string email,
-            bool exactMatch)
+            int? limit,
+            bool multipleResults)
         {
             var data = _patientRepository
                 .Filter(patient => !patient.Disabled)
@@ -30,9 +31,18 @@ namespace Core.Patients
                 .Where(x => foreignIdNumber == null || x.IdNumber == foreignIdNumber)
                 .Where(x => email == null || x.Email == email);
 
+            IQueryable<Patient> patients = data;
 
-            var patients = data.Where(x =>
-                idNumber == null || (exactMatch ? x.IdNumber == idNumber : x.IdNumber.Contains(idNumber)));
+            if (multipleResults)
+            {
+                patients = data.Where(x => x.IdNumber.Contains(idNumber));
+            }
+
+
+            if (limit != null)
+            {
+                patients = patients.Take(limit.Value);
+            }
 
             return await patients.ToListAsync();
         }

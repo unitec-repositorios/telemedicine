@@ -86,7 +86,7 @@ function HospitalSearching(props: any){
         >
            <Select
 						showSearch
-						placeholder="Seleccione una institucion"
+						placeholder="Seleccione una institución"
 						onSelect={(value:any) => {
 							props.onInstitution(value);
 							setSelectedInstitution(value);

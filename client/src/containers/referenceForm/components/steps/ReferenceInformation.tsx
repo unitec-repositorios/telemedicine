@@ -961,25 +961,24 @@ function ReferenceInformation(props: any) {
             }
           />
         </Form.Item>
+          <Form.Item {...tailFormItemLayout}>
+              <Button
+                  type="primary"
+                  htmlType="submit"
+                  style={{marginRight: "8px"}}
+              >
+                  Guardar
+              </Button>
 
-        <Form.Item {...tailFormItemLayout}>
-          <Button
-            type="primary"
-            htmlType="submit"
-            style={{ marginRight: "8px" }}
-          >
-            Guardar
-          </Button>
-
-          <Button htmlType="button" onClick={() => form.resetFields()}>
-            Reiniciar campos
-          </Button>
-          {current > 0 && (
-            <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
-              Anterior
-            </Button>
-          )}
-        </Form.Item>
+              <Button htmlType="button" onClick={() => form.resetFields()}>
+                  Reiniciar campos
+              </Button>
+              {current > 0 && (
+                  <Button style={{margin: "0 8px"}} onClick={() => prev()}>
+                      Anterior
+                  </Button>
+              )}
+          </Form.Item>
       </Form>
     </>
   );

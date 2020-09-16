@@ -46,12 +46,11 @@ function Dashboard(props: DashboardProps) {
             <Link to="networks">Redes</Link>
           </Menu.Item>
           <Menu.Item key="/referenceForm" icon={<FormOutlined />}>
-            <Link to="referenceForm">Formulario Referencia Respuesta</Link>
+            <Link to="referenceForm">Referencia Respuesta</Link>
           </Menu.Item>
           <Menu.Item key="/referenceACSPSForm" icon={<FormOutlined />}>
             <Link to="referenceACSPSForm">
-              Formulario Referencia Respuesta Agente Comunitario-Promotor de
-              Salud
+              Agente Comunitario
             </Link>
           </Menu.Item>
         </Menu>

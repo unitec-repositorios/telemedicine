@@ -10,7 +10,8 @@ namespace Core.Patients
 
         public Task Create(Patient patient);
 
-        public Task<IEnumerable<Patient>> All(int? id, string idNumber, string foreignIdNumber, string email, bool exactMatch);
+        public Task<IEnumerable<Patient>> All(int? id, string idNumber, string foreignIdNumber, string email, int? limit,
+            bool exactMatch);
 
         public Task Remove(int id);
 
