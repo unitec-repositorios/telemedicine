@@ -295,6 +295,10 @@ function AddPatientForm(props: AddPatientProps) {
               whitespace: true,
             },
             {
+              pattern: /^([A-Za-z]+[0-9]*[-|_|.]*)+@(.)+$/g,
+              message: "Correo sólo acepta letras, números, puntos o guiones. En ese orden. ",
+            },
+            {
               type: "email",
               message: "Correo debe estar en formato: ejemplo@ejemplo.com",
             },
