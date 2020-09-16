@@ -101,6 +101,7 @@ function ReferenceInformation(props: any) {
           type: "NotSet",
           originHfId: props.referenceState.originHfId,
           destinationHfId: props.referenceState.destinationHfId,
+					institution: props.referenceState.institution,
           patientId: "NotSet",
           motive: values.motive,
           descriptionMotive: values.descriptionMotive,

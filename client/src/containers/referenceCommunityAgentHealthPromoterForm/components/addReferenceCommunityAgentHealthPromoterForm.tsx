@@ -2,14 +2,24 @@ import React, { useState } from "react";
 import { Steps, Button, message } from "antd";
 import ReferenceACSPSInformation from "./steps/referenceACSPSInformation";
 import HospitalSearching from "./steps/HospitalSearching";
+import { ReferenceACSPSForm } from "./../referenceCommunityAgentHealthPromoterModel";
 const { Step } = Steps;
 
 function Stepper(props: any) {
   const [current, setCurrent] = useState(0);
+  const [reference, setReference] = useState({} as ReferenceACSPSForm) ;
 
   const changeCurrent = (current: number) => {
     setCurrent(current);
   };
+
+	const originHandler = (originHfId: number) => {
+		setReference({...reference, originHfId});
+	}
+
+	const destinationHandler = (destinationHfId: number) => {
+		setReference({...reference, destinationHfId});
+	}
 
   const next = () => {
     let nextVal = current + 1;
@@ -29,6 +39,8 @@ function Stepper(props: any) {
     {
       title: "Establecimiento de Salud",
       content: <HospitalSearching
+			onOrigin = {originHandler}
+			onDestination = {destinationHandler}
       length={3}
       current={current}
       changeCurrent={changeCurrent}
@@ -40,6 +52,7 @@ function Stepper(props: any) {
         length={3}
         current={current}
         changeCurrent={changeCurrent}
+				referenceState = {reference}
       />
     }
   ];

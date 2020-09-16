@@ -31,8 +31,8 @@ function ReferenceACSPSInformation(props: any) {
           referrerPhone: values.phone,
           referrerEmail: values.email,
           actionTaken: values.action,
-          originHfId: "Not Set",
-          destinationHfId: "Not Set"
+          originHfId: props.referenceState.originHfId,
+          destinationHfId: props.referenceState.destinationHfId
         });
 
         form.resetFields();

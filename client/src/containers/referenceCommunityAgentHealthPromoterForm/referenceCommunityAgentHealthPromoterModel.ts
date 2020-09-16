@@ -21,12 +21,12 @@ export interface ReferenceACSPSForm{
 	referrerPhone: string;
 	referrerEmail: string;
 	actionTaken: string;
-	originHfId: string;
-	destinationHfId: string;
+	originHfId: number;
+	destinationHfId: number;
 }
 
 export interface Reference{
-    codeform: number;
-    origin: string;
-    destination: string;
+    id: number;
+    originHfId: number;
+    destinationHfId: number;
 }

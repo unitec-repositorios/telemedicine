@@ -2,6 +2,7 @@ export interface CreateRRForm{
     type : string;
     originHfId: number;
     destinationHfId: number;
+    institution:string;
     patientId: string;
     motive: string;
     descriptionMotive: string;
@@ -46,8 +47,8 @@ export interface RRForm{
     date: Date;
 }
 export interface Reference{
-    codeform: number;
-    patientname: string;
-    origin: string;
-    destination: string;
+    id: number;
+    patient: string;
+    originHfId: number;
+    destinationHfId: number;
 }

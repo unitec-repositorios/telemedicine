@@ -7,24 +7,21 @@ export interface SearchForm{
 }
 
 function HospitalSearching(props: any){
-    const { Option } = Select;
-    const[form] = Form.useForm();
-    const [hidden, setHidden]= useState(true);
+  const { Option } = Select;
+  const [form] = Form.useForm();
+  const [hidden, setHidden]= useState(true);
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
 	const [selectedOrigin, setSelectedOrigin] = useState(0);
-    const [selectedDestination, setSelectedDestination] = useState(0);
-    const [current, setCurrent] = useState(0);
+	const [selectedDestination, setSelectedDestination] = useState(0);
+
+  useEffect(() => {
+    (async () => {
+      const data = await all();
+      setHospitals(data);
+      console.log(data);
+    })();
+  }, []);
     
-    const prev = () => {
-        const prevVal = current - 1;
-        setCurrent(prevVal);
-      };
-
-    const onFinish=(values: any) =>{
-        props.onChange(values.origin,values.destination,values.institution);
-        
-    };
-
     const formItemLayout = {
         labelCol: {
           xs: { span: 24 },
@@ -58,7 +55,6 @@ function HospitalSearching(props: any){
             name ="register"
             scrollToFirstError
             id= "HospitalDestination" 
-            onFinish = {onFinish}    
         >
        
 
@@ -74,8 +70,8 @@ function HospitalSearching(props: any){
 					showSearch
 					placeholder="Seleccione un establecimiento de salud"
 					onSelect={(value: any) => {
-						setSelectedOrigin(+value);
-						console.log(+value)
+						props.onOrigin(value);
+						console.log(value)
 					}}
 				>
 						{hospitals.map(
@@ -87,25 +83,6 @@ function HospitalSearching(props: any){
 						)}
         </Select>
 
-        </Form.Item>
-        
-
-        <Form.Item
-            name = "institution"
-            label="Institucion" 
-            rules = {[{
-                required: true,
-                message: "El campo es requerido."
-            }]}
-        >
-           <Select>
-               <Select.Option value = "SESAL"> SESAL</Select.Option>
-               <Select.Option value = "Privado"> Privado</Select.Option>
-               <Select.Option value = "IHSS"> IHSS</Select.Option>
-               <Select.Option value = "Militar"> Militar</Select.Option>
-               <Select.Option value = "ONG"> ONG</Select.Option>
-               <Select.Option value = "Otro"> Otro</Select.Option>
-           </Select>
         </Form.Item>
 
         <Form.Item 
@@ -117,11 +94,10 @@ function HospitalSearching(props: any){
          }]}
         >
         <Select
-
 					showSearch
 					placeholder="Seleccione un establecimiento de salud"
 					onSelect={(value: any) => {
-						setSelectedOrigin(+value);
+						props.onDestination(value);
 						console.log(+value)
 					}}
 				>
@@ -134,24 +110,6 @@ function HospitalSearching(props: any){
 						)}
         </Select>
         
-        </Form.Item>
-        <Form.Item {...tailFormItemLayout}>
-          <Button
-            type="primary"
-            htmlType="submit"
-            style={{ marginRight: "8px" }}
-          >
-            Siguiente
-          </Button>
-
-          <Button htmlType="button" onClick={() => form.resetFields()}>
-            Reiniciar campos
-          </Button>
-          {current > 0 && (
-            <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
-              Anterior
-            </Button>
-          )}
         </Form.Item>
         </Form>
 
