@@ -29,7 +29,7 @@ interface EditHospitalRouterParams {
 }
 
 interface EditHospitalProps
-  extends RouteComponentProps<EditHospitalRouterParams> { }
+  extends RouteComponentProps<EditHospitalRouterParams> {}
 
 export interface HospitalForm {
   [key: string]: string;
@@ -214,6 +214,7 @@ function EditHospitalForm(props: EditHospitalProps) {
 
   const onFinish = (values: HospitalForm) => {
     (async () => {
+      // setCurrentHospital({ ...currentHospital, city: values.city });
       try {
         debugger;
         await update({
@@ -222,7 +223,7 @@ function EditHospitalForm(props: EditHospitalProps) {
           name: values.name,
           address: values.address,
           department: currentHospital.department,
-          city: currentHospital.city,
+          city: values.city,
           category: values.category,
           contacts: JSON.stringify(values.contacts),
           services: JSON.stringify(tagsInformation.tags),
@@ -330,7 +331,10 @@ function EditHospitalForm(props: EditHospitalProps) {
                   ) || departmentsLocations.departments[0];
 
                 setDepartment(selectedDepartment);
-
+                setCurrentHospital({
+                  ...currentHospital,
+                  department: selectedDepartment.name,
+                });
                 form.resetFields(["city"]);
               }}
             >
@@ -363,7 +367,7 @@ function EditHospitalForm(props: EditHospitalProps) {
               }
             >
               {department.cities.map((l: any) => (
-                <Option key={l.name} value={l.id}>
+                <Option key={l.name} value={l.name}>
                   {l.name}
                 </Option>
               ))}
@@ -533,7 +537,7 @@ function EditHospitalForm(props: EditHospitalProps) {
                       onBlur={handleEditInputConfirm}
                       onPressEnter={handleEditInputConfirm}
                       maxLength={30}
-                    // required
+                      // required
                     />
                   </Form.Item>
                 );
@@ -576,8 +580,8 @@ function EditHospitalForm(props: EditHospitalProps) {
                   {tagElem}
                 </Tooltip>
               ) : (
-                  tagElem
-                );
+                tagElem
+              );
             })}
             {inputVisible && (
               <Form.Item
@@ -601,7 +605,7 @@ function EditHospitalForm(props: EditHospitalProps) {
                   onBlur={handleInputConfirm}
                   onPressEnter={handleInputConfirm}
                   maxLength={30}
-                // required
+                  // required
                 />
               </Form.Item>
             )}
