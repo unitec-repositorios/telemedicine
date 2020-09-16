@@ -4,6 +4,7 @@ import ReferenceInformation from "./steps/ReferenceInformation";
 import HospitalSearching from "./steps/HospitalSearching";
 import { RRForm } from "./../referenceFormModels";
 import PatientReference from "./steps/PatientReference";
+import PatientReference from "./steps/PatientReference";
 
 const { Step } = Steps;
 
