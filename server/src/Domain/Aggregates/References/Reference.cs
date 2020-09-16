@@ -11,7 +11,7 @@ namespace Domain.Aggregates.Reference
     public class Reference : BaseEntity, IAggregateRoot
     {
         public string Type { get; set; }
-        public string PatientId { get; set; }
+        public int PatientId { get; set; }
         public string Motive { get; set; }
         public string DescriptionMotive { get; set; }
 				public string Institution { get; set; }

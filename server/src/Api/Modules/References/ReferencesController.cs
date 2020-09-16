@@ -15,14 +15,11 @@ namespace Api.Modules.References
     public class ReferencesController : Controller
     {
         private readonly IReferenceService _referenceService;
-        private readonly IPatientRepository patientRepository;
 
         public ReferencesController(
-            IReferenceService referenceService,
-            IPatientRepository patientRepository)
+            IReferenceService referenceService)
         {
             _referenceService = referenceService;
-            this.patientRepository = patientRepository;
         }
 
 
