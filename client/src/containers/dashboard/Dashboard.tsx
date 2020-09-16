@@ -8,7 +8,7 @@ import {
   EnvironmentOutlined,
   ApartmentOutlined,
   HomeOutlined,
-  FormOutlined
+  FormOutlined,
 } from "@ant-design/icons";
 import { Link, RouteComponentProps } from "@reach/router";
 
@@ -49,7 +49,10 @@ function Dashboard(props: DashboardProps) {
             <Link to="referenceForm">Formulario Referencia Respuesta</Link>
           </Menu.Item>
           <Menu.Item key="/referenceACSPSForm" icon={<FormOutlined />}>
-            <Link to="referenceACSPSForm">Formulario Referencia Respuesta Agente Comunitario-Promotor de Salud</Link>
+            <Link to="referenceACSPSForm">
+              Formulario Referencia Respuesta Agente Comunitario-Promotor de
+              Salud
+            </Link>
           </Menu.Item>
         </Menu>
       </Sider>

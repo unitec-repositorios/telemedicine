@@ -15,10 +15,14 @@ namespace Api.Modules.References
     public class ReferencesController : Controller
     {
         private readonly IReferenceService _referenceService;
+        private readonly IPatientRepository patientRepository;
 
-        public ReferencesController(IReferenceService referenceService)
+        public ReferencesController(
+            IReferenceService referenceService,
+            IPatientRepository patientRepository)
         {
             _referenceService = referenceService;
+            this.patientRepository = patientRepository;
         }
 
 
@@ -32,7 +36,7 @@ namespace Api.Modules.References
                     Type = referenceViewModel.Type,
                     OriginHfId = referenceViewModel.OriginHfId,
                     DestinationHfId = referenceViewModel.DestinationHfId,
-										Institution = referenceViewModel.Institution,
+					Institution = referenceViewModel.Institution,
                     PatientId = referenceViewModel.PatientId,
                     Motive = referenceViewModel.Motive,
                     DescriptionMotive = referenceViewModel.DescriptionMotive,
@@ -81,7 +85,7 @@ namespace Api.Modules.References
                     OriginHfId = referenceViewModel.OriginHfId,
                     DestinationHfId = referenceViewModel.DestinationHfId,
                     PatientId = referenceViewModel.PatientId,
-										Institution = referenceViewModel.Institution,
+					Institution = referenceViewModel.Institution,
                     Motive = referenceViewModel.Motive,
                     DescriptionMotive = referenceViewModel.DescriptionMotive,
                     Symptoms = referenceViewModel.Symptoms,

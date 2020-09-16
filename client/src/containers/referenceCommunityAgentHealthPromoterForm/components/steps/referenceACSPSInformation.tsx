@@ -1,15 +1,21 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Select, message, Divider, DatePicker } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  Select,
+  message,
+  Divider,
+  DatePicker,
+} from "antd";
 import MaskedInput from "antd-mask-input";
 import { create } from "../../referenceCommunityAgentHealthPromoterService";
-
 
 export interface ReferenceACSPSForm {
   [key: string]: string;
 }
 
 function ReferenceACSPSInformation(props: any) {
-
   const { current, length, changeCurrent } = props;
   const [form] = Form.useForm();
 
@@ -19,7 +25,6 @@ function ReferenceACSPSInformation(props: any) {
   };
 
   const onFinish = (values: ReferenceACSPSForm) => {
-
     (async () => {
       try {
         await create({
@@ -32,13 +37,13 @@ function ReferenceACSPSInformation(props: any) {
           referrerEmail: values.email,
           actionTaken: values.action,
           originHfId: props.referenceState.originHfId,
-          destinationHfId: props.referenceState.destinationHfId
+          destinationHfId: props.referenceState.destinationHfId,
         });
 
         form.resetFields();
         message.success("Elementos se han guardado exitosamente.");
       } catch (error) {
-        console.log(error)
+        console.log(error);
         message.error("Ocurrió un error al guardar los elementos.");
       }
     })();
@@ -78,8 +83,8 @@ function ReferenceACSPSInformation(props: any) {
         name="register"
         onFinish={onFinish}
         scrollToFirstError
-        id="form-register">
-
+        id="form-register"
+      >
         <Form.Item
           name="motive"
           label="Motivo de la Referencia"
@@ -95,9 +100,10 @@ function ReferenceACSPSInformation(props: any) {
             },
             {
               pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/])+\s?)+$/g,
-              message: "No se permiten simbolos."
-            }
-          ]}>
+              message: "No se permiten simbolos.",
+            },
+          ]}
+        >
           <Input.TextArea />
         </Form.Item>
 
@@ -116,9 +122,10 @@ function ReferenceACSPSInformation(props: any) {
             },
             {
               pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/])+\s?)+$/g,
-              message: "No se permiten simbolos."
-            }
-          ]}>
+              message: "No se permiten simbolos.",
+            },
+          ]}
+        >
           <Input.TextArea />
         </Form.Item>
 
@@ -155,7 +162,7 @@ function ReferenceACSPSInformation(props: any) {
             },
             {
               pattern: /\d{4}/,
-              message: "Número de Teléfono incompleto. "
+              message: "Número de Teléfono incompleto. ",
             },
           ]}
         >
