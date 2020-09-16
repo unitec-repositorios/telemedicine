@@ -60,8 +60,8 @@ export interface RRForm {
 }
 
 export interface Reference {
-    id: number;
-    patient: string;
-    originHfId: number;
-    destinationHfId: number;
+  id: number;
+  patientId: number;
+  originHfId: number;
+  destinationHfId: number;
 }

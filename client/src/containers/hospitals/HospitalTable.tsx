@@ -1,5 +1,5 @@
 import React, { useEffect, useState, MouseEventHandler } from "react";
-import { Button, Table, Popconfirm, message, Pagination, Spin } from "antd";
+import { Input, Button, Table, Popconfirm, message, Pagination, Spin } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Link, RouteComponentProps, navigate } from "@reach/router";
 import { TableProps } from "antd/lib/table";
@@ -12,6 +12,7 @@ interface HospitalProps extends RouteComponentProps {}
 
 function HospitalTable(props: HospitalProps) {
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
+	const [filterTable, setFilterTable] = useState<Hospital[]>([]);
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -39,31 +40,45 @@ function HospitalTable(props: HospitalProps) {
     }
   };
 
+	const onSearch = (value: string) => {
+		const filter = hospitals.filter(o =>
+			Object.values(o).some(v =>
+				String(v).toLowerCase().includes(value.toLowerCase())
+			)
+		);
+		setFilterTable(filter);
+	}
+
   const columns = [
     {
       title: "Código",
       dataIndex: "code",
       key: "code",
+			sorter: (a:any, b:any) => a.code - b.code,
     },
     {
       title: "Nombre",
       dataIndex: "name",
       key: "name",
+			sorter: (a:any, b:any) => a.name.localeCompare(b.name),
     },
     {
       title: "Departamento",
       dataIndex: "department",
       key: "department",
+			sorter: (a:any, b:any) => a.department.localeCompare(b.department),
     },
     {
       title: "Municipio",
       dataIndex: "city",
       key: "city",
+			sorter: (a:any, b:any) => a.city.localeCompare(b.city),
     },
     {
       title: "Red",
       dataIndex: "network",
       key: "network",
+			sorter: (a:any, b:any) => a.network.localeCompare(b.network),
     },
     {
       title: "Acciones",
@@ -107,8 +122,14 @@ function HospitalTable(props: HospitalProps) {
         </Button>
       </Link>
       <Spin spinning={loading}>
+				<Input.Search
+					style={{ margin: "0 0 10px 600px", width: "400px" }}
+        	placeholder="Buscar"
+        	enterButton
+					onSearch={onSearch}
+				/>
         <Table
-          dataSource={hospitals}
+          dataSource={!filterTable.length ? hospitals: filterTable}
           pagination={{ defaultPageSize: 10 }}
           columns={columns}
           rowKey="code"
