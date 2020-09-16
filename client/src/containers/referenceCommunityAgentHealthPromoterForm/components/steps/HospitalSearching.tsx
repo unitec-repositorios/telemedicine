@@ -1,6 +1,7 @@
-import React, {useState} from "react";
 import {Form, Input, Select, message,Divider, Radio, Checkbox} from "antd";
-
+import { Hospital } from '../../../hospitals/hospitalModels'
+import React, { useState, useRef, useEffect } from "react";
+import { all } from "../../../hospitals/hospitalService";
 export interface SearchForm{
     [key: string]: string;
 }
@@ -48,7 +49,7 @@ function HospitalSearching(props: any){
         <Select
 					showSearch
 					placeholder="Seleccione un establecimiento de salud"
-					onSelect={(value) => {
+					onSelect={(value: any) => {
 						setSelectedOrigin(+value);
 						console.log(+value)
 					}}
@@ -92,9 +93,10 @@ function HospitalSearching(props: any){
          }]}
         >
         <Select
+
 					showSearch
 					placeholder="Seleccione un establecimiento de salud"
-					onSelect={(value) => {
+					onSelect={(value: any) => {
 						setSelectedOrigin(+value);
 						console.log(+value)
 					}}

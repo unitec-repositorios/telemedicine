@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Domain.Aggregates.Hospitals;
 
 namespace Domain.Aggregates.ReferencesACS_PS
 {

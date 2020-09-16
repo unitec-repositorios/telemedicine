@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Aggregates.Hospitals;
 
 namespace Core.ReferencesACS_PS
 {
@@ -42,8 +43,8 @@ namespace Core.ReferencesACS_PS
 
         public async Task Create(ReferenceCommunityAgentHealthPromoter reference)
         {
-						var newOriginHF = await _hospitalRepository.FIndById(reference.OriginHfId);
-						var newDestinationHF = await _hospitalRepository.FIndById(reference.DestinationHfId);
+						var newOriginHF = await _hospitalRepository.FindById(reference.OriginHfId);
+						var newDestinationHF = await _hospitalRepository.FindById(reference.DestinationHfId);
 
 						var newReference = new ReferenceCommunityAgentHealthPromoter {
 							Community = reference.Community,
@@ -54,7 +55,7 @@ namespace Core.ReferencesACS_PS
 							PatientId = reference.PatientId,
 							Motive = reference.Motive,
 							Date = reference.Date,
-							OriginHF = newOriginHF,
+                            OriginHF = newOriginHF,
 							DestinationHF = newDestinationHF
 						};
             await _referenceACS_PSRepository.Add(reference);

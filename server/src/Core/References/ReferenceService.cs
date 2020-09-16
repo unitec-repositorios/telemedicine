@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Domain.Aggregates.Hospitals;
 namespace Core.References
 {
     public class ReferenceService : IReferenceService
@@ -42,8 +42,8 @@ namespace Core.References
 
         public async Task Create(Reference reference)
         {
-						var newOriginHF = await _hospitalRepository.FIndById(reference.OriginHfId);
-						var newDestinationHF = await _hospitalRepository.FIndById(reference.DestinationHfId);
+						var newOriginHF = await _hospitalRepository.FindById(reference.OriginHfId);
+						var newDestinationHF = await _hospitalRepository.FindById(reference.DestinationHfId);
 
 						var newReference = new Reference {
 							Type = reference.Type,
