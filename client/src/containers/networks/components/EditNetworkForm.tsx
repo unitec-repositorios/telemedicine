@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import MainTitle from "../../../components/MainTitle";
-import { Button, Form, Input, message } from "antd";
+import { Button, Form, Input, message, Spin } from "antd";
 import { findById, update } from "../networkService";
 import { NetworkForm } from "./AddNetworkForm";
 import { RouteComponentProps, Link } from "@reach/router";
@@ -11,17 +11,19 @@ interface EditNetworkRouteParams {
 }
 
 interface EditNetworkFormProps
-  extends RouteComponentProps<EditNetworkRouteParams> {}
+  extends RouteComponentProps<EditNetworkRouteParams> { }
 
 function EditNetworkForm(props: EditNetworkFormProps) {
   const [form] = Form.useForm();
   const [network, setNetwork] = useState({} as Network);
 
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     (async () => {
       const foundNetwork = await findById(props.id ?? 1);
       setNetwork(foundNetwork);
       form.setFieldsValue(foundNetwork);
+      setLoading(false);
     })();
   }, []);
 
@@ -73,51 +75,51 @@ function EditNetworkForm(props: EditNetworkFormProps) {
           shape="circle"
           htmlType="submit"
           icon={<ArrowLeftOutlined />}
-          style={{ marginLeft: "-20%" }}
+          style={{ marginLeft: "-20" }}
         ></Button>
       </Link>
       <MainTitle>Editar red</MainTitle>
-      <Form
-        {...formItemLayout}
-        form={form}
-        name="register"
-        onFinish={onFinish}
-        scrollToFirstError
-      >
-        <Form.Item
-          name="name"
-          label="Nombre"
-          rules={[
-            {
-              pattern: /^.{5,15}$/g,
-              message: "Nombre de red debe tener mínimo 5 letras y máximo 15.",
-            },
-            {
-              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
-              message: "Sólo se permiten letras.",
-            },
-            {
-              required: true,
-              message: "Nombre de red es un campo requerido",
-              whitespace: true,
-            },
-          ]}
+      <Spin spinning={loading}>
+        <Form
+          {...formItemLayout}
+          form={form}
+          name="register"
+          onFinish={onFinish}
+          scrollToFirstError
         >
-          <Input />
-        </Form.Item>
-        <Form.Item {...tailFormItemLayout}>
-          <Button
-            type="primary"
-            htmlType="submit"
-            style={{ marginRight: "8px" }}
+          <Form.Item
+            name="name"
+            label="Nombre"
+            rules={[
+              {
+                pattern: /^.{5,15}$/g,
+                message:
+                  "Nombre de red debe tener mínimo 5 letras y máximo 15.",
+              },
+              {
+                pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])+\s?)+$/g,
+                message: "Sólo se permiten letras.",
+              },
+              {
+                required: true,
+                message: "Nombre de red es un campo requerido",
+                whitespace: true,
+              },
+            ]}
           >
-            Guardar
-          </Button>
-          <Button htmlType="button" onClick={() => form.resetFields()}>
-            Reiniciar campo
-          </Button>
-        </Form.Item>
-      </Form>
+            <Input />
+          </Form.Item>
+          <Form.Item {...tailFormItemLayout}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ marginRight: "8px" }}
+            >
+              Guardar
+            </Button>
+          </Form.Item>
+        </Form>
+      </Spin>
     </>
   );
 }

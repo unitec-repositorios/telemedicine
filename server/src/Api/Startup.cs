@@ -16,6 +16,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Data.Repositories.References;
+using Domain.Aggregates.Reference;
+using Core.References;
+using Data.Repositories.ReferencesACS_PS;
+using Domain.Aggregates.ReferencesACS_PS;
+using Core.ReferencesACS_PS;
 
 namespace Api
 {
@@ -44,7 +50,11 @@ namespace Api
             services.AddScoped<INetworkService, NetworkService>();
             services.AddScoped<IPatientRepository, PatientRepository>();
             services.AddScoped<IPatientService, PatientService>();
-            
+            services.AddScoped<IReferenceRepository, ReferenceRepository>();
+            services.AddScoped<IReferenceService, ReferenceService>();
+            services.AddScoped<IReferenceCommunityAgentHealthPromoterRepository, ReferenceCommunityAgentHealthPromoterRepository>();
+            services.AddScoped<IReferenceCommunityAgentHealthPromoterService, ReferenceCommunityAgentHealthPromoterService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

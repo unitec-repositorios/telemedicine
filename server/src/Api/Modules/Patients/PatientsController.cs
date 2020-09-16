@@ -19,9 +19,10 @@ namespace Api.Modules.Patients
 
 
         [HttpGet("{id:int?}")]
-        public async Task<IActionResult> Get(int? id, [FromQuery] string idNumber)
+        public async Task<IActionResult> Get(int? id, [FromQuery] string idNumber, [FromQuery] string foreignIdNumber,
+            [FromQuery] string email, [FromQuery] int? limit, [FromQuery] bool multipleResults)
         {
-            var data = (await _patientService.All(id, idNumber))
+            var data = (await _patientService.All(id, idNumber, foreignIdNumber, email, limit, multipleResults))
                 .Select(patient => new PatientViewModel
                 {
                     Id = patient.Id,
@@ -32,7 +33,9 @@ namespace Api.Modules.Patients
                     DateOfBirth = patient.DateOfBirth,
                     Email = patient.Email,
                     Gender = patient.Gender,
-                    Address = patient.Address
+                    Address = patient.Address,
+                    Nationality = patient.Nationality,
+                    Contacts = patient.Contacts
                 });
 
             return Ok(data);
@@ -50,7 +53,9 @@ namespace Api.Modules.Patients
                 DateOfBirth = patientViewModel.DateOfBirth,
                 Email = patientViewModel.Email,
                 Gender = patientViewModel.Gender,
-                Address = patientViewModel.Address
+                Address = patientViewModel.Address,
+                Nationality = patientViewModel.Nationality,
+                Contacts = patientViewModel.Contacts
             };
 
             await _patientService.Create(patient);
@@ -76,7 +81,9 @@ namespace Api.Modules.Patients
                 DateOfBirth = patientViewModel.DateOfBirth,
                 Email = patientViewModel.Email,
                 Gender = patientViewModel.Gender,
-                Address = patientViewModel.Address
+                Address = patientViewModel.Address,
+                Nationality = patientViewModel.Nationality,
+                Contacts = patientViewModel.Contacts
             };
             await _patientService.Update(id, patient);
         }

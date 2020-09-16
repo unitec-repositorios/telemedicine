@@ -10,7 +10,7 @@ namespace Core.Hospitals
     {
         public Task<Hospital> FindById(int id);
 
-        public Task Create(Hospital network);
+        public Task Create(Hospital hospital);
 
         public Task<IEnumerable<Hospital>> All(int? id, int? code);
 

@@ -1,5 +1,6 @@
 import React from "react";
 import "./App.css";
+import "antd/dist/antd.css";
 import Dashboard from "./containers/dashboard/Dashboard";
 import { Router } from "@reach/router";
 import Hospital from "./containers/hospitals/HospitalTable";
@@ -11,7 +12,10 @@ import AddNetworkForm from "./containers/networks/components/AddNetworkForm";
 import EditNetworkForm from "./containers/networks/components/EditNetworkForm";
 import AddPatientForm from "./containers/patients/components/AddPatientForm";
 import EditPatientForm from "./containers/patients/components/EditPatientForm";
-
+import AddRRForm from "./containers/referenceForm/components/AddReferenceForm";
+import AddRRACSPS from "./containers/referenceCommunityAgentHealthPromoterForm/components/addReferenceCommunityAgentHealthPromoterForm";
+import ReferenceTable from "./containers/referenceForm/components/ReferenceTable";
+import ReferenceACPSTable from "./containers/referenceCommunityAgentHealthPromoterForm/components/referenceCommunityAgentHealthPromoterTable";
 function App() {
   return (
     <div className="App">
@@ -26,6 +30,10 @@ function App() {
           <EditPatientForm path="patients/edit/:id" />
           <AddNetworkForm path="networks/add" />
           <EditNetworkForm path="networks/edit/:id" />
+          <AddRRForm path="referenceForm/add" />
+          <AddRRACSPS path="referenceACSPSForm/add" />
+          <ReferenceTable path="referenceForm" />
+          <ReferenceACPSTable path="referenceACSPSForm" />
         </Dashboard>
       </Router>
     </div>

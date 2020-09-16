@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Popconfirm, Table, Space, message } from "antd";
+import { Input, Button, Popconfirm, Table, Space, message, Spin } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Link, navigate, RouteComponentProps } from "@reach/router";
 import { ColumnType } from "antd/lib/table/interface";
@@ -8,15 +8,19 @@ import { Patient } from "./patientModels";
 import MainTitle from "../../components/MainTitle";
 import { all, remove } from "./patientService";
 
-interface PatientProps extends RouteComponentProps {}
+interface PatientProps extends RouteComponentProps { }
 
 function PatientTable(props: PatientProps) {
   const [patients, setPatients] = useState<Patient[]>([]);
+	const [filterTable, setFilterTable] = useState<Patient[]>([]);
+
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
       const data = await all();
       setPatients(data);
+      setLoading(false);
     })();
   }, []);
 
@@ -37,27 +41,40 @@ function PatientTable(props: PatientProps) {
     }
   };
 
+	const onSearch = (value: string) => {
+		const filter = patients.filter(o =>
+			Object.values(o).some(v =>
+				String(v).toLowerCase().includes(value.toLowerCase())
+			)
+		);
+		setFilterTable(filter);
+	}
+
   const columns: ColumnType<Patient>[] = [
     {
       title: "Número de Identidad",
       dataIndex: "idNumber",
       key: "idNumber",
       width: 150,
+			sorter: (a:any, b:any) => a.idNumber - b.idNumber,
     },
     {
       title: "Nombre",
       dataIndex: "name",
       key: "name",
+			sorter: (a:any, b:any) => a.name.localeCompare(b.name),
     },
     {
       title: "Primer Apellido",
       dataIndex: "firstLastName",
       key: "lastName",
+			sorter: (a:any, b:any) => a.lastName.localeCompare(b.lastName),
     },
     {
       title: "Segundo Apellido",
       dataIndex: "secondLastName",
       key: "secondLastName",
+			sorter: (a:any, b:any) => a.secondLastName.localeCompare(b.secondLastName),
     },
     {
       title: "Fecha de Nacimiento",
@@ -80,17 +97,13 @@ function PatientTable(props: PatientProps) {
       dataIndex: "email",
       key: "email",
       width: 200,
+			sorter: (a:any, b:any) => a.email.localeCompare(b.email),
     },
     {
       title: "Género",
       dataIndex: "gender",
       key: "gender",
-    },
-    {
-      title: "Dirección",
-      dataIndex: "address",
-      key: "address",
-      width: 200,
+			sorter: (a:any, b:any) => a.gender.localeCompare(b.gender),
     },
     {
       title: "Acciones",
@@ -128,6 +141,7 @@ function PatientTable(props: PatientProps) {
       ),
     },
   ];
+
   return (
     <div>
       <MainTitle>Pacientes</MainTitle>
@@ -136,13 +150,22 @@ function PatientTable(props: PatientProps) {
           Agregar
         </Button>
       </Link>
-      <Table
-        dataSource={patients}
-        columns={columns}
-        rowKey="firstName"
-        locale={{ emptyText: "Sin información" }}
-        scroll={{ x: 1300 }}
-      />
+      <Spin spinning={loading}>
+			<Input.Search
+				style={{ margin: "0 0 10px 600px", width: "400px" }}
+        placeholder="Buscar"
+        enterButton
+				onSearch={onSearch}
+			/>
+        <Table
+          pagination={{ defaultPageSize: 10 }}
+          dataSource={!filterTable.length ? patients: filterTable}
+          columns={columns}
+          rowKey="idNumber"
+          locale={{ emptyText: "Sin información" }}
+          scroll={{ x: 1300 }}
+        />
+      </Spin>
     </div>
   );
 }
