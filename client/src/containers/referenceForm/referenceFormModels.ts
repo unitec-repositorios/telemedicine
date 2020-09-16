@@ -20,6 +20,10 @@ export interface CreateRRForm {
     contactedHf: boolean;
     contactId: string;
     date: Date;
+    companion: string;
+    relationship: string;
+    address: string;
+    phone: string;
 }
 
 export interface PatientReferenceInformation {

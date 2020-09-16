@@ -96,11 +96,11 @@ function ReferenceInformation(props: any) {
     (async () => {
       try {
         await create({
-          type: "NotSet",
+          type: "normal",
           originHfId: props.referenceState.originHfId,
           destinationHfId: props.referenceState.destinationHfId,
           institution: props.referenceState.institution,
-          patientId: "NotSet",
+          patientId: props.referenceState.patientId,
           motive: values.motive,
           descriptionMotive: values.descriptionMotive,
           symptoms: values.symptoms,
@@ -117,6 +117,10 @@ function ReferenceInformation(props: any) {
           contactedHf: Boolean(values.contactedHf),
           contactId: values.contactId,
           date: new Date(values.date),
+          address: props.referenceState.address,
+          companion: props.referenceState.companion,
+          phone: props.referenceState.phone,
+          relationship: props.referenceState.relationship
         });
 
         form.resetFields();
