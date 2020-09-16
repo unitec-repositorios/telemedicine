@@ -51,6 +51,10 @@ namespace Api.Modules.References
                     ContactedHf = referenceViewModel.ContactedHf,
                     ContactId = referenceViewModel.ContactId,
                     Date = referenceViewModel.Date,
+                    Companion =  referenceViewModel.Companion,
+                    Relationship = referenceViewModel.Relationship,
+                    Address = referenceViewModel.Address,
+                    Phone = referenceViewModel.Phone,
                 });
 
             return Ok(data);
@@ -77,7 +81,7 @@ namespace Api.Modules.References
 
             var reference = new Reference
             {
-                Id = referenceViewModel.Id,
+                    Id = referenceViewModel.Id,
                     Type = referenceViewModel.Type,
                     OriginHfId = referenceViewModel.OriginHfId,
                     DestinationHfId = referenceViewModel.DestinationHfId,
@@ -99,6 +103,10 @@ namespace Api.Modules.References
                     ContactedHf = referenceViewModel.ContactedHf,
                     ContactId = referenceViewModel.ContactId,
                     Date = referenceViewModel.Date,
+                    Companion =  referenceViewModel.Companion,
+                    Relationship = referenceViewModel.Relationship,
+                    Address = referenceViewModel.Address,
+                    Phone = referenceViewModel.Phone,
 
             };
 

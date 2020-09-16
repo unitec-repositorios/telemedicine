@@ -56,6 +56,7 @@ namespace Core.Hospitals
             updateHospital.Contacts = hospital.Contacts;
             updateHospital.Services = hospital.Services;
             updateHospital.Network = network;
+
             await _hospitalRepository.Update(updateHospital);
         }
 

@@ -96,11 +96,11 @@ function ReferenceInformation(props: any) {
     (async () => {
       try {
         await create({
-          type: "NotSet",
+          type: "normal",
           originHfId: props.referenceState.originHfId,
           destinationHfId: props.referenceState.destinationHfId,
           institution: props.referenceState.institution,
-          patientId: "NotSet",
+          patientId: props.referenceState.patientId,
           motive: values.motive,
           descriptionMotive: values.descriptionMotive,
           symptoms: values.symptoms,
@@ -117,6 +117,10 @@ function ReferenceInformation(props: any) {
           contactedHf: Boolean(values.contactedHf),
           contactId: values.contactId,
           date: new Date(values.date),
+          address: props.referenceState.address,
+          companion: props.referenceState.companion,
+          phone: props.referenceState.phone,
+          relationship: props.referenceState.relationship
         });
 
         form.resetFields();
@@ -961,25 +965,24 @@ function ReferenceInformation(props: any) {
             }
           />
         </Form.Item>
+          <Form.Item {...tailFormItemLayout}>
+              <Button
+                  type="primary"
+                  htmlType="submit"
+                  style={{marginRight: "8px"}}
+              >
+                  Guardar
+              </Button>
 
-        <Form.Item {...tailFormItemLayout}>
-          <Button
-            type="primary"
-            htmlType="submit"
-            style={{ marginRight: "8px" }}
-          >
-            Guardar
-          </Button>
-
-          <Button htmlType="button" onClick={() => form.resetFields()}>
-            Reiniciar campos
-          </Button>
-          {current > 0 && (
-            <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
-              Anterior
-            </Button>
-          )}
-        </Form.Item>
+              <Button htmlType="button" onClick={() => form.resetFields()}>
+                  Reiniciar campos
+              </Button>
+              {current > 0 && (
+                  <Button style={{margin: "0 8px"}} onClick={() => prev()}>
+                      Anterior
+                  </Button>
+              )}
+          </Form.Item>
       </Form>
     </>
   );

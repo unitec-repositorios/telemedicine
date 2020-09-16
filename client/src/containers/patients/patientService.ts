@@ -26,6 +26,18 @@ export async function findById(id: number) {
   };
 }
 
+export async function searchById(id: string) {
+  const response = await axios.get(`${baseUrl}`, {
+    params :{
+      idNumber: id,
+      limit: 50,
+      multipleResults: true
+    }
+  });
+
+  return (response.data as Patient[]);
+}
+
 export async function update(patient: Patient) {
   await axios.put(`${baseUrl}/${patient.id}`, patient);
 }

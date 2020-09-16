@@ -21,15 +21,30 @@ namespace Core.Patients
             return await _patientRepository.FindById(id);
         }
 
-        public async Task<IEnumerable<Patient>> All(int? id, string idNumber, string foreignIdNumber, string email)
+        public async Task<IEnumerable<Patient>> All(int? id, string idNumber, string foreignIdNumber, string email,
+            int? limit,
+            bool multipleResults)
         {
-            return await _patientRepository 
+            var data = _patientRepository
                 .Filter(patient => !patient.Disabled)
                 .Where(x => id == null || x.Id == id)
-                .Where(x => idNumber == null || x.IdNumber == idNumber)
                 .Where(x => foreignIdNumber == null || x.IdNumber == foreignIdNumber)
-                .Where(x => email == null || x.Email == email)
-                .ToListAsync();
+                .Where(x => email == null || x.Email == email);
+
+            IQueryable<Patient> patients = data;
+
+            if (multipleResults)
+            {
+                patients = data.Where(x => x.IdNumber.Contains(idNumber));
+            }
+
+
+            if (limit != null)
+            {
+                patients = patients.Take(limit.Value);
+            }
+
+            return await patients.ToListAsync();
         }
 
         public async Task Remove(int id)

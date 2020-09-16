@@ -19,9 +19,10 @@ namespace Api.Modules.Patients
 
 
         [HttpGet("{id:int?}")]
-        public async Task<IActionResult> Get(int? id, [FromQuery] string idNumber, [FromQuery] string foreignIdNumber,  [FromQuery] string email)
+        public async Task<IActionResult> Get(int? id, [FromQuery] string idNumber, [FromQuery] string foreignIdNumber,
+            [FromQuery] string email, [FromQuery] int? limit, [FromQuery] bool multipleResults)
         {
-            var data = (await _patientService.All(id, idNumber, foreignIdNumber, email))
+            var data = (await _patientService.All(id, idNumber, foreignIdNumber, email, limit, multipleResults))
                 .Select(patient => new PatientViewModel
                 {
                     Id = patient.Id,
