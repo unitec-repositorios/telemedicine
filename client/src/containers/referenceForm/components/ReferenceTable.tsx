@@ -1,5 +1,5 @@
 import React, { useEffect, useState, MouseEventHandler } from "react";
-import { Button, Table, Popconfirm, message } from "antd";
+import { Button, Table, Popconfirm, message, Input } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Link, RouteComponentProps, navigate } from "@reach/router";
 import{Reference} from "../referenceFormModels";
@@ -19,6 +19,7 @@ interface Table {
 function ReferenceTable(props: ReferenceProps){
     const [reference, setReference] = useState<Reference[]>([]);
 		const [table, setTable] = useState<Table[]>([]);
+		const [filterTable, setFilterTable] = useState<Table[]>([]);
 
     useEffect(() => {
         (async () => {
@@ -34,26 +35,40 @@ function ReferenceTable(props: ReferenceProps){
 
         })();
       }, []);
+
+	const onSearch = (value: string) => {
+		const filter = table.filter(o => 
+			Object.values(o).some(v =>
+				String(v).toLowerCase().includes(value.toLowerCase())
+			)
+		);
+		setFilterTable(filter);
+	}
+
       const columns = [
         {
           title: "Codigo",
           dataIndex: "id",
           key: "id",
+					sorter: (a:any, b:any) => a.id - b.id,
         },
         {
           title: "Paciente",
           dataIndex: "patient",
           key: "patient",
+					sorter: (a:any, b:any) => a.patient.localeCompare(b.patient),
         },
         {
           title: "Emisor",
           dataIndex: "origin",
           key: "origin",
+					sorter: (a:any, b:any) => a.origin.localeCompare(b.origin),
         },
         {
           title: "Destino", 
           dataIndex: "destination",
           key: "destination",
+					sorter: (a:any, b:any) => a.destination.localeCompare(b.destination),
         }
       ]
       return (
@@ -64,8 +79,14 @@ function ReferenceTable(props: ReferenceProps){
               Agregar
             </Button>
           </Link>
+				<Input.Search
+				style={{ margin: "0 0 10px 600px", width: "400px" }}
+        placeholder="Buscar"
+        enterButton
+				onSearch={onSearch}
+			/>
           <Table
-            dataSource={table}
+            dataSource={!filterTable.length ? table: filterTable}
             columns={columns}
             rowKey="name"
             locale={{ emptyText: "Sin Informacion." }}

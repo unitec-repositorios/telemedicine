@@ -1,5 +1,5 @@
 import React, { useEffect, useState, MouseEventHandler } from "react";
-import { Button, Table, Popconfirm, message } from "antd";
+import { Input, Button, Table, Popconfirm, message } from "antd";
 import { Link, RouteComponentProps, navigate } from "@reach/router";
 import{Reference} from "../referenceCommunityAgentHealthPromoterModel";
 import MainTitle from "../../../components/MainTitle";
@@ -18,6 +18,7 @@ interface Table {
 function ReferenceACPSTable(props: ReferenceProps){
     const [reference, setReference] = useState<Reference[]>([]);
 		const [table, setTable] = useState<Table[]>([]);
+		const [filterTable, setFilterTable] = useState<Table[]>([]);
 
     useEffect(() => {
         (async () => {
@@ -32,26 +33,40 @@ function ReferenceACPSTable(props: ReferenceProps){
 					setTable(newTable);
         })();
       }, []);
+
+	const onSearch = (value: string) => {
+		const filter = table.filter(o => 
+			Object.values(o).some(v =>
+				String(v).toLowerCase().includes(value.toLowerCase())
+			)
+		);
+		setFilterTable(filter);
+	}
+
       const columns = [
         {
           title: "Codigo",
           dataIndex: "id",
           key: "id",
+					sorter: (a:any, b:any) => a.id - b.id,
         },
         {
           title: "Paciente",
           dataIndex: "patient",
           key: "patient",
+					sorter: (a:any, b:any) => a.patient.localeCompare(b.patient),
         },
         {
           title: "Emisor",
           dataIndex: "origin",
           key: "origin",
+					sorter: (a:any, b:any) => a.origin.localeCompare(b.origin),
         },
         {
           title: "Destino", 
           dataIndex: "destination",
           key: "destination",
+					sorter: (a:any, b:any) => a.destination.localeCompare(b.destination),
         }
       ]
       return (
@@ -62,8 +77,14 @@ function ReferenceACPSTable(props: ReferenceProps){
               Agregar
             </Button>
           </Link>
+											<Input.Search
+				style={{ margin: "0 0 10px 600px", width: "400px" }}
+        placeholder="Buscar"
+        enterButton
+				onSearch={onSearch}
+			/>
           <Table
-            dataSource={table}
+            dataSource={!filterTable.length ? table: filterTable}
             columns={columns}
             rowKey="name"
             locale={{ emptyText: "Sin Informacion." }}

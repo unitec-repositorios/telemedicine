@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, message, Popconfirm, Table, Spin } from "antd";
+import { Input, Button, message, Popconfirm, Table, Spin } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Link, navigate, RouteComponentProps } from "@reach/router";
 
@@ -12,6 +12,7 @@ interface NetworkProps extends RouteComponentProps {}
 
 function NetworksTable(props: NetworkProps) {
   const [networks, setNetworks] = useState<Network[]>([]);
+	const [filterTable, setFilterTable] = useState<Network[]>([]);
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -43,11 +44,21 @@ function NetworksTable(props: NetworkProps) {
     }
   };
 
+	const onSearch = (value: string) => {
+		const filter = networks.filter(o =>
+			Object.values(o).some(v =>
+				String(v).toLowerCase().includes(value.toLowerCase())
+			)
+		);
+		setFilterTable(filter);
+	}
+
   const columns = [
     {
       title: "Nombre",
       dataIndex: "name",
       key: "name",
+			sorter: (a:any, b:any) => a.name.localeCompare(b.name),
     },
     {
       title: "Acciones",
@@ -92,9 +103,15 @@ function NetworksTable(props: NetworkProps) {
         </Button>
       </Link>
       <Spin spinning={loading}>
+			<Input.Search
+				style={{ margin: "0 0 10px 600px", width: "400px" }}
+        placeholder="Buscar"
+        enterButton
+				onSearch={onSearch}
+			/>
         <Table
           pagination={{ defaultPageSize: 10 }}
-          dataSource={networks}
+          dataSource={!filterTable.length ? networks: filterTable}
           columns={columns}
           rowKey="name"
           locale={{ emptyText: "Sin información" }}
