@@ -1,8 +1,8 @@
 import React, {useState} from "react";
-import {Steps, Button} from "antd";
+import {Steps} from "antd";
 import ReferenceInformation from "./steps/ReferenceInformation";
 import HospitalSearching from "./steps/HospitalSearching";
-import {RRForm} from "../referenceFormModels";
+import {PatientReferenceInformation, RRForm} from "../referenceFormModels";
 import PatientReference from "./steps/PatientReference";
 
 const {Step} = Steps;
@@ -26,6 +26,19 @@ function Stepper(props: any) {
         setReference({...reference, institution});
     };
 
+    const setPatientInfo = (patient: PatientReferenceInformation) => {
+        setReference({
+            ...reference,
+            patientId: patient.patientId,
+            relationship: patient.relationship,
+            address: patient.address,
+            companion: patient.companion,
+            phone: patient.phone,
+
+
+        })
+    }
+
     const next = () => {
         let nextVal = current + 1;
         setCurrent(nextVal);
@@ -41,7 +54,7 @@ function Stepper(props: any) {
             title: "Paciente",
             content: (
                 <PatientReference current={current} changeCurrent={changeCurrent}
-                                  referenceState={reference}/>
+                                  referenceState={reference} setPatientInfo={setPatientInfo}/>
             ),
         },
         {
@@ -54,6 +67,7 @@ function Stepper(props: any) {
                     length={3}
                     current={current}
                     changeCurrent={changeCurrent}
+
                 />
             ),
         },

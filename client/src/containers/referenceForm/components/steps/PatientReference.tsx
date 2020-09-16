@@ -5,10 +5,11 @@ import Select from "antd/lib/select";
 import React, {useEffect, useState} from "react";
 import {searchById} from "../../../patients/patientService"
 import {Patient} from "../../../patients/patientModels";
+import {PatientReferenceInformation} from "../../referenceFormModels";
 
 export default function PatientReference(props: any) {
     const {Option} = Select;
-    const {current, setCurrent} = props;
+    const {current, changeCurrent} = props;
     const [fetching, setFetching] = useState(true);
     const [patients, setPatients] = useState([] as Patient[]);
     const [patient, setPatient] = useState({} as Patient);
@@ -40,7 +41,14 @@ export default function PatientReference(props: any) {
     };
 
     const onFinish = (values: any) => {
-        setCurrent(current + 1);
+        props.setPatientInfo({
+            companion: values.name,
+            phone: values.phoneNumber,
+            address: values.address,
+            relationship: values.relationShip,
+            patientId: patient.id
+        } as PatientReferenceInformation)
+        changeCurrent(current + 1);
     }
 
     const tailFormItemLayout = {
@@ -71,9 +79,14 @@ export default function PatientReference(props: any) {
             >
                 <Divider orientation="left">Paciente</Divider>
                 <Form.Item label="Paciente" name="patient"
-                           required>
-                    <Select
 
+                           rules={[
+                               {
+                                   required: true,
+                                   message: "Paciente es un campo requerido",
+                               },
+                           ]}>
+                    <Select
                         labelInValue
                         showSearch
                         placeholder="Seleccionar paciente"
@@ -82,7 +95,6 @@ export default function PatientReference(props: any) {
                         onSearch={fetchPatient}
                         onChange={handleChange}
                         style={{width: "100%"}}
-
                     >
                         {patients.map((d) => (
                             <Option
