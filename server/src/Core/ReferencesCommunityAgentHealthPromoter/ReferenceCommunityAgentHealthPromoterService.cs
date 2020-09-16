@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Aggregates.Hospitals;
 
 namespace Core.ReferencesACS_PS
 {
@@ -12,10 +13,12 @@ namespace Core.ReferencesACS_PS
     {
 
         private readonly IReferenceCommunityAgentHealthPromoterRepository _referenceACS_PSRepository;
+				private readonly IHospitalRepository _hospitalRepository;
 
-        public ReferenceCommunityAgentHealthPromoterService(IReferenceCommunityAgentHealthPromoterRepository referenceACS_PSRepository)
+        public ReferenceCommunityAgentHealthPromoterService(IReferenceCommunityAgentHealthPromoterRepository referenceACS_PSRepository, IHospitalRepository hospitalRepository)
         {
             _referenceACS_PSRepository = referenceACS_PSRepository;
+						_hospitalRepository = hospitalRepository;
         }
 
 
@@ -40,14 +43,23 @@ namespace Core.ReferencesACS_PS
 
         public async Task Create(ReferenceCommunityAgentHealthPromoter reference)
         {
+						var newOriginHF = await _hospitalRepository.FindById(reference.OriginHfId);
+						var newDestinationHF = await _hospitalRepository.FindById(reference.DestinationHfId);
+
+						var newReference = new ReferenceCommunityAgentHealthPromoter {
+							Community = reference.Community,
+							Referrer = reference.Referrer,
+							ReferrerPhone = reference.ReferrerPhone,
+							ReferrerEmail = reference.ReferrerEmail,
+							ActionTaken = reference.ActionTaken,
+							PatientId = reference.PatientId,
+							Motive = reference.Motive,
+							Date = reference.Date,
+                            OriginHF = newOriginHF,
+							DestinationHF = newDestinationHF
+						};
             await _referenceACS_PSRepository.Add(reference);
         }
 
-        public async Task<IEnumerable<ReferenceCommunityAgentHealthPromoter>> All()
-        {
-            return await _referenceACS_PSRepository
-                .Filter(network => !network.Disabled)
-                .ToListAsync();
-        }
     }
 }

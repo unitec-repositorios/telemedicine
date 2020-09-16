@@ -14,8 +14,6 @@ namespace Core.References
 
         public Task<IEnumerable<Reference>> All(int? id);
 
-        public Task<IEnumerable<Reference>> All();
-
         public Task Remove(int id);
 
     }

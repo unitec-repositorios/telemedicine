@@ -17,6 +17,5 @@ namespace Core.ReferencesACS_PS
 
         public Task Remove(int id);
 
-        public Task<IEnumerable<ReferenceCommunityAgentHealthPromoter>> All();
     }
 }

@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using System.Text.Json.Serialization;
-using Domain.Aggregates.Patients;
 using Domain.Contracts;
+using Domain.Aggregates.Hospitals;
 
 namespace Domain.Aggregates.Reference
 {
     public class Reference : BaseEntity, IAggregateRoot
     {
         public string Type { get; set; }
-        public string OriginHfId { get; set; }
-        public string DestinationHfId { get; set; } 
-        public string PatientId { get; set; }
+        public int PatientId { get; set; }
         public string Motive { get; set; }
         public string DescriptionMotive { get; set; }
+				public string Institution { get; set; }
         public string Symptoms { get; set; }
         public string MedicalSummary { get; set; }
 
@@ -36,5 +35,12 @@ namespace Domain.Aggregates.Reference
         public bool ContactedHf { get; set; }
         public string ContactId { get; set; }
         public DateTime Date { get; set; }
+
+        public int OriginHfId { get; set; }
+        public int DestinationHfId { get; set; }
+
+				public Hospital OriginHF { get; set; }
+				public Hospital DestinationHF { get; set; }
+
     }
 }

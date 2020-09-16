@@ -1,14 +1,27 @@
 import React, { useState } from "react";
-import { Steps, Button, message } from "antd";
+import { Steps, Button } from "antd";
 import ReferenceInformation from "./steps/ReferenceInformation";
-
+import HospitalSearching from "./steps/HospitalSearching";
+import { RRForm } from "./../referenceFormModels";
 const { Step } = Steps;
 
 function Stepper(props: any) {
   const [current, setCurrent] = useState(0);
-
+  const [reference, setReference] = useState({} as RRForm);
   const changeCurrent = (current: number) => {
     setCurrent(current);
+  };
+
+  const originHandler = (originHfId: number) => {
+    setReference({ ...reference, originHfId });
+  };
+
+  const destinationHandler = (destinationHfId: number) => {
+    setReference({ ...reference, destinationHfId });
+  };
+
+  const institutionHandler = (institution: string) => {
+    setReference({ ...reference, institution });
   };
 
   const next = () => {
@@ -24,20 +37,32 @@ function Stepper(props: any) {
   const steps = [
     {
       title: "Paciente",
-      content: "First-Content"
+      content: "First-Content",
     },
     {
       title: "Establecimiento de Salud",
-      content: "Second-Content"
+      content: (
+        <HospitalSearching
+          onOrigin={originHandler}
+          onDestination={destinationHandler}
+          onInstitution={institutionHandler}
+          length={3}
+          current={current}
+          changeCurrent={changeCurrent}
+        />
+      ),
     },
     {
       title: "Diagnostico",
-      content: <ReferenceInformation
-        length={3}
-        current={current}
-        changeCurrent={changeCurrent}
-      />
-    }
+      content: (
+        <ReferenceInformation
+          length={3}
+          current={current}
+          changeCurrent={changeCurrent}
+          referenceState={reference}
+        />
+      ),
+    },
   ];
 
   return (
@@ -48,7 +73,7 @@ function Stepper(props: any) {
         ))}
       </Steps>
 
-      <div className="steps-content" >{steps[current].content}</div>
+      <div className="steps-content">{steps[current].content}</div>
       <div style={{ marginTop: "20px" }} className="steps-action">
         {current < steps.length - 1 && (
           <Button type="primary" onClick={() => next()}>

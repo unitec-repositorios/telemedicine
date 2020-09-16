@@ -1,14 +1,19 @@
 import React, { useState, Props } from "react";
-import { Button, Form, Input, Select, message, Divider, DatePicker } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  Select,
+  message,
+  Divider,
+  DatePicker,
+} from "antd";
 import moment from "moment";
 import { create } from "../../referenceFormService";
-
 
 export interface ReferenceForm {
   [key: string]: string;
 }
-
-
 
 function ReferenceInformation(props: any) {
   const { current, length, changeCurrent } = props;
@@ -18,18 +23,14 @@ function ReferenceInformation(props: any) {
   const [attentionCurrent, setAttentionCurrent] = useState(false);
 
   const handleSelectReferenceAnswer = (value: string) => {
-    if (value.toLowerCase() == "otros")
-      setMadeByCurrent(true)
-    else
-      setMadeByCurrent(false)
-  }
+    if (value.toLowerCase() == "otros") setMadeByCurrent(true);
+    else setMadeByCurrent(false);
+  };
 
   const handleSelectAttentionAnswer = (values: string) => {
-    if (values.toLowerCase() == "otros")
-      setAttentionCurrent(true)
-    else
-      setAttentionCurrent(false)
-  }
+    if (values.toLowerCase() == "otros") setAttentionCurrent(true);
+    else setAttentionCurrent(false);
+  };
 
   const prev = () => {
     let value = current - 1;
@@ -37,7 +38,6 @@ function ReferenceInformation(props: any) {
   };
 
   const onFinish = (values: ReferenceForm) => {
-
     const vitalSignsFormJson = {
       vitalSignsJson: {
         bloodPressure: values.bloodPressure,
@@ -46,8 +46,8 @@ function ReferenceInformation(props: any) {
         heartRate: values.heartRate,
         temperature: values.temperature,
         weight: values.weight,
-        sizePerson: values.sizePerson
-      }
+        sizePerson: values.sizePerson,
+      },
     };
 
     const obgynFormJson = {
@@ -60,8 +60,8 @@ function ReferenceInformation(props: any) {
         livingChildren: values.livingChildren,
         deadChildren: values.deadChildren,
         deaths: values.deaths,
-        abortions: values.abortions
-      }
+        abortions: values.abortions,
+      },
     };
 
     const physicalExamination = {
@@ -74,33 +74,32 @@ function ReferenceInformation(props: any) {
         abdomen: values.abdomen,
         genitals: values.genitals,
         extremities: values.extremities,
-        neurological: values.neurological
-      }
+        neurological: values.neurological,
+      },
     };
 
     //Decide whether to get the value from the select or from the input other
     var madeByValue: string;
     if (madeBycurrent == true) {
-      madeByValue = values.othersMadeBy
-    }
-    else {
-      madeByValue = values.madeBy
+      madeByValue = values.othersMadeBy;
+    } else {
+      madeByValue = values.madeBy;
     }
 
     var attentionValue: string;
     if (attentionCurrent == true) {
-      attentionValue = values.othersAttention
-    }
-    else {
-      attentionValue = values.attentionRequired
+      attentionValue = values.othersAttention;
+    } else {
+      attentionValue = values.attentionRequired;
     }
 
     (async () => {
       try {
         await create({
           type: "NotSet",
-          originHfId: "NotSet",
-          destinationHfId: "NotSet",
+          originHfId: props.referenceState.originHfId,
+          destinationHfId: props.referenceState.destinationHfId,
+          institution: props.referenceState.institution,
           patientId: "NotSet",
           motive: values.motive,
           descriptionMotive: values.descriptionMotive,
@@ -123,7 +122,7 @@ function ReferenceInformation(props: any) {
         form.resetFields();
         message.success("Elementos se han guardado exitosamente.");
       } catch (error) {
-        console.log(error)
+        console.log(error);
         message.error("Ocurrió un error al guardar los elementos.");
       }
     })();
@@ -163,16 +162,19 @@ function ReferenceInformation(props: any) {
         name="register"
         onFinish={onFinish}
         scrollToFirstError
-        id="form-register">
-
-        <Form.Item label="Motivo"
+        id="form-register"
+      >
+        <Form.Item
+          label="Motivo"
           name="motive"
-          rules={[{
-            required: true,
-            message: "El campo es requerido."
-          }]}
+          rules={[
+            {
+              required: true,
+              message: "El campo es requerido.",
+            },
+          ]}
         >
-          <Select >
+          <Select>
             <Select.Option value="Diagnostico">Diagnostico</Select.Option>
             <Select.Option value="Tratamiento">Tratamiento</Select.Option>
             <Select.Option value="Seguimiento">Seguimiento</Select.Option>
@@ -195,9 +197,10 @@ function ReferenceInformation(props: any) {
             },
             {
               pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/"'])+\s?)+$/g,
-              message: "No se permiten simbolos."
-            }
-          ]}>
+              message: "No se permiten simbolos.",
+            },
+          ]}
+        >
           <Input.TextArea />
         </Form.Item>
 
@@ -216,9 +219,10 @@ function ReferenceInformation(props: any) {
             },
             {
               pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/"'])+\s?)+$/g,
-              message: "No se permiten simbolos."
-            }
-          ]}>
+              message: "No se permiten simbolos.",
+            },
+          ]}
+        >
           <Input.TextArea />
         </Form.Item>
 
@@ -237,9 +241,10 @@ function ReferenceInformation(props: any) {
             },
             {
               pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/"'])+\s?)+$/g,
-              message: "No se permiten simbolos."
-            }
-          ]}>
+              message: "No se permiten simbolos.",
+            },
+          ]}
+        >
           <Input.TextArea />
         </Form.Item>
 
@@ -407,8 +412,7 @@ function ReferenceInformation(props: any) {
             style={{ width: "100%" }}
             format={"DD-MM-YYYY"}
             placeholder="Ingrese fecha"
-            disabledDate={(d) =>
-              !d || d.isSameOrBefore("1940-01-01")}
+            disabledDate={(d) => !d || d.isSameOrBefore("1940-01-01")}
           />
         </Form.Item>
 
@@ -753,20 +757,24 @@ function ReferenceInformation(props: any) {
             },
             {
               pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/])+\s?)+$/g,
-              message: "No se permiten simbolos."
-            }
-          ]}>
+              message: "No se permiten simbolos.",
+            },
+          ]}
+        >
           <Input.TextArea />
         </Form.Item>
 
-        <Form.Item label="Evaluación de Riesgo"
+        <Form.Item
+          label="Evaluación de Riesgo"
           name="risk"
-          rules={[{
-            required: true,
-            message: "El campo es requerido."
-          }]}
+          rules={[
+            {
+              required: true,
+              message: "El campo es requerido.",
+            },
+          ]}
         >
-          <Select >
+          <Select>
             <Select.Option value="False">Sin Riesgo</Select.Option>
             <Select.Option value="True">Con Riesgo</Select.Option>
           </Select>
@@ -787,9 +795,10 @@ function ReferenceInformation(props: any) {
             },
             {
               pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/"'])+\s?)+$/g,
-              message: "No se permiten simbolos."
-            }
-          ]}>
+              message: "No se permiten simbolos.",
+            },
+          ]}
+        >
           <Input.TextArea />
         </Form.Item>
 
@@ -808,28 +817,36 @@ function ReferenceInformation(props: any) {
             },
             {
               pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9.¡!¿?)()+-/"'])+\s?)+$/g,
-              message: "No se permiten simbolos."
-            }
-          ]}>
+              message: "No se permiten simbolos.",
+            },
+          ]}
+        >
           <Input.TextArea />
         </Form.Item>
 
-        <Form.Item label="Referencia Respuesta elaborada por"
+        <Form.Item
+          label="Referencia Respuesta elaborada por"
           name="madeBy"
-          rules={[{
-            required: true,
-            message: "El campo es requerido."
-          }]}
+          rules={[
+            {
+              required: true,
+              message: "El campo es requerido.",
+            },
+          ]}
         >
-          <Select onChange={handleSelectReferenceAnswer} >
+          <Select onChange={handleSelectReferenceAnswer}>
             <Select.Option value="Medico General">Medico General</Select.Option>
-            <Select.Option value="Medico Especialista">Medico Especialista</Select.Option>
-            <Select.Option value="Auxiliar Enfermeria">Auxiliar Enfermeria</Select.Option>
+            <Select.Option value="Medico Especialista">
+              Medico Especialista
+            </Select.Option>
+            <Select.Option value="Auxiliar Enfermeria">
+              Auxiliar Enfermeria
+            </Select.Option>
             <Select.Option value="Otros">Otros</Select.Option>
           </Select>
         </Form.Item>
 
-        {madeBycurrent === true ?
+        {madeBycurrent === true ? (
           <Form.Item
             name="othersMadeBy"
             label="Especificación"
@@ -847,26 +864,31 @@ function ReferenceInformation(props: any) {
           >
             <Input />
           </Form.Item>
-          : null}
+        ) : null}
 
-
-
-        <Form.Item label="Amerita atencion en"
+        <Form.Item
+          label="Amerita atencion en"
           name="attentionRequired"
-          rules={[{
-            required: true,
-            message: "El campo es requerido."
-          }]}
+          rules={[
+            {
+              required: true,
+              message: "El campo es requerido.",
+            },
+          ]}
         >
-          <Select onChange={handleSelectAttentionAnswer} >
-            <Select.Option value="Consulta Externa">Consulta Externa</Select.Option>
+          <Select onChange={handleSelectAttentionAnswer}>
+            <Select.Option value="Consulta Externa">
+              Consulta Externa
+            </Select.Option>
             <Select.Option value="Emergencia">Emergencia</Select.Option>
-            <Select.Option value="Hospitalizacion">Hospitalizacion</Select.Option>
+            <Select.Option value="Hospitalizacion">
+              Hospitalizacion
+            </Select.Option>
             <Select.Option value="Otros">Otros</Select.Option>
           </Select>
         </Form.Item>
 
-        {attentionCurrent === true ?
+        {attentionCurrent === true ? (
           <Form.Item
             name="othersAttention"
             label="Especifique"
@@ -884,14 +906,17 @@ function ReferenceInformation(props: any) {
           >
             <Input />
           </Form.Item>
-          : null}
+        ) : null}
 
-        <Form.Item label="Se contacto al Establecimiento de Salud"
+        <Form.Item
+          label="Se contacto al Establecimiento de Salud"
           name="contactedHf"
-          rules={[{
-            required: true,
-            message: "El campo es requerido."
-          }]}
+          rules={[
+            {
+              required: true,
+              message: "El campo es requerido.",
+            },
+          ]}
         >
           <Select>
             <Select.Option value="False">No</Select.Option>
