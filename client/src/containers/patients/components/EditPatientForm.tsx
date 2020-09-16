@@ -104,7 +104,7 @@ function EditPatientForm(props: EditPatientFormProps) {
           name: values.name,
           firstLastName: values.firstLastName,
           secondLastName: values.secondLastName,
-          dateOfBirth: currentDate.toDate(),
+          dateOfBirth: moment(values.dateOfBirth).toDate(),
           email: values.email,
           gender: values.gender,
           address: values.address,
@@ -318,6 +318,10 @@ function EditPatientForm(props: EditPatientFormProps) {
                 required: true,
                 message: "Correo electrónico es un campo requerido",
                 whitespace: true,
+              },
+              {
+                pattern: /^([A-Za-z]+[0-9]*[-|_|.]*)+@(.)+$/g,
+                message: "Correo sólo acepta letras, números, puntos o guiones. En ese orden. ",
               },
               {
                 type: "email",
