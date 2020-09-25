@@ -1,10 +1,29 @@
 import React, { useEffect, useState } from "react";
 import MainTitle from "../../../components/MainTitle";
-import { Button, Form, Input, Radio, DatePicker, message, Space, Spin } from "antd";
-import { findById, update, IdNumberExists, EmailExists } from "../patientService";
+import {
+  Button,
+  Form,
+  Input,
+  Radio,
+  DatePicker,
+  message,
+  Space,
+  Spin,
+} from "antd";
+import {
+  findById,
+  update,
+  IdNumberExists,
+  EmailExists,
+  ForeignIdNumberExists,
+} from "../patientService";
 import { PatientForm } from "./AddPatientForm";
 import { Link, RouteComponentProps } from "@reach/router";
-import { ArrowLeftOutlined, PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
+import {
+  ArrowLeftOutlined,
+  PlusOutlined,
+  MinusCircleOutlined,
+} from "@ant-design/icons";
 import MaskedInput from "antd-mask-input";
 import moment from "moment";
 import { Patient } from "../patientModels";
@@ -14,9 +33,12 @@ import { StoreValue } from "antd/lib/form/interface";
 interface EditPatientRouteParams {
   id: number;
 }
+interface PhoneNumbersState {
+  num: string[];
+}
 
 interface EditPatientFormProps
-  extends RouteComponentProps<EditPatientRouteParams> { }
+  extends RouteComponentProps<EditPatientRouteParams> {}
 
 function EditPatientForm(props: EditPatientFormProps) {
   const [form] = Form.useForm();
@@ -28,18 +50,44 @@ function EditPatientForm(props: EditPatientFormProps) {
   const [Required, setRequired] = useState(false);
   const [phoneRequired, setPhoneRequired] = useState(false);
   const [currentIdNumber, setCurrentIdNumber] = useState("");
+  const [phoneNumbers, setPhoneNumbers] = useState({
+    num: [] as string[],
+  } as PhoneNumbersState);
   const dateFormat = "DD-MM-YYYY";
 
   const [loading, setLoading] = useState(true);
 
   const changeHidden = () => {
-    setHidden(!Hidden)
-    setRequired(!Required)
-  }
+    setHidden(!Hidden);
+    setRequired(!Required);
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let { num } = phoneNumbers;
+    if (event.target.value.search("_") === -1) {
+      num = [...num, event.target.value];
+      setPhoneNumbers({ ...phoneNumbers, num });
+    }
+  };
+
+  const validatePhoneNumber = async (rule: RuleObject, value: StoreValue) => {
+    const { num } = phoneNumbers;
+    const phoneN = value;
+    const exists = num.indexOf(phoneN);
+
+    if (exists !== -1) {
+      throw new Error(`No se permiten números de Teléfonos duplicados`);
+    }
+  };
+
+  const deletePhoneNumber = (arrayIndex: number) => {
+    let { num } = phoneNumbers;
+    setPhoneNumbers({ ...phoneNumbers, num: num.splice(arrayIndex, 0) });
+  };
 
   const validateIdNumber = async (rule: RuleObject, value: StoreValue) => {
     const IdNumber = value;
-    const exists = await IdNumberExists(IdNumber);
+    const exists = await ForeignIdNumberExists(IdNumber);
 
     if (exists && Required === false && currentIdNumber !== IdNumber) {
       throw new Error(
@@ -48,9 +96,12 @@ function EditPatientForm(props: EditPatientFormProps) {
     }
   };
 
-  const ForeignIdNumberExists = async (rule: RuleObject, value: StoreValue) => {
+  const validateForeignIdNumber = async (
+    rule: RuleObject,
+    value: StoreValue
+  ) => {
     const ForeignIdNumber = value;
-    const exists = await IdNumberExists(ForeignIdNumber);
+    const exists = await ForeignIdNumberExists(ForeignIdNumber);
 
     if (exists && Required === true && currentIdNumber !== ForeignIdNumber) {
       throw new Error(
@@ -62,7 +113,6 @@ function EditPatientForm(props: EditPatientFormProps) {
   const validateEmail = async (rule: RuleObject, value: StoreValue) => {
     const Email = value;
     const exists = await EmailExists(Email);
-
 
     if (exists && patient.email !== Email) {
       throw new Error(
@@ -86,6 +136,10 @@ function EditPatientForm(props: EditPatientFormProps) {
         setRequired(true);
         patient.idNumber = "";
       }
+      setPhoneNumbers({
+        ...phoneNumbers,
+        num: Object.values(patient.contacts),
+      });
       form.setFieldsValue(patient);
       setLoading(false);
     })();
@@ -109,7 +163,7 @@ function EditPatientForm(props: EditPatientFormProps) {
           gender: values.gender,
           address: values.address,
           contacts: JSON.stringify(values.contacts),
-          nationality: values.nationality
+          nationality: values.nationality,
         });
         setCurrentIdNumber(newId);
         message.success("El paciente ha sido editado existosamente");
@@ -172,7 +226,7 @@ function EditPatientForm(props: EditPatientFormProps) {
             rules={[
               {
                 required: true,
-                message: "Nacionalidad es un campo requerido"
+                message: "Nacionalidad es un campo requerido",
               },
             ]}
           >
@@ -214,14 +268,15 @@ function EditPatientForm(props: EditPatientFormProps) {
               {
                 min: 8,
                 max: 20,
-                message: "Número de Identidad debe tener mínimo 8 y máximo 20 caracteres."
+                message:
+                  "Número de Identidad debe tener mínimo 8 y máximo 20 caracteres.",
               },
               {
                 required: Required,
-                message: "Número de Identidad es un campo requerido"
+                message: "Número de Identidad es un campo requerido",
               },
               {
-                validator: ForeignIdNumberExists,
+                validator: validateForeignIdNumber,
               },
             ]}
           >
@@ -321,15 +376,16 @@ function EditPatientForm(props: EditPatientFormProps) {
               },
               {
                 pattern: /^([A-Za-z]+[0-9]*[-|_|.]*)+@(.)+$/g,
-                message: "Correo sólo acepta letras, números, puntos o guiones. En ese orden. ",
+                message:
+                  "Correo sólo acepta letras, números, puntos o guiones. En ese orden. ",
               },
               {
                 type: "email",
                 message: "Correo debe estar en formato: ejemplo@ejemplo.com",
               },
               {
-                validator: validateEmail
-              }
+                validator: validateEmail,
+              },
             ]}
           >
             <Input />
@@ -355,17 +411,18 @@ function EditPatientForm(props: EditPatientFormProps) {
             label="Dirección"
             rules={[
               {
-                pattern: /^.{1,200}$/g,
-                message: "Dirección debe tener máximo 200 letras.",
-              },
-              {
-                pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ.,])+\s?)+([0-9])*$/g,
+                pattern: /^[a-zA-Z]+([^!@$%^&*()_+-/?:;'"\*{}[\]<>][a-zA-Z]*[0-9]*\s?[,.#]?\n?)*$/g,
                 message: "Sólo se permiten letras, números, puntos y comas.",
+                min: 1,
               },
               {
                 required: true,
                 message: "Dirección es un campo requerido",
-                whitespace: true
+                whitespace: true,
+              },
+              {
+                max: 200,
+                message: "Dirección debe tener maximo 200 caracteres.",
               },
             ]}
           >
@@ -386,10 +443,7 @@ function EditPatientForm(props: EditPatientFormProps) {
                 return (
                   <div>
                     {fields.map((field) => (
-                      <Space
-                        key={field.key}
-                        align="start"
-                      >
+                      <Space key={field.key} align="start">
                         <Form.Item
                           {...field}
                           rules={[
@@ -401,9 +455,15 @@ function EditPatientForm(props: EditPatientFormProps) {
                               required: true,
                               message: "Ingresar número o eliminar el campo",
                             },
+                            {
+                              validator: validatePhoneNumber,
+                            },
                           ]}
                         >
-                          <MaskedInput mask="+(111) 1111-1111" />
+                          <MaskedInput
+                            mask="+(111) 1111-1111"
+                            onBlur={handleInputChange}
+                          />
                         </Form.Item>
 
                         <MinusCircleOutlined
@@ -411,6 +471,7 @@ function EditPatientForm(props: EditPatientFormProps) {
                             if (fields.length === 1) {
                               setPhoneRequired(true);
                             }
+                            deletePhoneNumber(field.name);
                             remove(field.name);
                           }}
                         />
@@ -423,11 +484,12 @@ function EditPatientForm(props: EditPatientFormProps) {
                         onClick={() => {
                           add();
                           setPhoneRequired(false);
+                          console.log(phoneNumbers);
                         }}
                         block
                       >
                         <PlusOutlined /> Agregar número de teléfono
-                    </Button>
+                      </Button>
                     </Form.Item>
                   </div>
                 );

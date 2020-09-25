@@ -24,10 +24,14 @@ import { ok } from "assert";
 import { all } from "../../networks/networkService";
 import { Network } from "../../networks/networkModels";
 
-export interface AddHospitalProps extends RouteComponentProps { }
+export interface AddHospitalProps extends RouteComponentProps {}
 
 export interface HospitalForm {
   [key: string]: string;
+}
+
+interface PhoneNumbersState {
+  num: string[];
 }
 
 const formItemLayout = {
@@ -91,6 +95,32 @@ function AddHospitalForm(props: AddHospitalProps) {
     setTagsInformation({ ...tagsInformation, tags });
   };
 
+  const [phoneNumbers, setPhoneNumbers] = useState({
+    num: [] as string[],
+  } as PhoneNumbersState);
+
+  const addPhoneNumber = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let { num } = phoneNumbers;
+    if (event.target.value.search("_") === -1) {
+      num = [...num, event.target.value];
+      setPhoneNumbers({ ...phoneNumbers, num });
+    }
+  };
+
+  const validatePhoneNumber = async (rule: RuleObject, value: StoreValue) => {
+    const { num } = phoneNumbers;
+    const phoneN = value;
+    const exists = num.indexOf(phoneN);
+
+    if (exists !== -1) {
+      throw new Error(`No se permiten números de Teléfonos duplicados`);
+    }
+  };
+
+  const deletePhoneNumber = (arrayIndex: number) => {
+    let { num } = phoneNumbers;
+    setPhoneNumbers({ ...phoneNumbers, num: num.splice(arrayIndex, 0) });
+  };
   useEffect(() => {
     if (editInput.current) {
       editInput.current?.focus();
@@ -393,16 +423,18 @@ function AddHospitalForm(props: AddHospitalProps) {
           label="Dirección"
           rules={[
             {
-              pattern: /^.{1,200}$/g,
-              message: "Dirección debe tener máximo 200 letras.",
-            },
-            {
-              pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ.,])+\s?)+([0-9])*$/g,
+              pattern: /^[a-zA-Z]+([^!@$%^&*()_+-/?:;'"\*{}[\]<>][a-zA-Z]*[0-9]*\s?[,.#]?\n?)*$/g,
               message: "Sólo se permiten letras, números, puntos y comas.",
+              min: 1,
             },
             {
               required: true,
               message: "Dirección es un campo requerido",
+              whitespace: true,
+            },
+            {
+              max: 200,
+              message: "Dirección debe tener maximo 200 caracteres.",
             },
           ]}
         >
@@ -454,13 +486,20 @@ function AddHospitalForm(props: AddHospitalProps) {
                             pattern: /-\d{4}/g,
                             message: "Número de teléfono incompleto. ",
                           },
+                          {
+                            validator: validatePhoneNumber,
+                          },
                         ]}
                       >
-                        <MaskedInput mask="+(111) 1111-1111" />
+                        <MaskedInput
+                          mask="+(111) 1111-1111"
+                          onBlur={addPhoneNumber}
+                        />
                       </Form.Item>
 
                       <MinusCircleOutlined
                         onClick={() => {
+                          deletePhoneNumber(field.name);
                           remove(field.name);
                         }}
                       />
@@ -508,7 +547,7 @@ function AddHospitalForm(props: AddHospitalProps) {
                     onBlur={handleEditInputConfirm}
                     onPressEnter={handleEditInputConfirm}
                     maxLength={30}
-                  // required
+                    // required
                   />
                 </Form.Item>
               );
@@ -551,8 +590,8 @@ function AddHospitalForm(props: AddHospitalProps) {
                 {tagElem}
               </Tooltip>
             ) : (
-                tagElem
-              );
+              tagElem
+            );
           })}
           {inputVisible && (
             <Form.Item
@@ -576,7 +615,7 @@ function AddHospitalForm(props: AddHospitalProps) {
                 onBlur={handleInputConfirm}
                 onPressEnter={handleInputConfirm}
                 maxLength={30}
-              // required
+                // required
               />
             </Form.Item>
           )}
@@ -598,7 +637,7 @@ function AddHospitalForm(props: AddHospitalProps) {
             type="primary"
             htmlType="submit"
             style={{ marginRight: "8px" }}
-            onClick={() => { }}
+            onClick={() => {}}
           >
             Guardar
           </Button>

@@ -35,6 +35,9 @@ export interface HospitalForm {
   [key: string]: string;
 }
 
+interface PhoneNumbersState {
+  num: string[];
+}
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -88,6 +91,33 @@ function EditHospitalForm(props: EditHospitalProps) {
     const tags = tagsInformation.tags.filter((tag) => tag !== removedTag);
 
     setTagsInformation({ ...tagsInformation, tags });
+  };
+
+  const [phoneNumbers, setPhoneNumbers] = useState({
+    num: [] as string[],
+  } as PhoneNumbersState);
+
+  const addPhoneNumber = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let { num } = phoneNumbers;
+    if (event.target.value.search("_") === -1) {
+      num = [...num, event.target.value];
+      setPhoneNumbers({ ...phoneNumbers, num });
+    }
+  };
+
+  const validatePhoneNumber = async (rule: RuleObject, value: StoreValue) => {
+    const { num } = phoneNumbers;
+    const phoneN = value;
+    const exists = num.indexOf(phoneN);
+
+    if (exists !== -1) {
+      throw new Error(`No se permiten números de Teléfonos duplicados`);
+    }
+  };
+
+  const deletePhoneNumber = (arrayIndex: number) => {
+    let { num } = phoneNumbers;
+    setPhoneNumbers({ ...phoneNumbers, num: num.splice(arrayIndex, 0) });
   };
 
   useEffect(() => {
@@ -186,8 +216,15 @@ function EditHospitalForm(props: EditHospitalProps) {
       } else {
         hospital.contacts = JSON.parse(hospital.contacts);
       }
-      console.log(hospital);
+      setPhoneNumbers({
+        ...phoneNumbers,
+        num: Object.values(hospital.contacts).map(
+          (item: any) => item.contactNumber
+        ),
+      });
+
       setCurrentHospital(hospital);
+
       form.setFieldsValue(hospital);
       setTagsInformation({
         tags: JSON.parse(hospital.services) as string[],
@@ -198,7 +235,6 @@ function EditHospitalForm(props: EditHospitalProps) {
           (d) => d.name === hospital.department
         ) || departmentsLocations.departments[0]
       );
-
       setLoading(false);
     })();
   }, []);
@@ -426,16 +462,18 @@ function EditHospitalForm(props: EditHospitalProps) {
             label="Dirección"
             rules={[
               {
-                pattern: /^.{1,200}$/g,
-                message: "Direccion debe tener máximo 200 letras",
-              },
-              {
-                pattern: /^(([a-zA-ZáéíóúÁÉÍÓÚñÑüÜ.,])+\s?)+$/g,
-                message: "Sólo se permiten letras, puntos y comas",
+                pattern: /^[a-zA-Z]+([^!@$%^&*()_+-/?:;'"\*{}[\]<>][a-zA-Z]*[0-9]*\s?[,.#]?\n?)*$/g,
+                message: "Sólo se permiten letras, números, puntos y comas.",
+                min: 1,
               },
               {
                 required: true,
                 message: "Dirección es un campo requerido",
+                whitespace: true,
+              },
+              {
+                max: 200,
+                message: "Dirección debe tener maximo 200 caracteres.",
               },
             ]}
           >
@@ -483,13 +521,20 @@ function EditHospitalForm(props: EditHospitalProps) {
                               required: true,
                               message: "Número es requerido",
                             },
+                            {
+                              validator: validatePhoneNumber,
+                            },
                           ]}
                         >
-                          <MaskedInput mask="+(111) 1111-1111" />
+                          <MaskedInput
+                            mask="+(111) 1111-1111"
+                            onBlur={addPhoneNumber}
+                          />
                         </Form.Item>
 
                         <MinusCircleOutlined
                           onClick={() => {
+                            deletePhoneNumber(field.name);
                             remove(field.name);
                           }}
                         />
