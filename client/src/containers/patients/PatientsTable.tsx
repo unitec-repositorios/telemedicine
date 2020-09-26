@@ -152,7 +152,7 @@ function PatientTable(props: PatientProps) {
       </Link>
       <Spin spinning={loading}>
 			<Input.Search
-				style={{ margin: "0 0 10px 600px", width: "400px" }}
+				style={{ marginLeft: "35%", width: "30%" }}
         placeholder="Buscar"
         enterButton
 				onSearch={onSearch}

@@ -78,7 +78,7 @@ function ReferenceACPSTable(props: ReferenceProps){
             </Button>
           </Link>
 											<Input.Search
-				style={{ margin: "0 0 10px 600px", width: "400px" }}
+				style={{ marginLeft: "30%", width: "30%" }}
         placeholder="Buscar"
         enterButton
 				onSearch={onSearch}

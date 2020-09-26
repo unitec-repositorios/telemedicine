@@ -120,11 +120,20 @@ export default function PatientReference(props: any) {
                     <Input/>
                 </Form.Item>
                 <Form.Item
-                    name="phoneNumber"
+                        
+                        name="phoneNumber"
                     label="Número de Teléfono"
-                >
-                    <MaskedInput mask="+(111) 1111-1111"/>
-                </Form.Item>
+                        
+                        rules={[
+
+                          {
+                            pattern: /-\d{4}/g,
+                            message: "Número de teléfono incompleto. ",
+                          },
+                        ]}
+                      >
+                        <MaskedInput mask="+(111) 1111-1111" />
+                      </Form.Item>
                 <Form.Item
                     name="relationShip"
                     label="Parentesco"
