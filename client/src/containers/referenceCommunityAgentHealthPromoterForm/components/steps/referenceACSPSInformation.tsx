@@ -3,10 +3,7 @@ import {
   Button,
   Form,
   Input,
-  Select,
   message,
-  Divider,
-  DatePicker,
 } from "antd";
 import MaskedInput from "antd-mask-input";
 import { create } from "../../referenceCommunityAgentHealthPromoterService";
@@ -16,7 +13,7 @@ export interface ReferenceACSPSForm {
 }
 
 function ReferenceACSPSInformation(props: any) {
-  const { current, length, changeCurrent } = props;
+  const { current, changeCurrent } = props;
   const [form] = Form.useForm();
 
   const prev = () => {

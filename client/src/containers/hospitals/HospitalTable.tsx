@@ -1,24 +1,19 @@
-import React, { useEffect, useState, MouseEventHandler } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Input,
   Button,
   Table,
   Popconfirm,
   message,
-  Pagination,
   Spin,
-  Empty,
 } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Link, RouteComponentProps, navigate } from "@reach/router";
-import { TableProps } from "antd/lib/table";
 import { Hospital } from "./hospitalModels";
 import MainTitle from "../../components/MainTitle";
 import { all, remove } from "./hospitalService";
-import { table } from "console";
-import { locale } from "moment";
 
-interface HospitalProps extends RouteComponentProps {}
+interface HospitalProps extends RouteComponentProps { }
 
 function HospitalTable(props: HospitalProps) {
   const [tempHospitals, setTempHospitals] = useState<Hospital[]>([]);

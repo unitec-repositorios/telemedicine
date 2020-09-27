@@ -20,11 +20,10 @@ import { create, rupsCodeExists } from "../hospitalService";
 import departmentsLocations from "../../../departmentsLocations";
 import { RuleObject, StoreValue } from "rc-field-form/lib/interface";
 import { MaskedInput } from "antd-mask-input";
-import { ok } from "assert";
 import { all } from "../../networks/networkService";
 import { Network } from "../../networks/networkModels";
 
-export interface AddHospitalProps extends RouteComponentProps {}
+export interface AddHospitalProps extends RouteComponentProps { }
 
 export interface HospitalForm {
   [key: string]: string;
@@ -85,6 +84,7 @@ function AddHospitalForm(props: AddHospitalProps) {
   const [tagsInformation, setTagsInformation] = useState({
     tags: [] as string[],
   } as ServiceTagsState);
+  const [editing, setEditing] = useState(true);
 
   const input = useRef<Input>(null);
   const editInput = useRef<Input>(null);
@@ -108,12 +108,14 @@ function AddHospitalForm(props: AddHospitalProps) {
   };
 
   const validatePhoneNumber = async (rule: RuleObject, value: StoreValue) => {
-    const { num } = phoneNumbers;
-    const phoneN = value;
-    const exists = num.indexOf(phoneN);
+    if (editing) {
+      const { num } = phoneNumbers;
+      const phoneN = value;
+      const exists = num.indexOf(phoneN);
 
-    if (exists !== -1) {
-      throw new Error(`No se permiten números de Teléfonos duplicados`);
+      if (exists !== -1) {
+        throw new Error(`No se permiten números de Teléfonos duplicados`);
+      }
     }
   };
 
@@ -230,9 +232,11 @@ function AddHospitalForm(props: AddHospitalProps) {
         form.resetFields();
         message.success("El hospital ha sido creado existosamente.");
         setTagsInformation({ tags: [] as string[] } as ServiceTagsState);
+        setPhoneNumbers({ num: [] as string[] } as PhoneNumbersState);
       } catch (error) {
         message.error("Ocurrió un error al guardar el hospital.");
       }
+      setEditing(true);
     })();
   };
 
@@ -547,7 +551,7 @@ function AddHospitalForm(props: AddHospitalProps) {
                     onBlur={handleEditInputConfirm}
                     onPressEnter={handleEditInputConfirm}
                     maxLength={30}
-                    // required
+                  // required
                   />
                 </Form.Item>
               );
@@ -590,8 +594,8 @@ function AddHospitalForm(props: AddHospitalProps) {
                 {tagElem}
               </Tooltip>
             ) : (
-              tagElem
-            );
+                tagElem
+              );
           })}
           {inputVisible && (
             <Form.Item
@@ -615,7 +619,6 @@ function AddHospitalForm(props: AddHospitalProps) {
                 onBlur={handleInputConfirm}
                 onPressEnter={handleInputConfirm}
                 maxLength={30}
-                // required
               />
             </Form.Item>
           )}
@@ -637,7 +640,9 @@ function AddHospitalForm(props: AddHospitalProps) {
             type="primary"
             htmlType="submit"
             style={{ marginRight: "8px" }}
-            onClick={() => {}}
+            onClick={() => {
+              setEditing(false);
+            }}
           >
             Guardar
           </Button>

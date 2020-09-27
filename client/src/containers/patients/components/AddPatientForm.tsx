@@ -4,7 +4,6 @@ import {
   Form,
   Input,
   Radio,
-  Select,
   DatePicker,
   message,
   Space,
@@ -27,7 +26,7 @@ import MaskedInput from "antd-mask-input";
 import { RuleObject } from "antd/lib/form";
 import { StoreValue } from "antd/lib/form/interface";
 
-export interface AddPatientProps extends RouteComponentProps {}
+export interface AddPatientProps extends RouteComponentProps { }
 
 export interface PatientForm {
   [key: string]: string;
@@ -66,6 +65,7 @@ function AddPatientForm(props: AddPatientProps) {
   const [form] = Form.useForm();
 
   const [Hidden, setHidden] = useState(false);
+  const [editing, setEditing] = useState(true);
   const [Required, setRequired] = useState(false);
   const [phoneRequired, setPhoneRequired] = useState(true);
   const [phoneNumbers, setPhoneNumbers] = useState({
@@ -81,7 +81,7 @@ function AddPatientForm(props: AddPatientProps) {
     setRequired(!Required);
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const addPhoneNumber = (event: React.ChangeEvent<HTMLInputElement>) => {
     let { num } = phoneNumbers;
     if (event.target.value.search("_") === -1) {
       num = [...num, event.target.value];
@@ -90,12 +90,15 @@ function AddPatientForm(props: AddPatientProps) {
   };
 
   const validatePhoneNumber = async (rule: RuleObject, value: StoreValue) => {
-    const { num } = phoneNumbers;
-    const phoneN = value;
-    const exists = num.indexOf(phoneN);
-
-    if (exists !== -1) {
-      throw new Error(`No se permiten números de Teléfonos duplicados`);
+    if (editing) {
+      const { num } = phoneNumbers;
+      const phoneN = value;
+      const exists = num.indexOf(phoneN);
+      console.log(num)
+      console.log(exists)
+      if (exists !== -1) {
+        throw new Error(`No se permiten números de Teléfonos duplicados`);
+      }
     }
   };
 
@@ -160,10 +163,12 @@ function AddPatientForm(props: AddPatientProps) {
         });
         form.resetFields();
         setPhoneRequired(true);
+        setPhoneNumbers({ num: [] as string[] } as PhoneNumbersState);
         message.success("El paciente ha sido creado existosamente");
       } catch (error) {
         message.error("Ocurrió un error al guardar nuevo paciente");
       }
+      setEditing(true);
     })();
   };
 
@@ -430,7 +435,7 @@ function AddPatientForm(props: AddPatientProps) {
                       >
                         <MaskedInput
                           mask="+(111) 1111-1111"
-                          onBlur={handleInputChange}
+                          onBlur={addPhoneNumber}
                         />
                       </Form.Item>
 
@@ -468,6 +473,9 @@ function AddPatientForm(props: AddPatientProps) {
             type="primary"
             htmlType="submit"
             style={{ marginRight: "8px" }}
+            onClick={() => {
+              setEditing(false);
+            }}
           >
             Guardar
           </Button>

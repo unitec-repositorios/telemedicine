@@ -29,7 +29,7 @@ interface EditHospitalRouterParams {
 }
 
 interface EditHospitalProps
-  extends RouteComponentProps<EditHospitalRouterParams> {}
+  extends RouteComponentProps<EditHospitalRouterParams> { }
 
 export interface HospitalForm {
   [key: string]: string;
@@ -81,6 +81,8 @@ function EditHospitalForm(props: EditHospitalProps) {
     departmentsLocations.departments[0]
   );
 
+  const [editing, setEditing] = useState(true);
+
   const [tagsInformation, setTagsInformation] = useState({
     tags: [] as string[],
   } as ServiceTagsState);
@@ -106,12 +108,14 @@ function EditHospitalForm(props: EditHospitalProps) {
   };
 
   const validatePhoneNumber = async (rule: RuleObject, value: StoreValue) => {
-    const { num } = phoneNumbers;
-    const phoneN = value;
-    const exists = num.indexOf(phoneN);
+    if (editing) {
+      const { num } = phoneNumbers;
+      const phoneN = value;
+      const exists = num.indexOf(phoneN);
 
-    if (exists !== -1) {
-      throw new Error(`No se permiten números de Teléfonos duplicados`);
+      if (exists !== -1) {
+        throw new Error(`No se permiten números de Teléfonos duplicados`);
+      }
     }
   };
 
@@ -211,7 +215,7 @@ function EditHospitalForm(props: EditHospitalProps) {
   useEffect(() => {
     (async () => {
       const hospital = await findById(props.id ?? 1);
-      if (hospital.contacts == undefined) {
+      if (hospital.contacts === undefined) {
         hospital.contacts = JSON.parse("[]");
       } else {
         hospital.contacts = JSON.parse(hospital.contacts);
@@ -250,7 +254,6 @@ function EditHospitalForm(props: EditHospitalProps) {
 
   const onFinish = (values: HospitalForm) => {
     (async () => {
-      // setCurrentHospital({ ...currentHospital, city: values.city });
       try {
         debugger;
         await update({
@@ -265,11 +268,11 @@ function EditHospitalForm(props: EditHospitalProps) {
           services: JSON.stringify(tagsInformation.tags),
           networkId: parseInt(values.networkId),
         });
-
         message.success("El hospital ha sido editado existosamente");
       } catch (error) {
         message.error("Ocurrió un error al editar el hospital");
       }
+      setEditing(true);
     })();
   };
 
@@ -380,7 +383,6 @@ function EditHospitalForm(props: EditHospitalProps) {
                     {l.name}
                   </Option>
                 )
-                // form.resetFields(["city"])
               )}
             </Select>
           </Form.Item>
@@ -566,7 +568,6 @@ function EditHospitalForm(props: EditHospitalProps) {
                     rules={[
                       {
                         required: true,
-                        // type : "regexp",
                         pattern: /^([a-zA-Z]\s?)+$/g,
                         message: "Solo se permiten letras",
                       },
@@ -582,7 +583,6 @@ function EditHospitalForm(props: EditHospitalProps) {
                       onBlur={handleEditInputConfirm}
                       onPressEnter={handleEditInputConfirm}
                       maxLength={30}
-                      // required
                     />
                   </Form.Item>
                 );
@@ -625,8 +625,8 @@ function EditHospitalForm(props: EditHospitalProps) {
                   {tagElem}
                 </Tooltip>
               ) : (
-                tagElem
-              );
+                  tagElem
+                );
             })}
             {inputVisible && (
               <Form.Item
@@ -650,7 +650,6 @@ function EditHospitalForm(props: EditHospitalProps) {
                   onBlur={handleInputConfirm}
                   onPressEnter={handleInputConfirm}
                   maxLength={30}
-                  // required
                 />
               </Form.Item>
             )}
@@ -672,8 +671,11 @@ function EditHospitalForm(props: EditHospitalProps) {
               type="primary"
               htmlType="submit"
               style={{ marginRight: "8px" }}
+              onClick={() => {
+                setEditing(false);
+              }}
             >
-              Editar
+              Guardar
             </Button>
           </Form.Item>
         </Form>

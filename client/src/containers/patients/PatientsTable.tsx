@@ -8,12 +8,12 @@ import { Patient } from "./patientModels";
 import MainTitle from "../../components/MainTitle";
 import { all, remove } from "./patientService";
 
-interface PatientProps extends RouteComponentProps {}
+interface PatientProps extends RouteComponentProps { }
 
 function PatientTable(props: PatientProps) {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [filterTable, setFilterTable] = useState<Patient[]>([]);
-  const [currentPatients, setcurrentPatient] = useState<Patient[]>([]);
+  const [currentPatients, setcurrentPatients] = useState<Patient[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ function PatientTable(props: PatientProps) {
       const data = await all();
       setPatients(data);
       setLoading(false);
-      setcurrentPatient(data);
+      setcurrentPatients(data);
     })();
   }, []);
 
@@ -37,7 +37,7 @@ function PatientTable(props: PatientProps) {
       setPatients(
         patients.filter((currentPatients) => currentPatients.id !== id)
       );
-      setcurrentPatient(
+      setcurrentPatients(
         patients.filter((currentPatients) => currentPatients.id !== id)
       );
     } catch (error) {
@@ -47,11 +47,23 @@ function PatientTable(props: PatientProps) {
 
   const onSearch = (value: string) => {
     setPatients(currentPatients);
-    const filter = currentPatients.filter((o) =>
-      Object.values(o).some((v) =>
-        String(v).toLowerCase().includes(value.toLowerCase())
+
+    let filterWords = value.trim().split(" ");
+    let filter = currentPatients
+    for (let word of filterWords) {
+      filter = currentPatients.filter((o) =>
+        Object.values(o).some((v) =>
+          String(v).toLowerCase().includes(word.toLowerCase())
+        )
       )
-    );
+      setFilterTable(filter)
+      if (filter.length !== 0) {
+        setcurrentPatients(filter)
+      }
+      if (filter.length === 0) {
+        break
+      }
+    }
     if (filter.length === 0 && value !== "") {
       setPatients([]);
       setFilterTable([]);

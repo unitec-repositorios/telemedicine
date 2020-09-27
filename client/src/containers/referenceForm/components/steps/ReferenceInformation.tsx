@@ -16,19 +16,19 @@ export interface ReferenceForm {
 }
 
 function ReferenceInformation(props: any) {
-  const { current, length, changeCurrent } = props;
+  const { current, changeCurrent } = props;
 
   const [form] = Form.useForm();
   const [madeBycurrent, setMadeByCurrent] = useState(false);
   const [attentionCurrent, setAttentionCurrent] = useState(false);
 
   const handleSelectReferenceAnswer = (value: string) => {
-    if (value.toLowerCase() == "otros") setMadeByCurrent(true);
+    if (value.toLowerCase() === "otros") setMadeByCurrent(true);
     else setMadeByCurrent(false);
   };
 
   const handleSelectAttentionAnswer = (values: string) => {
-    if (values.toLowerCase() == "otros") setAttentionCurrent(true);
+    if (values.toLowerCase() === "otros") setAttentionCurrent(true);
     else setAttentionCurrent(false);
   };
 
@@ -80,14 +80,14 @@ function ReferenceInformation(props: any) {
 
     //Decide whether to get the value from the select or from the input other
     var madeByValue: string;
-    if (madeBycurrent == true) {
+    if (madeBycurrent === true) {
       madeByValue = values.othersMadeBy;
     } else {
       madeByValue = values.madeBy;
     }
 
     var attentionValue: string;
-    if (attentionCurrent == true) {
+    if (attentionCurrent === true) {
       attentionValue = values.othersAttention;
     } else {
       attentionValue = values.attentionRequired;
@@ -965,24 +965,24 @@ function ReferenceInformation(props: any) {
             }
           />
         </Form.Item>
-          <Form.Item {...tailFormItemLayout}>
-              <Button
-                  type="primary"
-                  htmlType="submit"
-                  style={{marginRight: "8px"}}
-              >
-                  Guardar
+        <Form.Item {...tailFormItemLayout}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={{ marginRight: "8px" }}
+          >
+            Guardar
               </Button>
 
-              <Button htmlType="button" onClick={() => form.resetFields()}>
-                  Reiniciar campos
+          <Button htmlType="button" onClick={() => form.resetFields()}>
+            Reiniciar campos
               </Button>
-              {current > 0 && (
-                  <Button style={{margin: "0 8px"}} onClick={() => prev()}>
-                      Anterior
-                  </Button>
-              )}
-          </Form.Item>
+          {current > 0 && (
+            <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+              Anterior
+            </Button>
+          )}
+        </Form.Item>
       </Form>
     </>
   );
