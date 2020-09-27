@@ -1,7 +1,8 @@
 import {Button, Form, Select} from "antd";
 import {Hospital} from '../../../hospitals/hospitalModels';
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {all} from "../../../hospitals/hospitalService";
+import StepsContext from "../../../../contexts/StepsContext";
 
 export interface SearchForm {
     [key: string]: string;
@@ -16,6 +17,7 @@ function HospitalSearching(props: any) {
     const [selectedDestination, setSelectedDestination] = useState(0);
     const [selectedInstitution, setSelectedInstitution] = useState("");
     const {current, changeCurrent} = props;
+    const referenceInformation = useContext(StepsContext);
 
     const tailFormItemLayout = {
         wrapperCol: {

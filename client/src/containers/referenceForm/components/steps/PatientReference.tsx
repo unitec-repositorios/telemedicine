@@ -14,6 +14,15 @@ export default function PatientReference(props: any) {
     const [patients, setPatients] = useState([] as Patient[]);
     const [patient, setPatient] = useState({} as Patient);
     const [form] = Form.useForm();
+    const {
+        patientId,
+        relationship,
+        address,
+        companion,
+        phone,
+
+    } = props.referenceState;
+
     const fetchPatient = async (value: string) => {
 
         setFetching(true);
@@ -21,6 +30,14 @@ export default function PatientReference(props: any) {
         setPatients(patients);
         setFetching(false);
     };
+
+    useEffect(() => {
+        (async () => {
+            if (patientId) {
+                await fetchPatient(patientId);
+            }
+        })();
+    },[]);
 
     const handleChange = (value: any) => {
 
@@ -68,6 +85,7 @@ export default function PatientReference(props: any) {
         },
     };
 
+
     return (
         <>
             <Form
@@ -79,6 +97,7 @@ export default function PatientReference(props: any) {
             >
                 <Divider orientation="left">Paciente</Divider>
                 <Form.Item label="Paciente" name="patient"
+                    initialValue={patientId}
 
                            rules={[
                                {
@@ -89,7 +108,7 @@ export default function PatientReference(props: any) {
                     <Select
                         labelInValue
                         showSearch
-                        placeholder="Seleccionar paciente"
+                        placeholder="Ingrese un número de identificación"
                         notFoundContent={fetching ? <Spin size="small"/> : null}
                         filterOption={false}
                         onSearch={fetchPatient}
@@ -100,7 +119,7 @@ export default function PatientReference(props: any) {
                             <Option
                                 key={d.idNumber}
                                 value={d.id}
-                            >{`${d.name} ${d.firstLastName}`}</Option>
+                            >{`${d.name} ${d.firstLastName} | ${d.idNumber}`}</Option>
                         ))}
                     </Select>
                 </Form.Item>
