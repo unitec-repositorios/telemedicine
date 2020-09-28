@@ -49,7 +49,7 @@ export default function PatientReference(props: any) {
     const handleChange = async (value: any) => {
         const foundPatient = patients.find(p => p.id === value);
         setPatient(foundPatient);
-        const patientTemp = await findById(value);
+        const patientTemp = foundPatient;
         if (patientTemp !== undefined) {
             setIdPatient(patientTemp.idNumber);
             setNamePatient(patientTemp.name);
@@ -84,7 +84,8 @@ export default function PatientReference(props: any) {
             address,
             name: companion,
             phoneNumber: phone,
-            lastName
+            lastName,
+            patient: patient.id
         });
 
     }

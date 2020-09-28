@@ -1,4 +1,4 @@
-import React, {useState, Props} from "react";
+import React, {useState, Props, useEffect} from "react";
 import {
     Button,
     Form,
@@ -32,6 +32,17 @@ function ReferenceInformation(props: any) {
         physicalExamination.madeBy = value;
         setReference({...referenceState, physicalExamination} as RRForm);
     };
+
+    useEffect(()=> {
+        if(referenceState.motive){
+            form.setFieldsValue({
+                ...referenceState,
+                ...referenceState.vitalSigns,
+                ...referenceState.obGyn,
+                ...referenceState.physicalExamination,
+            });
+        }
+    })
 
     const handleSelectAttentionAnswer = (values: string) => {
         if (values.toLowerCase() == "otros") setAttentionCurrent(true);
@@ -98,12 +109,6 @@ function ReferenceInformation(props: any) {
             attentionValue = values.attentionRequired;
         }
 
-        form.setFieldsValue({
-            ...referenceState,
-            ...referenceState.vitalSigns,
-            ...referenceState.obGyn,
-            ...referenceState.physicalExamination,
-        });
 
         (async () => {
             try {
