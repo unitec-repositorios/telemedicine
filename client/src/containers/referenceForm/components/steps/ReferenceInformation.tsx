@@ -11,13 +11,14 @@ import {
 import moment from "moment";
 import {create} from "../../referenceFormService";
 import {navigate} from "@reach/router";
+import {RRForm} from "../../referenceFormModels";
 
 export interface ReferenceForm {
     [key: string]: string;
 }
 
 function ReferenceInformation(props: any) {
-    const {current, length, changeCurrent} = props;
+    const {current, length, changeCurrent, referenceState, setReference} = props;
 
     const [form] = Form.useForm();
     const [madeBycurrent, setMadeByCurrent] = useState(false);
@@ -26,17 +27,35 @@ function ReferenceInformation(props: any) {
     const handleSelectReferenceAnswer = (value: string) => {
         if (value.toLowerCase() == "otros") setMadeByCurrent(true);
         else setMadeByCurrent(false);
+
+        const physicalExamination = {...referenceState.physicalExamination};
+        physicalExamination.madeBy = value;
+        setReference({...referenceState, physicalExamination} as RRForm);
     };
 
     const handleSelectAttentionAnswer = (values: string) => {
         if (values.toLowerCase() == "otros") setAttentionCurrent(true);
         else setAttentionCurrent(false);
+
+        const physicalExamination = {...referenceState.physicalExamination};
+        physicalExamination.attentionRequired = values;
+        setReference({...referenceState, physicalExamination} as RRForm);
     };
 
     const prev = () => {
         let value = current - 1;
         changeCurrent(value);
     };
+
+
+    if (referenceState.motive) {
+        form.setFieldsValue({
+            ...referenceState,
+            ...referenceState.vitalSigns,
+            ...referenceState.obGyn,
+            ...referenceState.physicalExamination,
+        })
+    }
 
     const onFinish = (values: ReferenceForm) => {
         const vitalSignsFormJson = {
@@ -180,7 +199,9 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Select>
+                    <Select onSelect={(value) => {
+                        setReference({...referenceState, motive: value} as RRForm)
+                    }}>
                         <Select.Option value="Diagnostico">Diagnostico</Select.Option>
                         <Select.Option value="Tratamiento">Tratamiento</Select.Option>
                         <Select.Option value="Seguimiento">Seguimiento</Select.Option>
@@ -207,7 +228,8 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input.TextArea/>
+                    <Input.TextArea
+                        onChange={event => setReference({...referenceState, symptoms: event.target.value} as RRForm)}/>
                 </Form.Item>
 
                 <Form.Item
@@ -229,7 +251,11 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input.TextArea/>
+                    <Input.TextArea onChange={(event) => {
+
+
+                        setReference({...referenceState, descriptionMotive: event.target.value} as RRForm)
+                    }}/>
                 </Form.Item>
 
                 <Form.Item
@@ -251,7 +277,10 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input.TextArea/>
+                    <Input.TextArea onChange={(event) => setReference({
+                        ...referenceState,
+                        medicalSummary: event.target.value
+                    } as RRForm)}/>
                 </Form.Item>
 
                 <Divider orientation="left">Signos vitales</Divider>
@@ -271,7 +300,12 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input/>
+                    <Input onChange={event => {
+
+                        const vitalSigns = {...referenceState.vitalSigns};
+                        vitalSigns.bloodPressure = event.target.value;
+                        setReference({...referenceState, vitalSigns} as RRForm)
+                    }}/>
                 </Form.Item>
 
                 <Form.Item
@@ -289,7 +323,11 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input/>
+                    <Input onChange={event => {
+                        const vitalSigns = {...referenceState.vitalSigns};
+                        vitalSigns.respiratoryRate = event.target.value;
+                        setReference({...referenceState, vitalSigns} as RRForm);
+                    }}/>
                 </Form.Item>
 
                 <Form.Item
@@ -307,7 +345,11 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input/>
+                    <Input onChange={event => {
+                        const vitalSigns = {...referenceState.vitalSigns};
+                        vitalSigns.pulse = event.target.value;
+                        setReference({...referenceState, vitalSigns} as RRForm);
+                    }}/>
                 </Form.Item>
 
                 <Form.Item
@@ -325,7 +367,11 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input/>
+                    <Input onChange={event => {
+                        const vitalSigns = {...referenceState.vitalSigns};
+                        vitalSigns.heartRate = event.target.value;
+                        setReference({...referenceState, vitalSigns} as RRForm);
+                    }}/>
                 </Form.Item>
 
                 <Form.Item
@@ -343,7 +389,11 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input/>
+                    <Input onChange={event => {
+                        const vitalSigns = {...referenceState.vitalSigns};
+                        vitalSigns.temperature = event.target.value;
+                        setReference({...referenceState, vitalSigns} as RRForm);
+                    }}/>
                 </Form.Item>
 
                 <Form.Item
@@ -361,7 +411,11 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input/>
+                    <Input onChange={event => {
+                        const vitalSigns = {...referenceState.vitalSigns};
+                        vitalSigns.weight = event.target.value;
+                        setReference({...referenceState, vitalSigns} as RRForm);
+                    }}/>
                 </Form.Item>
 
                 <Form.Item
@@ -379,7 +433,11 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input/>
+                    <Input onChange={event => {
+                        const vitalSigns = {...referenceState.vitalSigns};
+                        vitalSigns.sizePerson = event.target.value;
+                        setReference({...referenceState, vitalSigns} as RRForm);
+                    }}/>
                 </Form.Item>
 
                 {
@@ -401,6 +459,12 @@ function ReferenceInformation(props: any) {
                                 style={{width: "100%"}}
                                 format={"DD-MM-YYYY"}
                                 placeholder="Ingrese fecha"
+                                onChange={value => {
+
+                                    const obGyn = {...referenceState.obGyn};
+                                    obGyn.fum = value;
+                                    setReference({...referenceState, obGyn} as RRForm);
+                                }}
                                 disabledDate={(d) =>
                                     !d || d.isSameOrBefore("1940-01-01") || d.isAfter(moment())
                                 }
@@ -422,6 +486,11 @@ function ReferenceInformation(props: any) {
                                 format={"DD-MM-YYYY"}
                                 placeholder="Ingrese fecha"
                                 disabledDate={(d) => !d || d.isSameOrBefore("1940-01-01")}
+                                onChange={value => {
+                                    const obGyn = {...referenceState.obGyn};
+                                    obGyn.fpp = value;
+                                    setReference({...referenceState, obGyn} as RRForm);
+                                }}
                             />
                         </Form.Item>
 
@@ -440,7 +509,11 @@ function ReferenceInformation(props: any) {
                                 },
                             ]}
                         >
-                            <Input/>
+                            <Input onChange={event => {
+                                const obGyn = {...referenceState.obGyn};
+                                obGyn.pregnancy = event.target.value;
+                                setReference({...referenceState, obGyn} as RRForm);
+                            }}/>
                         </Form.Item>
 
                         <Form.Item
@@ -458,7 +531,11 @@ function ReferenceInformation(props: any) {
                                 },
                             ]}
                         >
-                            <Input/>
+                            <Input onChange={event => {
+                                const obGyn = {...referenceState.obGyn};
+                                obGyn.birth = event.target.value;
+                                setReference({...referenceState, obGyn} as RRForm);
+                            }}/>
                         </Form.Item>
 
                         <Form.Item
@@ -476,7 +553,11 @@ function ReferenceInformation(props: any) {
                                 },
                             ]}
                         >
-                            <Input/>
+                            <Input onChange={event => {
+                                const obGyn = {...referenceState.obGyn};
+                                obGyn.cesareanSections = event.target.value;
+                                setReference({...referenceState, obGyn} as RRForm);
+                            }}/>
                         </Form.Item>
 
                         <Form.Item
@@ -494,7 +575,11 @@ function ReferenceInformation(props: any) {
                                 },
                             ]}
                         >
-                            <Input/>
+                            <Input onChange={event => {
+                                const obGyn = {...referenceState.obGyn};
+                                obGyn.livingChildren = event.target.value;
+                                setReference({...referenceState, obGyn} as RRForm);
+                            }}/>
                         </Form.Item>
 
                         <Form.Item
@@ -512,7 +597,11 @@ function ReferenceInformation(props: any) {
                                 },
                             ]}
                         >
-                            <Input/>
+                            <Input onChange={event => {
+                                const obGyn = {...referenceState.obGyn};
+                                obGyn.deadChildren = event.target.value;
+                                setReference({...referenceState, obGyn} as RRForm);
+                            }}/>
                         </Form.Item>
 
                         <Form.Item
@@ -530,7 +619,11 @@ function ReferenceInformation(props: any) {
                                 },
                             ]}
                         >
-                            <Input/>
+                            <Input onChange={event => {
+                                const obGyn = {...referenceState.obGyn};
+                                obGyn.deaths = event.target.value;
+                                setReference({...referenceState, obGyn} as RRForm);
+                            }}/>
                         </Form.Item>
 
                         <Form.Item
@@ -548,7 +641,11 @@ function ReferenceInformation(props: any) {
                                 },
                             ]}
                         >
-                            <Input/>
+                            <Input onChange={event => {
+                                const obGyn = {...referenceState.obGyn};
+                                obGyn.abortions = event.target.value;
+                                setReference({...referenceState, obGyn} as RRForm);
+                            }}/>
                         </Form.Item>
                     </div>)}
 
@@ -573,7 +670,11 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input/>
+                    <Input onChange={event => {
+                        const physicalExamination = {...referenceState.physicalExamination};
+                        physicalExamination.head = event.target.value;
+                        setReference({...referenceState, physicalExamination} as RRForm);
+                    }}/>
                 </Form.Item>
 
                 <Form.Item
@@ -595,7 +696,11 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input/>
+                    <Input onChange={event => {
+                        const physicalExamination = {...referenceState.physicalExamination};
+                        physicalExamination.orl = event.target.value;
+                        setReference({...referenceState, physicalExamination} as RRForm);
+                    }}/>
                 </Form.Item>
 
                 <Form.Item
@@ -617,7 +722,11 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input/>
+                    <Input onChange={event => {
+                        const physicalExamination = {...referenceState.physicalExamination};
+                        physicalExamination.eyes = event.target.value;
+                        setReference({...referenceState, physicalExamination} as RRForm);
+                    }}/>
                 </Form.Item>
 
                 <Form.Item
@@ -639,7 +748,11 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input/>
+                    <Input onChange={event => {
+                        const physicalExamination = {...referenceState.physicalExamination};
+                        physicalExamination.neck = event.target.value;
+                        setReference({...referenceState, physicalExamination} as RRForm);
+                    }}/>
                 </Form.Item>
 
                 <Form.Item
@@ -661,7 +774,11 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input/>
+                    <Input onChange={event => {
+                        const physicalExamination = {...referenceState.physicalExamination};
+                        physicalExamination.torax = event.target.value;
+                        setReference({...referenceState, physicalExamination} as RRForm);
+                    }}/>
                 </Form.Item>
 
                 <Form.Item
@@ -683,7 +800,11 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input/>
+                    <Input onChange={event => {
+                        const physicalExamination = {...referenceState.physicalExamination};
+                        physicalExamination.abdomen = event.target.value;
+                        setReference({...referenceState, physicalExamination} as RRForm);
+                    }}/>
                 </Form.Item>
 
                 <Form.Item
@@ -705,7 +826,11 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input/>
+                    <Input onChange={event => {
+                        const physicalExamination = {...referenceState.physicalExamination};
+                        physicalExamination.genitals = event.target.value;
+                        setReference({...referenceState, physicalExamination} as RRForm);
+                    }}/>
                 </Form.Item>
 
                 <Form.Item
@@ -727,7 +852,11 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input/>
+                    <Input onChange={event => {
+                        const physicalExamination = {...referenceState.physicalExamination};
+                        physicalExamination.extremities = event.target.value;
+                        setReference({...referenceState, physicalExamination} as RRForm);
+                    }}/>
                 </Form.Item>
 
                 <Form.Item
@@ -749,7 +878,11 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input/>
+                    <Input onChange={event => {
+                        const physicalExamination = {...referenceState.physicalExamination};
+                        physicalExamination.neurological = event.target.value;
+                        setReference({...referenceState, physicalExamination} as RRForm);
+                    }}/>
                 </Form.Item>
 
                 <Form.Item
@@ -771,7 +904,11 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input.TextArea/>
+                    <Input.TextArea onChange={event => {
+                        const physicalExamination = {...referenceState.physicalExamination};
+                        physicalExamination.complementaryExams = event.target.value;
+                        setReference({...referenceState, physicalExamination} as RRForm);
+                    }}/>
                 </Form.Item>
 
                 <Form.Item
@@ -784,7 +921,11 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Select>
+                    <Select onChange={value => {
+                        const physicalExamination = {...referenceState.physicalExamination};
+                        physicalExamination.risk = value;
+                        setReference({...referenceState, physicalExamination} as RRForm);
+                    }}>
                         <Select.Option value="False">Sin Riesgo</Select.Option>
                         <Select.Option value="True">Con Riesgo</Select.Option>
                     </Select>
@@ -809,7 +950,11 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input.TextArea/>
+                    <Input.TextArea onChange={event => {
+                        const physicalExamination = {...referenceState.physicalExamination};
+                        physicalExamination.diagnosticImpression = event.target.value;
+                        setReference({...referenceState, physicalExamination} as RRForm);
+                    }}/>
                 </Form.Item>
 
                 <Form.Item
@@ -831,7 +976,11 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input.TextArea/>
+                    <Input.TextArea onChange={event => {
+                        const physicalExamination = {...referenceState.physicalExamination};
+                        physicalExamination.observations = event.target.value;
+                        setReference({...referenceState, physicalExamination} as RRForm);
+                    }}/>
                 </Form.Item>
 
                 <Form.Item
@@ -872,7 +1021,11 @@ function ReferenceInformation(props: any) {
                             },
                         ]}
                     >
-                        <Input/>
+                        <Input onChange={event => {
+                            const physicalExamination = {...referenceState.physicalExamination};
+                            physicalExamination.othersMadeBy = event.target.value;
+                            setReference({...referenceState, physicalExamination} as RRForm);
+                        }}/>
                     </Form.Item>
                 ) : null}
 
@@ -914,7 +1067,11 @@ function ReferenceInformation(props: any) {
                             },
                         ]}
                     >
-                        <Input/>
+                        <Input onChange={event => {
+                            const physicalExamination = {...referenceState.physicalExamination};
+                            physicalExamination.othersAttention = event.target.value;
+                            setReference({...referenceState, physicalExamination} as RRForm);
+                        }}/>
                     </Form.Item>
                 ) : null}
 
@@ -928,7 +1085,11 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Select>
+                    <Select onSelect={value => {
+                        const physicalExamination = {...referenceState.physicalExamination};
+                        physicalExamination.contactedHf = value;
+                        setReference({...referenceState, physicalExamination} as RRForm);
+                    }}>
                         <Select.Option value="False">No</Select.Option>
                         <Select.Option value="True">Si</Select.Option>
                     </Select>
@@ -949,7 +1110,11 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input/>
+                    <Input onChange={event => {
+                        const physicalExamination = {...referenceState.physicalExamination};
+                        physicalExamination.contactId = event.target.value;
+                        setReference({...referenceState, physicalExamination} as RRForm);
+                    }}/>
                 </Form.Item>
 
                 <Form.Item
@@ -969,6 +1134,11 @@ function ReferenceInformation(props: any) {
                         disabledDate={(d) =>
                             !d || d.isSameOrBefore("1940-01-01") || d.isAfter(moment())
                         }
+                        onChange={value => {
+                            const physicalExamination = {...referenceState.physicalExamination};
+                            physicalExamination.date = value;
+                            setReference({...referenceState, physicalExamination} as RRForm);
+                        }}
                     />
                 </Form.Item>
                 <Form.Item {...tailFormItemLayout}>

@@ -38,7 +38,6 @@ function Stepper(props: any) {
             selectedPatient: patient.selectedPatient,
             lastName: patient.lastName
 
-
         })
     }
 
@@ -83,6 +82,7 @@ function Stepper(props: any) {
                     current={current}
                     changeCurrent={changeCurrent}
                     referenceState={{...reference}}
+                    setReference={setReference}
                 />
             ),
         },

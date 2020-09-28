@@ -49,9 +49,9 @@ export interface RRForm {
     descriptionMotive: string;
     symptoms: string;
     medicalSummary: string;
-    vitalSigns: JSON;
-    obGyn: JSON;
-    physicalExamination: JSON;
+    vitalSigns: any;
+    obGyn: any;
+    physicalExamination: any;
     complementaryExams: string;
     diagnosticImpression: string;
     observations: string;

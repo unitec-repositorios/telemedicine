@@ -3,6 +3,7 @@ import {Steps, Button, message} from "antd";
 import ReferenceACSPSInformation from "./steps/referenceACSPSInformation";
 import HospitalSearching from "./steps/HospitalSearching";
 import {ReferenceACSPSForm} from "./../referenceCommunityAgentHealthPromoterModel";
+import PatientReferenceAgent from "./steps/PatientReferenceAgent";
 
 const {Step} = Steps;
 
@@ -35,7 +36,7 @@ function Stepper(props: any) {
     const steps = [
         {
             title: "Paciente",
-            content: "First Content",
+            content: <PatientReferenceAgent referenceState={reference} />,
         },
         {
             title: "Establecimiento de Salud",
