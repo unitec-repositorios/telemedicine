@@ -39,7 +39,6 @@ function ReferenceInformation(props: any) {
 
   const onFinish = (values: ReferenceForm) => {
     const vitalSignsFormJson = {
-      vitalSignsJson: {
         bloodPressure: values.bloodPressure,
         respiratoryRate: values.respiratoryRate,
         pulse: values.pulse,
@@ -47,11 +46,9 @@ function ReferenceInformation(props: any) {
         temperature: values.temperature,
         weight: values.weight,
         sizePerson: values.sizePerson,
-      },
     };
 
     const obgynFormJson = {
-      obgynJson: {
         fum: values.fum,
         fpp: values.fpp,
         pregnancy: values.pregnancy,
@@ -61,11 +58,9 @@ function ReferenceInformation(props: any) {
         deadChildren: values.deadChildren,
         deaths: values.deaths,
         abortions: values.abortions,
-      },
     };
 
-    const physicalExamination = {
-      physicalExaminationFormJson: {
+    const physicalExaminationFormJson = {
         head: values.head,
         orl: values.orl,
         eyes: values.eyes,
@@ -75,7 +70,6 @@ function ReferenceInformation(props: any) {
         genitals: values.genitals,
         extremities: values.extremities,
         neurological: values.neurological,
-      },
     };
 
     //Decide whether to get the value from the select or from the input other
@@ -107,7 +101,7 @@ function ReferenceInformation(props: any) {
           medicalSummary: values.medicalSummary,
           vitalSigns: JSON.stringify(vitalSignsFormJson),
           obGyn: JSON.stringify(obgynFormJson),
-          physicalExamination: JSON.stringify(physicalExamination),
+          physicalExamination: JSON.stringify(physicalExaminationFormJson),
           complementaryExams: values.complementaryExams,
           diagnosticImpression: values.diagnosticImpression,
           observations: values.observations,

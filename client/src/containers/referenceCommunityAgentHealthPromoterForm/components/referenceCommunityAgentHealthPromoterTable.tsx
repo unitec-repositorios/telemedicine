@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { Input, Button, Table } from "antd";
-import { Link, RouteComponentProps } from "@reach/router";
+import React, { useEffect, useState, MouseEventHandler } from "react";
+import { Input, Button, Table, Popconfirm, message } from "antd";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Link, RouteComponentProps, navigate } from "@reach/router";
 import { Reference } from "../referenceCommunityAgentHealthPromoterModel";
 import MainTitle from "../../../components/MainTitle";
-import { allR } from "../referenceCommunityAgentHealthPromoterService"
+import { allR, remove } from "../referenceCommunityAgentHealthPromoterService"
 import { all } from "../../hospitals/hospitalService"
 import { all as allPatients } from "../../patients/patientService"
 interface ReferenceProps extends RouteComponentProps { }
@@ -33,6 +34,21 @@ function ReferenceACPSTable(props: ReferenceProps) {
       setTable(newTable);
     })();
   }, []);
+
+  const onDelete = async (id: number) => {
+    try {
+      console.log('demo')
+      await remove(id);
+      message.info("El Hospital ha sido borrado");
+    } catch (error) {
+      message.error("Ocurrió un error al borrar el Hospital");
+    }
+  };
+
+  const onEdit = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    const id = event.currentTarget.dataset.id;
+    await navigate(`/referenceACSPSForm/edit/${id}`);
+  };
 
   const onSearch = (value: string) => {
     const filter = table.filter(o =>
@@ -67,6 +83,38 @@ function ReferenceACPSTable(props: ReferenceProps) {
       dataIndex: "destination",
       key: "destination",
       sorter: (a: any, b: any) => a.destination.localeCompare(b.destination),
+    },
+    {
+      title: "Acciones",
+      dataIndex: "actions",
+      key: "actions",
+      render: (text: string, record: Table) => (
+        <div>
+          {" "}
+          <Button
+            onClick={onEdit}
+            data-id={record.id}
+            type="primary"
+            icon={<EditOutlined />}
+            style={{ height: "40px", width: "40px", marginLeft: "2px" }}
+          />
+          <Popconfirm
+            placement="top"
+            title="¿Está seguro que sea eliminar el registro?"
+            onConfirm={() => onDelete(record.id)}
+            okText="Si"
+            cancelText="No"
+          >
+            <Button
+              data-id={record.id}
+              type="primary"
+              danger
+              icon={<DeleteOutlined />}
+              style={{ height: "40px", width: "40px", marginLeft: "2px" }}
+            />
+          </Popconfirm>
+        </div>
+      ),
     }
   ]
   return (

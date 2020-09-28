@@ -45,9 +45,9 @@ export interface RRForm {
     descriptionMotive: string;
     symptoms: string;
     medicalSummary: string;
-    vitalSigns: JSON;
-    obGyn: JSON;
-    physicalExamination: JSON;
+    vitalSigns: string;
+    obGyn: string;
+    physicalExamination: string;
     complementaryExams: string;
     diagnosticImpression: string;
     observations: string;
@@ -61,6 +61,10 @@ export interface RRForm {
     relationship: string;
     address: string;
     phone: string;
+}
+
+export interface ReferenceEditPatience {
+    id:number
 }
 
 export interface Reference {

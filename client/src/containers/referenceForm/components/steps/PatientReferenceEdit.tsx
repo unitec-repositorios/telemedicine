@@ -1,23 +1,28 @@
-import { Button, Divider, Form, Input, Space, Spin } from "antd";
+import { Button, Divider, Form, Input, Spin } from "antd";
 import MaskedInput from "antd-mask-input/build/main/lib/MaskedInput";
 import TextArea from "antd/lib/input/TextArea";
 import Select from "antd/lib/select";
-import React, {useEffect, useState} from "react";
-import {searchById, findById} from "../../../patients/patientService"
-import {Patient} from "../../../patients/patientModels";
-import {PatientReferenceInformation, RRForm, ReferenceEditPatience} from "../../referenceFormModels";
+import React, { useEffect, useState } from "react";
+import { searchById } from "../../../patients/patientService"
+import { Patient } from "../../../patients/patientModels";
+import { PatientReferenceInformation, RRForm, ReferenceEditPatience } from "../../referenceFormModels";
+import { findById2 } from "../../referenceFormService";
+import { findById } from "../../../patients/patientService";
 
-export default function PatientReference(props: any) {
+export default function PatientReferenceEdit(props: any) {
     const { Option } = Select;
     const { current, changeCurrent } = props;
     const [fetching, setFetching] = useState(true);
     const [patients, setPatients] = useState([] as Patient[]);
     const [patient, setPatient] = useState({} as Patient);
-    const [hiddenPatientInfo, setHiddenPatientInfo] = useState(true);
+    const { referenceId, setReferenceId, a } = props;
+    const [form] = Form.useForm();
+    const [hiddenPatientInfo, setHiddenPatientInfo] = useState(false);
     const [idPatient, setIdPatient] = useState("");
     const [namePatient, setNamePatient] = useState("");
-    const {referenceId, setReferenceId} = props;
-    const [form] = Form.useForm();
+    const [currentHospital, setCurrentHospital] = useState({} as RRForm)
+    const [identity, setIdentity] = useState('null')
+
     const fetchPatient = async (value: string) => {
 
         setFetching(true);
@@ -32,9 +37,30 @@ export default function PatientReference(props: any) {
         if (patientTemp !== undefined) {
             setIdPatient(patientTemp.idNumber);
             setNamePatient(value.label);
-            setHiddenPatientInfo(false);
+            setHiddenPatientInfo(true);
         }
     };
+
+    useEffect(() => {
+        (async () => {
+            console.log(props.passId)
+            const hospital = await findById2(props.passId ?? 1);
+            const demo = await findById(hospital.patientId ?? 1);
+            const referenceEdit = await findById2(props.passId ?? 1);
+            setIdentity(demo.idNumber)
+            form.setFieldsValue(
+                {
+                    patientId: demo.idNumber,
+                    patientName: demo.name,
+                    name: referenceEdit.companion,
+                    lastName: demo.firstLastName,
+                    phoneNumber: referenceEdit.phone,
+                    relationShip: referenceEdit.relationship,
+                    address: referenceEdit.address
+                })
+
+        })();
+    }, []);
 
     const formItemLayout = {
         labelCol: {
@@ -50,6 +76,7 @@ export default function PatientReference(props: any) {
     };
 
     const onFinish = (values: any) => {
+
         props.setPatientInfo({
             companion: values.name,
             phone: values.phoneNumber,
@@ -58,7 +85,6 @@ export default function PatientReference(props: any) {
             patientId: patient.id
         } as PatientReferenceInformation)
         changeCurrent(current + 1);
-        setHiddenPatientInfo(true);
     }
 
     const tailFormItemLayout = {
@@ -78,14 +104,6 @@ export default function PatientReference(props: any) {
         },
     };
 
-    useEffect(() => {
-        (async () => {
-            
-            console.log("third ->", referenceId)
-            
-
-        })();
-    }, []);
 
     return (
         <>
@@ -95,48 +113,51 @@ export default function PatientReference(props: any) {
                 name="register"
                 onFinish={onFinish}
                 scrollToFirstError
+                initialValues={{ name: 'data' }}
             >
                 <Divider orientation="left">Paciente</Divider>
-                <Form.Item label="Número de identidad" name="patient"
-
-                    rules={[
-                        {
-                            required: true,
-                            message: "Paciente es un campo requerido",
-                        },
-                    ]}>
+                <Form.Item label="Paciente" name="patient">
                     <Select
                         labelInValue
                         showSearch
-                        placeholder="Ingrese número identidad de paciente"
+                        placeholder="Seleccionar paciente"
                         notFoundContent={fetching ? <Spin size="small" /> : null}
                         filterOption={false}
                         onSearch={fetchPatient}
                         onChange={handleChange}
                         style={{ width: "100%" }}
+                        defaultValue='0501'
+
                     >
                         {patients.map((d) => (
                             <Option
                                 key={d.idNumber}
                                 value={d.id}
-                            >{`${d.name} ${d.firstLastName} ${d.secondLastName}`}</Option>
+                            >{`${d.name} ${d.firstLastName}`}</Option>
                         ))}
                     </Select>
                 </Form.Item>
                 <Form.Item
-                    name="patientInfo"
+                    name="patientId"
                     label="Información del Paciente"
                     hidden={hiddenPatientInfo}
                 >
                     <Input
                         placeholder="Número de identidad"
-                        value={idPatient}
                         disabled
+                        value={idPatient}
                         style={{ marginBottom: "20px" }} />
+                </Form.Item>
+                <Form.Item
+                    name="patientName"
+                    label="Información del Paciente"
+                    hidden={hiddenPatientInfo}
+                >
                     <Input
                         placeholder="Nombre"
+                        disabled
                         value={namePatient}
-                        disabled />
+                    />
 
 
                 </Form.Item>

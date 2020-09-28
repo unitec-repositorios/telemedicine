@@ -16,5 +16,7 @@ namespace Core.References
 
         public Task Remove(int id);
 
+        public Task Update(int id, Reference reference);
+
     }
 }
