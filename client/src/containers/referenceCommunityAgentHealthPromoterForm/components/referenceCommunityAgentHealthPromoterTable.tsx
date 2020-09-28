@@ -1,96 +1,144 @@
 import React, { useEffect, useState, MouseEventHandler } from "react";
 import { Input, Button, Table, Popconfirm, message } from "antd";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Link, RouteComponentProps, navigate } from "@reach/router";
-import{Reference} from "../referenceCommunityAgentHealthPromoterModel";
+import { Reference } from "../referenceCommunityAgentHealthPromoterModel";
 import MainTitle from "../../../components/MainTitle";
-import {allR} from "../referenceCommunityAgentHealthPromoterService"
-import {all} from "../../hospitals/hospitalService"
-import {all as allPatients} from "../../patients/patientService"
-interface ReferenceProps extends RouteComponentProps {}
+import { allR, remove } from "../referenceCommunityAgentHealthPromoterService"
+import { all } from "../../hospitals/hospitalService"
+import { all as allPatients } from "../../patients/patientService"
+interface ReferenceProps extends RouteComponentProps { }
 
 interface Table {
-	id: number,
-	patient: string,
-	origin: string,
-	destination: string
+  id: number,
+  patient: string,
+  origin: string,
+  destination: string
 }
 
-function ReferenceACPSTable(props: ReferenceProps){
-    const [reference, setReference] = useState<Reference[]>([]);
-		const [table, setTable] = useState<Table[]>([]);
-		const [filterTable, setFilterTable] = useState<Table[]>([]);
+function ReferenceACPSTable(props: ReferenceProps) {
+  const [reference, setReference] = useState<Reference[]>([]);
+  const [table, setTable] = useState<Table[]>([]);
+  const [filterTable, setFilterTable] = useState<Table[]>([]);
 
-    useEffect(() => {
-        (async () => {
-          const data = await allR();
-					const hospital = await all();
-					const patients = await allPatients();
-					
-					let newTable:Table[] = [];
+  useEffect(() => {
+    (async () => {
+      const data = await allR();
+      const hospital = await all();
+      const patients = await allPatients();
 
-					data.forEach(reg => newTable.push({id: reg.id, patient: patients.find(p => p.id === reg.patientId)?.name||" ", origin: hospital.find(h => h.id === reg.originHfId)?.name||" ", destination: hospital.find(h => h.id === reg.destinationHfId)?.name||" " }));
+      let newTable: Table[] = [];
 
-					setTable(newTable);
-        })();
-      }, []);
+      data.forEach(reg => newTable.push({ id: reg.id, patient: patients.find(p => p.id === reg.patientId)?.name || " ", origin: hospital.find(h => h.id === reg.originHfId)?.name || " ", destination: hospital.find(h => h.id === reg.destinationHfId)?.name || " " }));
 
-	const onSearch = (value: string) => {
-		const filter = table.filter(o => 
-			Object.values(o).some(v =>
-				String(v).toLowerCase().includes(value.toLowerCase())
-			)
-		);
-		setFilterTable(filter);
-	}
+      setTable(newTable);
+    })();
+  }, []);
 
-      const columns = [
-        {
-          title: "Codigo",
-          dataIndex: "id",
-          key: "id",
-					sorter: (a:any, b:any) => a.id - b.id,
-        },
-        {
-          title: "Paciente",
-          dataIndex: "patient",
-          key: "patient",
-					sorter: (a:any, b:any) => a.patient.localeCompare(b.patient),
-        },
-        {
-          title: "Emisor",
-          dataIndex: "origin",
-          key: "origin",
-					sorter: (a:any, b:any) => a.origin.localeCompare(b.origin),
-        },
-        {
-          title: "Destino", 
-          dataIndex: "destination",
-          key: "destination",
-					sorter: (a:any, b:any) => a.destination.localeCompare(b.destination),
-        }
-      ]
-      return (
+  const onDelete = async (id: number) => {
+    try {
+      console.log('demo')
+      await remove(id);
+      message.info("El Hospital ha sido borrado");
+    } catch (error) {
+      message.error("Ocurrió un error al borrar el Hospital");
+    }
+  };
+
+  const onEdit = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    const id = event.currentTarget.dataset.id;
+    await navigate(`/referenceACSPSForm/edit/${id}`);
+  };
+
+  const onSearch = (value: string) => {
+    const filter = table.filter(o =>
+      Object.values(o).some(v =>
+        String(v).toLowerCase().includes(value.toLowerCase())
+      )
+    );
+    setFilterTable(filter);
+  }
+
+  const columns = [
+    {
+      title: "Codigo",
+      dataIndex: "id",
+      key: "id",
+      sorter: (a: any, b: any) => a.id - b.id,
+    },
+    {
+      title: "Paciente",
+      dataIndex: "patient",
+      key: "patient",
+      sorter: (a: any, b: any) => a.patient.localeCompare(b.patient),
+    },
+    {
+      title: "Emisor",
+      dataIndex: "origin",
+      key: "origin",
+      sorter: (a: any, b: any) => a.origin.localeCompare(b.origin),
+    },
+    {
+      title: "Destino",
+      dataIndex: "destination",
+      key: "destination",
+      sorter: (a: any, b: any) => a.destination.localeCompare(b.destination),
+    },
+    {
+      title: "Acciones",
+      dataIndex: "actions",
+      key: "actions",
+      render: (text: string, record: Table) => (
         <div>
-          <MainTitle>Referencia Agente Comunitario - Promotor de Salud</MainTitle>
-          <Link to="/referenceACSPSForm/add">
-            <Button type="primary" style={{ marginBottom: "20px" }}>
-              Agregar
+          {" "}
+          <Button
+            onClick={onEdit}
+            data-id={record.id}
+            type="primary"
+            icon={<EditOutlined />}
+            style={{ height: "40px", width: "40px", marginLeft: "2px" }}
+          />
+          <Popconfirm
+            placement="top"
+            title="¿Está seguro que sea eliminar el registro?"
+            onConfirm={() => onDelete(record.id)}
+            okText="Si"
+            cancelText="No"
+          >
+            <Button
+              data-id={record.id}
+              type="primary"
+              danger
+              icon={<DeleteOutlined />}
+              style={{ height: "40px", width: "40px", marginLeft: "2px" }}
+            />
+          </Popconfirm>
+        </div>
+      ),
+    }
+  ]
+  return (
+    <div>
+      <MainTitle>Referencia Agente Comunitario - Promotor de Salud</MainTitle>
+      <Link to="/referenceACSPSForm/add">
+        <Button type="primary" style={{ marginBottom: "20px" }}>
+          Agregar
             </Button>
-          </Link>
-											<Input.Search
-				style={{ margin: "0 0 10px 600px", width: "400px" }}
+      </Link>
+      <Input.Search
+        style={{ margin: "0 0 10px 600px", width: "400px" }}
         placeholder="Buscar"
         enterButton
-				onSearch={onSearch}
-			/>
-          <Table
-            dataSource={!filterTable.length ? table: filterTable}
-            columns={columns}
-            rowKey="name"
-            locale={{ emptyText: "Sin Informacion." }}
-          />
-        </div>
-      );
+        onSearch={onSearch}
+      />
+      <Table
+        dataSource={!filterTable.length ? table : filterTable}
+        columns={columns}
+        rowKey="name"
+        locale={{ emptyText: "Sin Informacion." }}
+      />
+    </div>
+  );
 
 }
 export default ReferenceACPSTable;

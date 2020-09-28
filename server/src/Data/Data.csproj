@@ -5,6 +5,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="Migrations\20200924214408_Initial.cs" />
+      <Compile Remove="Migrations\20200924214408_Initial.Designer.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.7" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.7">
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
