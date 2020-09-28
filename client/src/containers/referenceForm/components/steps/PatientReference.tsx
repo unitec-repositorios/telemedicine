@@ -1,4 +1,4 @@
-import {Button, Divider, Form, Input, Spin} from "antd";
+import { Button, Divider, Form, Input, Space, Spin } from "antd";
 import MaskedInput from "antd-mask-input/build/main/lib/MaskedInput";
 import TextArea from "antd/lib/input/TextArea";
 import Select from "antd/lib/select";
@@ -8,17 +8,8 @@ import {Patient} from "../../../patients/patientModels";
 import {PatientReferenceInformation, RRForm, ReferenceEditPatience} from "../../referenceFormModels";
 
 export default function PatientReference(props: any) {
-
-    const defaultPatient = props.referenceState.selectedPatient;
-
-    const patientProps = {
-        label: 'Paciente',
-        name: "patient"
-    } as any;
-
-
-    const {Option} = Select;
-    const {current, changeCurrent} = props;
+    const { Option } = Select;
+    const { current, changeCurrent } = props;
     const [fetching, setFetching] = useState(true);
     const [patients, setPatients] = useState(defaultPatient == null ? [] as Patient[] : [defaultPatient] as Patient[]);
     const [patient, setPatient] = useState(defaultPatient == null ? {} as Patient : defaultPatient);
@@ -65,14 +56,14 @@ export default function PatientReference(props: any) {
 
     const formItemLayout = {
         labelCol: {
-            xs: {span: 24},
-            sm: {span: 8},
-            md: {span: 8},
+            xs: { span: 24 },
+            sm: { span: 8 },
+            md: { span: 8 },
         },
         wrapperCol: {
-            xs: {span: 24},
-            sm: {span: 16},
-            md: {span: 8},
+            xs: { span: 24 },
+            sm: { span: 16 },
+            md: { span: 8 },
         },
     };
 
@@ -106,6 +97,7 @@ export default function PatientReference(props: any) {
             selectedPatient: patient
         } as PatientReferenceInformation)
         changeCurrent(current + 1);
+        setHiddenPatientInfo(true);
     }
 
     const tailFormItemLayout = {
@@ -136,28 +128,28 @@ export default function PatientReference(props: any) {
                 scrollToFirstError
             >
                 <Divider orientation="left">Paciente</Divider>
-                <Form.Item  {...patientProps}
+                <Form.Item label="Número de identidad" name="patient"
 
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Paciente es un campo requerido",
-                                },
-                            ]}>
+                    rules={[
+                        {
+                            required: true,
+                            message: "Paciente es un campo requerido",
+                        },
+                    ]}>
                     <Select
                         showSearch
-                        placeholder="Ingrese un número de identificación"
-                        notFoundContent={fetching ? <Spin size="small"/> : null}
+                        placeholder="Ingrese número identidad de paciente"
+                        notFoundContent={fetching ? <Spin size="small" /> : null}
                         filterOption={false}
                         onSearch={fetchPatient}
                         onChange={handleChange}
-                        style={{width: "100%"}}
+                        style={{ width: "100%" }}
                     >
                         {patients.map((d) => (
                             <Option
                                 key={d.id}
                                 value={d.id}
-                            >{`${d.name} ${d.firstLastName}`}</Option>
+                            >{`${d.name} ${d.firstLastName} ${d.secondLastName}`}</Option>
                         ))}
                     </Select>
                 </Form.Item>
@@ -184,30 +176,22 @@ export default function PatientReference(props: any) {
                     label="Primer nombre"
 
                 >
-                    <Input/>
+                    <Input />
                 </Form.Item>
                 <Form.Item
                     name="lastName"
                     label="Primer apellido"
 
                 >
-                    <Input/>
+                    <Input />
                 </Form.Item>
                 <Form.Item
                         
                         name="phoneNumber"
                     label="Número de Teléfono"
-                        
-                        rules={[
-
-                          {
-                            pattern: /-\d{4}/g,
-                            message: "Número de teléfono incompleto. ",
-                          },
-                        ]}
-                      >
-                        <MaskedInput mask="+(111) 1111-1111" />
-                      </Form.Item>
+                >
+                    <MaskedInput mask="+(111) 1111-1111" />
+                </Form.Item>
                 <Form.Item
                     name="relationShip"
                     label="Parentesco"
@@ -240,10 +224,10 @@ export default function PatientReference(props: any) {
                     label="Dirección"
 
                 >
-                    <TextArea rows={4}/>
+                    <TextArea rows={4} />
                 </Form.Item>
                 <Form.Item {...tailFormItemLayout}>
-                    <Button type="primary" htmlType={"submit"} style={{margin: "0 8px"}}>
+                    <Button type="primary" htmlType={"submit"} style={{ margin: "0 8px" }}>
                         Siguiente
                     </Button>
                     <Button htmlType="button" onClick={() => form.resetFields()}>

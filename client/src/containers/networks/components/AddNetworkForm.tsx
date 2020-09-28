@@ -6,7 +6,7 @@ import { create, networkNameExists } from "../networkService";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { RuleObject } from "antd/lib/form";
 import { StoreValue } from "antd/lib/form/interface";
-export interface AddNetworkProps extends RouteComponentProps { }
+export interface AddNetworkProps extends RouteComponentProps {}
 
 export interface NetworkForm {
   [key: string]: string;
@@ -47,9 +47,10 @@ function AddNetworkForm(props: AddNetworkProps) {
 
   const onFinish = (values: NetworkForm) => {
     (async () => {
+      values.name = values.name.toLocaleLowerCase();
       try {
         await create({
-          name: values.name,
+          name: values.name.charAt(0).toUpperCase() + values.name.slice(1),
         });
         form.resetFields();
         message.success("La red ha sido creada existosamente");
@@ -60,8 +61,10 @@ function AddNetworkForm(props: AddNetworkProps) {
   };
 
   const validateName = async (rule: RuleObject, value: StoreValue) => {
-    const name = value;
-    const exists = await networkNameExists(name);
+    const name = value.toLowerCase();
+    const exists = await networkNameExists(
+      name.charAt(0).toUpperCase() + name.slice(1)
+    );
     if (exists) {
       throw new Error(`Ya existe una red con el nombre ${name}`);
     }

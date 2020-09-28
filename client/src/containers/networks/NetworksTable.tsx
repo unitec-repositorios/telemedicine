@@ -12,14 +12,15 @@ interface NetworkProps extends RouteComponentProps {}
 
 function NetworksTable(props: NetworkProps) {
   const [networks, setNetworks] = useState<Network[]>([]);
-	const [filterTable, setFilterTable] = useState<Network[]>([]);
-
+  const [filterTable, setFilterTable] = useState<Network[]>([]);
+  const [currentNetwork, setcurrentNetwork] = useState<Network[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     (async () => {
       const data = await all();
       setNetworks(data);
       setLoading(false);
+      setcurrentNetwork(data);
     })();
   }, []);
 
@@ -35,6 +36,9 @@ function NetworksTable(props: NetworkProps) {
       setNetworks(
         networks.filter((currentNetwork) => currentNetwork.id !== id)
       );
+      setcurrentNetwork(
+        networks.filter((currentNetwork) => currentNetwork.id !== id)
+      );
     } catch (error) {
       if (error.response.data === "The network is being used by a hospital") {
         message.error("Hay hospitales vinculados a esta red.");
@@ -44,21 +48,29 @@ function NetworksTable(props: NetworkProps) {
     }
   };
 
-	const onSearch = (value: string) => {
-		const filter = networks.filter(o =>
-			Object.values(o).some(v =>
-				String(v).toLowerCase().includes(value.toLowerCase())
-			)
-		);
-		setFilterTable(filter);
-	}
+  const onSearch = (value: string) => {
+    setNetworks(currentNetwork);
+    const filter = currentNetwork.filter((o) =>
+      Object.values(o).some((v) =>
+        String(v).toLowerCase().includes(value.toLowerCase())
+      )
+    );
+    if (filter.length === 0 && value !== "") {
+      setNetworks([]);
+      setFilterTable([]);
+    } else if (value === "") {
+      setFilterTable([]);
+    } else {
+      setFilterTable(filter);
+    }
+  };
 
   const columns = [
     {
       title: "Nombre",
       dataIndex: "name",
       key: "name",
-			sorter: (a:any, b:any) => a.name.localeCompare(b.name),
+      sorter: (a: any, b: any) => a.name.localeCompare(b.name),
     },
     {
       title: "Acciones",
@@ -103,15 +115,15 @@ function NetworksTable(props: NetworkProps) {
         </Button>
       </Link>
       <Spin spinning={loading}>
-			<Input.Search
-				style={{marginLeft: "35%", width: "30%" }}
-        placeholder="Buscar"
-        enterButton
-				onSearch={onSearch}
-			/>
+        <Input.Search
+          style={{ margin: "0 0 10px 600px", width: "400px" }}
+          placeholder="Buscar"
+          enterButton
+          onSearch={onSearch}
+        />
         <Table
           pagination={{ defaultPageSize: 10 }}
-          dataSource={!filterTable.length ? networks: filterTable}
+          dataSource={!filterTable.length ? networks : filterTable}
           columns={columns}
           rowKey="name"
           locale={{ emptyText: "Sin información" }}

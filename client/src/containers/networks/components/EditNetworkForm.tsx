@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
 import MainTitle from "../../../components/MainTitle";
 import { Button, Form, Input, message, Spin } from "antd";
-import { findById, update } from "../networkService";
+import { findById, update, networkNameExists } from "../networkService";
 import { NetworkForm } from "./AddNetworkForm";
 import { RouteComponentProps, Link } from "@reach/router";
 import { Network } from "../networkModels";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import { RuleObject } from "antd/lib/form";
+import { StoreValue } from "antd/lib/form/interface";
+
 interface EditNetworkRouteParams {
   id: number;
 }
 
 interface EditNetworkFormProps
-  extends RouteComponentProps<EditNetworkRouteParams> { }
+  extends RouteComponentProps<EditNetworkRouteParams> {}
 
 function EditNetworkForm(props: EditNetworkFormProps) {
   const [form] = Form.useForm();
@@ -30,15 +33,26 @@ function EditNetworkForm(props: EditNetworkFormProps) {
   const onFinish = (values: NetworkForm) => {
     (async () => {
       try {
+        values.name = values.name.toLocaleLowerCase();
         await update({
           id: network.id,
-          name: values.name,
+          name: values.name.charAt(0).toUpperCase() + values.name.slice(1),
         });
         message.success("La red ha sido editada existosamente");
       } catch (error) {
         message.error("Ocurrió un error al editar la red");
       }
     })();
+  };
+
+  const validateName = async (rule: RuleObject, value: StoreValue) => {
+    const name = value.toLowerCase();
+    const exists = await networkNameExists(
+      name.charAt(0).toUpperCase() + name.slice(1)
+    );
+    if (exists) {
+      throw new Error(`Ya existe una red con el nombre ${name}`);
+    }
   };
 
   const formItemLayout = {
@@ -104,6 +118,9 @@ function EditNetworkForm(props: EditNetworkFormProps) {
                 required: true,
                 message: "Nombre de red es un campo requerido",
                 whitespace: true,
+              },
+              {
+                validator: validateName,
               },
             ]}
           >

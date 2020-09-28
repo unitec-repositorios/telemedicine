@@ -37,7 +37,7 @@ function Dashboard(props: DashboardProps) {
             <Link to="/">Inicio</Link>
           </Menu.Item>
           <Menu.Item key="/hospitals" icon={<EnvironmentOutlined />}>
-            <Link to="hospitals">Hospitales</Link>
+            <Link to="hospitals">Establ. de Salud</Link>
           </Menu.Item>
           <Menu.Item key="/patients" icon={<UserOutlined />}>
             <Link to="patients">Pacientes</Link>
@@ -49,9 +49,7 @@ function Dashboard(props: DashboardProps) {
             <Link to="referenceForm">Referencia Respuesta</Link>
           </Menu.Item>
           <Menu.Item key="/referenceACSPSForm" icon={<FormOutlined />}>
-            <Link to="referenceACSPSForm">
-              Agente Comunitario
-            </Link>
+            <Link to="referenceACSPSForm">Agente Comunitario</Link>
           </Menu.Item>
         </Menu>
       </Sider>
