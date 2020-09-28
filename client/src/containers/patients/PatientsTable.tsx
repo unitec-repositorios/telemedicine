@@ -13,7 +13,7 @@ interface PatientProps extends RouteComponentProps { }
 function PatientTable(props: PatientProps) {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [filterTable, setFilterTable] = useState<Patient[]>([]);
-  const [currentPatients, setcurrentPatients] = useState<Patient[]>([]);
+  const [currentPatients, setCurrentPatients] = useState<Patient[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ function PatientTable(props: PatientProps) {
       const data = await all();
       setPatients(data);
       setLoading(false);
-      setcurrentPatients(data);
+      setCurrentPatients(data);
     })();
   }, []);
 
@@ -37,7 +37,7 @@ function PatientTable(props: PatientProps) {
       setPatients(
         patients.filter((currentPatients) => currentPatients.id !== id)
       );
-      setcurrentPatients(
+      setCurrentPatients(
         patients.filter((currentPatients) => currentPatients.id !== id)
       );
     } catch (error) {
@@ -47,30 +47,28 @@ function PatientTable(props: PatientProps) {
 
   const onSearch = (value: string) => {
     setPatients(currentPatients);
-
-    let filterWords = value.trim().split(" ");
-    let filter = currentPatients
+    let filterWords = value.split(" ");
+    let filteredTable = patients
+    let multipleSearch = currentPatients
     for (let word of filterWords) {
-      filter = currentPatients.filter((o) =>
+      filteredTable = multipleSearch.filter((o) =>
         Object.values(o).some((v) =>
           String(v).toLowerCase().includes(word.toLowerCase())
         )
       )
-      setFilterTable(filter)
-      if (filter.length !== 0) {
-        setcurrentPatients(filter)
-      }
-      if (filter.length === 0) {
+      if (filteredTable.length === 0) {
         break
       }
+      multipleSearch = filteredTable
     }
-    if (filter.length === 0 && value !== "") {
+
+    if (filteredTable.length === 0 && value !== "") {
       setPatients([]);
       setFilterTable([]);
     } else if (value === "") {
       setFilterTable([]);
     } else {
-      setFilterTable(filter);
+      setFilterTable(filteredTable);
     }
   };
 

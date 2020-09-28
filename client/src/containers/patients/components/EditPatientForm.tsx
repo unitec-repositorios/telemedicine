@@ -122,9 +122,7 @@ function EditPatientForm(props: EditPatientFormProps) {
       }
       setPhoneNumbers({
         ...phoneNumbers,
-        num: Object.values(patient.contacts).map(
-          (item: any) => item.contacts
-        ),
+        num: Object.values(patient.contacts),
       });
       form.setFieldsValue(patient);
       setLoading(false);

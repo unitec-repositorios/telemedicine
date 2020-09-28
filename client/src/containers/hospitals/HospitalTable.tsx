@@ -16,16 +16,16 @@ import { all, remove } from "./hospitalService";
 interface HospitalProps extends RouteComponentProps { }
 
 function HospitalTable(props: HospitalProps) {
-  const [tempHospitals, setTempHospitals] = useState<Hospital[]>([]);
+  const [hospitals, setHospitals] = useState<Hospital[]>([]);
   const [filterTable, setFilterTable] = useState<Hospital[]>([]);
-  const [currentHospitals, setcurrentHospitals] = useState<Hospital[]>([]);
+  const [currentHospitals, setCurrentHospitals] = useState<Hospital[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     (async () => {
       const data = await all();
-      setTempHospitals(data);
+      setHospitals(data);
       setLoading(false);
-      setcurrentHospitals(data);
+      setCurrentHospitals(data);
     })();
   }, []);
 
@@ -38,11 +38,11 @@ function HospitalTable(props: HospitalProps) {
     try {
       await remove(id);
       message.info("El Hospital ha sido borrado");
-      setTempHospitals(
-        tempHospitals.filter((currentNetwork) => currentNetwork.id !== id)
+      setHospitals(
+        hospitals.filter((currentNetwork) => currentNetwork.id !== id)
       );
-      setcurrentHospitals(
-        tempHospitals.filter((currentNetwork) => currentNetwork.id !== id)
+      setCurrentHospitals(
+        hospitals.filter((currentNetwork) => currentNetwork.id !== id)
       );
     } catch (error) {
       message.error("Ocurrió un error al borrar el Hospital");
@@ -50,19 +50,29 @@ function HospitalTable(props: HospitalProps) {
   };
 
   const onSearch = (value: string) => {
-    setTempHospitals(currentHospitals);
-    const filter = currentHospitals.filter((o) =>
-      Object.values(o).some((v) =>
-        String(v).toLowerCase().includes(value.toLowerCase())
+    setHospitals(currentHospitals);
+    let filterWords = value.split(" ");
+    let filteredTable = hospitals
+    let multipleSearch = currentHospitals
+    for (let word of filterWords) {
+      filteredTable = multipleSearch.filter((o) =>
+        Object.values(o).some((v) =>
+          String(v).toLowerCase().includes(word.toLowerCase())
+        )
       )
-    );
-    if (filter.length === 0 && value !== "") {
-      setTempHospitals([]);
+      if (filteredTable.length === 0) {
+        break
+      }
+      multipleSearch = filteredTable
+    }
+
+    if (filteredTable.length === 0 && value !== "") {
+      setHospitals([]);
       setFilterTable([]);
     } else if (value === "") {
       setFilterTable([]);
     } else {
-      setFilterTable(filter);
+      setFilterTable(filteredTable);
     }
   };
 
@@ -146,7 +156,7 @@ function HospitalTable(props: HospitalProps) {
           onSearch={onSearch}
         />
         <Table
-          dataSource={!filterTable.length ? tempHospitals : filterTable}
+          dataSource={!filterTable.length ? hospitals : filterTable}
           pagination={{ defaultPageSize: 10 }}
           columns={columns}
           rowKey="code"
