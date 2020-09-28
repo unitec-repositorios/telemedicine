@@ -10,6 +10,7 @@ import {
 } from "antd";
 import moment from "moment";
 import {create} from "../../referenceFormService";
+import {navigate} from "@reach/router";
 
 export interface ReferenceForm {
     [key: string]: string;
@@ -123,8 +124,9 @@ function ReferenceInformation(props: any) {
                     relationship: props.referenceState.relationship
                 });
 
-                form.resetFields();
-                message.success("Elementos se han guardado exitosamente.");
+
+                await navigate(`/referenceForm`);
+                message.success("La referencia se ha guardado exitosamente.");
             } catch (error) {
                 console.log(error);
                 message.error("Ocurrió un error al guardar los elementos.");

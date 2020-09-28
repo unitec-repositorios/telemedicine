@@ -10,6 +10,7 @@ import {
 } from "antd";
 import MaskedInput from "antd-mask-input";
 import { create } from "../../referenceCommunityAgentHealthPromoterService";
+import {navigate} from "@reach/router";
 
 export interface ReferenceACSPSForm {
   [key: string]: string;
@@ -40,8 +41,8 @@ function ReferenceACSPSInformation(props: any) {
           destinationHfId: props.referenceState.destinationHfId,
         });
 
-        form.resetFields();
-        message.success("Elementos se han guardado exitosamente.");
+        await navigate(`/referenceACSPSForm`);
+        message.success("La referencia se ha guardado exitosamente.");
       } catch (error) {
         console.log(error);
         message.error("Ocurrió un error al guardar los elementos.");
