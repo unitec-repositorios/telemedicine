@@ -8,6 +8,9 @@ import {Patient} from "../../../patients/patientModels";
 import {PatientReferenceInformation, RRForm, ReferenceEditPatience} from "../../referenceFormModels";
 
 export default function PatientReference(props: any) {
+
+    const defaultPatient = props.referenceState.selectedPatient;
+
     const { Option } = Select;
     const { current, changeCurrent } = props;
     const [fetching, setFetching] = useState(true);
@@ -68,7 +71,7 @@ export default function PatientReference(props: any) {
     };
 
     if (defaultPatient) {
-        patientProps.initialValue = defaultPatient.id;
+
         const {
             relationship,
             address,
