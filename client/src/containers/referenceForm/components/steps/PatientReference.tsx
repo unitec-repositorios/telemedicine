@@ -8,11 +8,21 @@ import {Patient} from "../../../patients/patientModels";
 import {PatientReferenceInformation} from "../../referenceFormModels";
 
 export default function PatientReference(props: any) {
+
+    const defaultPatient = props.referenceState.selectedPatient;
+
+    const patientProps = {
+        label: 'Paciente',
+        name: "patient"
+    } as any;
+
+
+
     const {Option} = Select;
     const {current, changeCurrent} = props;
     const [fetching, setFetching] = useState(true);
-    const [patients, setPatients] = useState([] as Patient[]);
-    const [patient, setPatient] = useState({} as Patient);
+    const [patients, setPatients] = useState(defaultPatient == null ? [] as Patient[] : [defaultPatient] as Patient[]);
+    const [patient, setPatient] = useState(defaultPatient == null ? {} as Patient : defaultPatient);
     const [form] = Form.useForm();
     const {
         patientId,
@@ -37,11 +47,11 @@ export default function PatientReference(props: any) {
                 await fetchPatient(patientId);
             }
         })();
-    },[]);
+    }, []);
 
     const handleChange = (value: any) => {
 
-        setPatient({id: value.value, name: value.label} as Patient);
+        setPatient(patients.find(p => p.id === value));
     };
 
     const formItemLayout = {
@@ -57,13 +67,18 @@ export default function PatientReference(props: any) {
         },
     };
 
+    if (defaultPatient) {
+        patientProps.initialValue = defaultPatient.id;
+    }
+
     const onFinish = (values: any) => {
         props.setPatientInfo({
             companion: values.name,
             phone: values.phoneNumber,
             address: values.address,
             relationship: values.relationShip,
-            patientId: patient.id
+            patientId: patient.id,
+            selectedPatient: patient
         } as PatientReferenceInformation)
         changeCurrent(current + 1);
     }
@@ -96,17 +111,15 @@ export default function PatientReference(props: any) {
                 scrollToFirstError
             >
                 <Divider orientation="left">Paciente</Divider>
-                <Form.Item label="Paciente" name="patient"
-                    initialValue={patientId}
+                <Form.Item  {...patientProps}
 
-                           rules={[
-                               {
-                                   required: true,
-                                   message: "Paciente es un campo requerido",
-                               },
-                           ]}>
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Paciente es un campo requerido",
+                                },
+                            ]}>
                     <Select
-                        labelInValue
                         showSearch
                         placeholder="Ingrese un número de identificación"
                         notFoundContent={fetching ? <Spin size="small"/> : null}
@@ -117,7 +130,7 @@ export default function PatientReference(props: any) {
                     >
                         {patients.map((d) => (
                             <Option
-                                key={d.idNumber}
+                                key={d.id}
                                 value={d.id}
                             >{`${d.name} ${d.firstLastName} | ${d.idNumber}`}</Option>
                         ))}
