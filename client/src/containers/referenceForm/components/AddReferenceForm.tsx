@@ -35,7 +35,8 @@ function Stepper(props: any) {
             address: patient.address,
             companion: patient.companion,
             phone: patient.phone,
-            selectedPatient: patient.selectedPatient
+            selectedPatient: patient.selectedPatient,
+            lastName: patient.lastName
 
 
         })

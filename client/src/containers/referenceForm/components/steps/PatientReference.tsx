@@ -17,7 +17,6 @@ export default function PatientReference(props: any) {
     } as any;
 
 
-
     const {Option} = Select;
     const {current, changeCurrent} = props;
     const [fetching, setFetching] = useState(true);
@@ -69,11 +68,27 @@ export default function PatientReference(props: any) {
 
     if (defaultPatient) {
         patientProps.initialValue = defaultPatient.id;
+        const {
+            relationship,
+            address,
+            companion,
+            phone,
+            lastName
+        } = props.referenceState;
+        form.setFieldsValue({
+            relationShip: relationship,
+            address,
+            name: companion,
+            phoneNumber: phone,
+            lastName
+        });
+
     }
 
     const onFinish = (values: any) => {
         props.setPatientInfo({
             companion: values.name,
+            lastName: values.lastName,
             phone: values.phoneNumber,
             address: values.address,
             relationship: values.relationShip,

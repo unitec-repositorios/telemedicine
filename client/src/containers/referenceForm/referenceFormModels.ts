@@ -31,6 +31,7 @@ export interface CreateRRForm {
 export interface PatientReferenceInformation {
     patientId: number;
     companion: string;
+    lastName: string;
     relationship: string;
     address: string;
     phone: string;
@@ -61,6 +62,7 @@ export interface RRForm {
     contactId: string;
     date: Date;
     companion: string;
+    lastName: string;
     relationship: string;
     address: string;
     phone: string;
