@@ -1,25 +1,27 @@
-import { Button, Divider, Form, Input, Space, Spin } from "antd";
+import {Button, Divider, Form, Input, Spin} from "antd";
 import MaskedInput from "antd-mask-input/build/main/lib/MaskedInput";
 import TextArea from "antd/lib/input/TextArea";
 import Select from "antd/lib/select";
 import React, {useEffect, useState} from "react";
-import {searchById, findById} from "../../../patients/patientService"
+import {searchById} from "../../../patients/patientService"
 import {Patient} from "../../../patients/patientModels";
-import {PatientReferenceInformation, RRForm, ReferenceEditPatience} from "../../referenceFormModels";
+import {PatientReferenceInformation} from "../../../referenceForm/referenceFormModels";
 
-export default function PatientReference(props: any) {
+export default function PatientReferenceAgent(props: any) {
 
     const defaultPatient = props.referenceState.selectedPatient;
 
-    const { Option } = Select;
-    const { current, changeCurrent } = props;
+    const patientProps = {
+        label: 'Paciente',
+        name: "patient"
+    } as any;
+
+
+    const {Option} = Select;
+    const {current, changeCurrent} = props;
     const [fetching, setFetching] = useState(true);
     const [patients, setPatients] = useState(defaultPatient == null ? [] as Patient[] : [defaultPatient] as Patient[]);
     const [patient, setPatient] = useState(defaultPatient == null ? {} as Patient : defaultPatient);
-    const [hiddenPatientInfo, setHiddenPatientInfo] = useState(defaultPatient == null);
-    const [idPatient, setIdPatient] = useState("");
-    const [namePatient, setNamePatient] = useState("");
-    const {referenceId, setReferenceId} = props;
     const [form] = Form.useForm();
     const {
         patientId,
@@ -46,32 +48,26 @@ export default function PatientReference(props: any) {
         })();
     }, []);
 
-    const handleChange = async (value: any) => {
-        const foundPatient = patients.find(p => p.id === value);
-        setPatient(foundPatient);
-        const patientTemp = foundPatient;
-        if (patientTemp !== undefined) {
-            setIdPatient(patientTemp.idNumber);
-            setNamePatient(patientTemp.name);
-            setHiddenPatientInfo(false);
-        }
+    const handleChange = (value: any) => {
+
+        setPatient(patients.find(p => p.id === value));
     };
 
     const formItemLayout = {
         labelCol: {
-            xs: { span: 24 },
-            sm: { span: 8 },
-            md: { span: 8 },
+            xs: {span: 24},
+            sm: {span: 8},
+            md: {span: 8},
         },
         wrapperCol: {
-            xs: { span: 24 },
-            sm: { span: 16 },
-            md: { span: 8 },
+            xs: {span: 24},
+            sm: {span: 16},
+            md: {span: 8},
         },
     };
 
     if (defaultPatient) {
-
+        patientProps.initialValue = defaultPatient.id;
         const {
             relationship,
             address,
@@ -84,8 +80,7 @@ export default function PatientReference(props: any) {
             address,
             name: companion,
             phoneNumber: phone,
-            lastName,
-            patient: patient.id
+            lastName
         });
 
     }
@@ -101,7 +96,6 @@ export default function PatientReference(props: any) {
             selectedPatient: patient
         } as PatientReferenceInformation)
         changeCurrent(current + 1);
-        setHiddenPatientInfo(true);
     }
 
     const tailFormItemLayout = {
@@ -132,47 +126,30 @@ export default function PatientReference(props: any) {
                 scrollToFirstError
             >
                 <Divider orientation="left">Paciente</Divider>
-                <Form.Item label="Número de identidad" name="patient"
+                <Form.Item  {...patientProps}
 
-                    rules={[
-                        {
-                            required: true,
-                            message: "Paciente es un campo requerido",
-                        },
-                    ]}>
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Paciente es un campo requerido",
+                                },
+                            ]}>
                     <Select
                         showSearch
-                        placeholder="Ingrese número identidad de paciente"
-                        notFoundContent={fetching ? <Spin size="small" /> : null}
+                        placeholder="Ingrese un número de identificación"
+                        notFoundContent={fetching ? <Spin size="small"/> : null}
                         filterOption={false}
                         onSearch={fetchPatient}
                         onChange={handleChange}
-                        style={{ width: "100%" }}
+                        style={{width: "100%"}}
                     >
                         {patients.map((d) => (
                             <Option
                                 key={d.id}
                                 value={d.id}
-                            >{`${d.name} ${d.firstLastName} ${d.secondLastName}`}</Option>
+                            >{`${d.name} ${d.firstLastName} | ${d.idNumber}`}</Option>
                         ))}
                     </Select>
-                </Form.Item>
-                <Form.Item
-                    name="patientInfo"
-                    label="Información del Paciente"
-                    hidden={hiddenPatientInfo}
-                >
-                    <Input
-                        placeholder="Número de identidad"
-                        value={idPatient}
-                        disabled
-                        style={{ marginBottom: "20px" }} />
-                    <Input
-                        placeholder="Nombre"
-                        value={namePatient}
-                        disabled />
-
-
                 </Form.Item>
                 <Divider orientation="left">Acompañante</Divider>
                 <Form.Item
@@ -180,21 +157,20 @@ export default function PatientReference(props: any) {
                     label="Primer nombre"
 
                 >
-                    <Input />
+                    <Input/>
                 </Form.Item>
                 <Form.Item
                     name="lastName"
                     label="Primer apellido"
 
                 >
-                    <Input />
+                    <Input/>
                 </Form.Item>
                 <Form.Item
-                        
-                        name="phoneNumber"
+                    name="phoneNumber"
                     label="Número de Teléfono"
                 >
-                    <MaskedInput mask="+(111) 1111-1111" />
+                    <MaskedInput mask="+(111) 1111-1111"/>
                 </Form.Item>
                 <Form.Item
                     name="relationShip"
@@ -228,10 +204,10 @@ export default function PatientReference(props: any) {
                     label="Dirección"
 
                 >
-                    <TextArea rows={4} />
+                    <TextArea rows={4}/>
                 </Form.Item>
                 <Form.Item {...tailFormItemLayout}>
-                    <Button type="primary" htmlType={"submit"} style={{ margin: "0 8px" }}>
+                    <Button type="primary" htmlType={"submit"} style={{margin: "0 8px"}}>
                         Siguiente
                     </Button>
                     <Button htmlType="button" onClick={() => form.resetFields()}>

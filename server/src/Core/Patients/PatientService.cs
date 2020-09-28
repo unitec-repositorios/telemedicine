@@ -25,17 +25,19 @@ namespace Core.Patients
             int? limit,
             bool multipleResults)
         {
-            var data = _patientRepository
+            var data = await _patientRepository
                 .Filter(patient => !patient.Disabled)
                 .Where(x => id == null || x.Id == id)
+                .Where(x => idNumber == null || x.IdNumber.Contains(idNumber))
+                
                 .Where(x => foreignIdNumber == null || x.IdNumber == foreignIdNumber)
-                .Where(x => email == null || x.Email == email);
+                .Where(x => email == null || x.Email == email).ToListAsync();
 
-            IQueryable<Patient> patients = data;
+            IEnumerable<Patient> patients = data;
 
-            if (multipleResults)
+            if (!multipleResults)
             {
-                patients = data.Where(x => x.IdNumber.Contains(idNumber));
+                patients = data.Where(x => idNumber == null || x.IdNumber == idNumber);
             }
 
 
@@ -44,7 +46,7 @@ namespace Core.Patients
                 patients = patients.Take(limit.Value);
             }
 
-            return await patients.ToListAsync();
+            return patients;
         }
 
         public async Task Remove(int id)

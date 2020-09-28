@@ -70,14 +70,6 @@ namespace Api.Modules.References
         [HttpPost]
         public async Task Post(ReferenceViewModel referenceViewModel)
         {
-            string vitalSignsJSON;
-            vitalSignsJSON = JsonSerializer.Serialize(referenceViewModel.VitalSigns);
-
-            string obGynJSON;
-            obGynJSON = JsonSerializer.Serialize(referenceViewModel.ObGyn);
-
-            string physicalExaminationJSON;
-            physicalExaminationJSON = JsonSerializer.Serialize(referenceViewModel.PhysicalExamination);
 
             var reference = new Reference
             {
@@ -91,9 +83,9 @@ namespace Api.Modules.References
                     DescriptionMotive = referenceViewModel.DescriptionMotive,
                     Symptoms = referenceViewModel.Symptoms,
                     MedicalSummary = referenceViewModel.MedicalSummary,
-                    VitalSigns = vitalSignsJSON,
-                    ObGyn = obGynJSON,
-                    PhysicalExamination = physicalExaminationJSON,
+                    VitalSigns = referenceViewModel.VitalSigns,
+                    ObGyn = referenceViewModel.ObGyn,
+                    PhysicalExamination = referenceViewModel.PhysicalExamination,
                     ComplementaryExams = referenceViewModel.ComplementaryExams,
                     DiagnosticImpression = referenceViewModel.DiagnosticImpression,
                     Observations = referenceViewModel.Observations,
@@ -111,6 +103,44 @@ namespace Api.Modules.References
             };
 
             await _referenceService.Create(reference);
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task Put(int id, ReferenceViewModel referenceViewModel)
+        {
+
+            var reference = new Reference
+            {
+                Id = referenceViewModel.Id,
+                Type = referenceViewModel.Type,
+                OriginHfId = referenceViewModel.OriginHfId,
+                DestinationHfId = referenceViewModel.DestinationHfId,
+                PatientId = referenceViewModel.PatientId,
+                Institution = referenceViewModel.Institution,
+                Motive = referenceViewModel.Motive,
+                DescriptionMotive = referenceViewModel.DescriptionMotive,
+                Symptoms = referenceViewModel.Symptoms,
+                MedicalSummary = referenceViewModel.MedicalSummary,
+                VitalSigns = referenceViewModel.VitalSigns,
+                ObGyn = referenceViewModel.ObGyn,
+                PhysicalExamination = referenceViewModel.PhysicalExamination,
+                ComplementaryExams = referenceViewModel.ComplementaryExams,
+                DiagnosticImpression = referenceViewModel.DiagnosticImpression,
+                Observations = referenceViewModel.Observations,
+                Risk = referenceViewModel.Risk,
+                AttentionRequired = referenceViewModel.AttentionRequired,
+                MadeBy = referenceViewModel.MadeBy,
+                ContactedHf = referenceViewModel.ContactedHf,
+                ContactId = referenceViewModel.ContactId,
+                Date = referenceViewModel.Date,
+                Companion = referenceViewModel.Companion,
+                Relationship = referenceViewModel.Relationship,
+                Address = referenceViewModel.Address,
+                Phone = referenceViewModel.Phone,
+
+            };
+
+            await _referenceService.Update(id, reference);
         }
 
     }

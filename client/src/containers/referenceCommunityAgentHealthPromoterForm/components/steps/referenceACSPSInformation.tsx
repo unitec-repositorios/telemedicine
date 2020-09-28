@@ -3,20 +3,18 @@ import {
   Button,
   Form,
   Input,
-  Select,
   message,
-  Divider,
-  DatePicker,
 } from "antd";
 import MaskedInput from "antd-mask-input";
 import { create } from "../../referenceCommunityAgentHealthPromoterService";
+import {navigate} from "@reach/router";
 
 export interface ReferenceACSPSForm {
   [key: string]: string;
 }
 
 function ReferenceACSPSInformation(props: any) {
-  const { current, length, changeCurrent } = props;
+  const { current, changeCurrent } = props;
   const [form] = Form.useForm();
 
   const prev = () => {
@@ -40,8 +38,8 @@ function ReferenceACSPSInformation(props: any) {
           destinationHfId: props.referenceState.destinationHfId,
         });
 
-        form.resetFields();
-        message.success("Elementos se han guardado exitosamente.");
+        await navigate(`/referenceACSPSForm`);
+        message.success("La referencia se ha guardado exitosamente.");
       } catch (error) {
         console.log(error);
         message.error("Ocurrió un error al guardar los elementos.");
@@ -152,22 +150,20 @@ function ReferenceACSPSInformation(props: any) {
         </Form.Item>
 
         <Form.Item
-          name="phone"
-          label="Número de Teléfono"
-          rules={[
-            {
-              required: true,
-              message: "El campo es requerido",
-              whitespace: true,
-            },
-            {
-              pattern: /\d{4}/,
-              message: "Número de Teléfono incompleto. ",
-            },
-          ]}
-        >
-          <MaskedInput mask="1111 1111" />
-        </Form.Item>
+                        
+                        name="phoneNumber"
+                    label="Número de Teléfono"
+                        
+                        rules={[
+
+                          {
+                            pattern: /-\d{4}/g,
+                            message: "Número de teléfono incompleto. ",
+                          },
+                        ]}
+                      >
+                        <MaskedInput mask="+(111) 1111-1111" />
+                      </Form.Item>
 
         <Form.Item
           name="email"

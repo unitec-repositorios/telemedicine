@@ -1,21 +1,26 @@
-import { Button, Form, Select } from "antd";
-import { Hospital } from '../../../hospitals/hospitalModels';
-import React, { useEffect, useState } from "react";
-import { all } from "../../../hospitals/hospitalService";
+import {Button, Form, Select} from "antd";
+import {Hospital} from '../../../hospitals/hospitalModels';
+import React, {useEffect, useState} from "react";
+import {all} from "../../../hospitals/hospitalService";
+import { findById } from "../../../hospitals/hospitalService";
+import { findById2 } from "../../referenceFormService";
 
 export interface SearchForm {
     [key: string]: string;
 }
 
-function HospitalSearching(props: any) {
-    const { Option } = Select;
+function HospitalSearchingEdit(props: any) {
+    const {Option} = Select;
     const [form] = Form.useForm();
     const [hidden, setHidden] = useState(true);
     const [hospitals, setHospitals] = useState<Hospital[]>([]);
     const [selectedOrigin, setSelectedOrigin] = useState(0);
     const [selectedDestination, setSelectedDestination] = useState(0);
     const [selectedInstitution, setSelectedInstitution] = useState("");
-    const { current, changeCurrent } = props;
+    const {current, changeCurrent} = props;
+
+    const [origin, setOrigin] = useState("")
+    const [destination, setDestination] = useState("")
 
     const tailFormItemLayout = {
         wrapperCol: {
@@ -39,18 +44,19 @@ function HospitalSearching(props: any) {
         (async () => {
             const data = await all();
             setHospitals(data);
+            
+            const hospitalEdit = await findById2(props.passId ?? 1);
+            const oriHospital = await findById(hospitalEdit.originHfId ?? 1);
+            const destHospital = await findById(hospitalEdit.destinationHfId ?? 1);
 
-            if(props.referenceState.originHfId){
-                const {originHfId, institution, destinationHfId } = props.referenceState;
-                form.setFieldsValue(
-                    {
-                        institution,
-                        origin: originHfId,
-                        destination: destinationHfId
-                    }
-                )
-            }
-
+            console.log(destination)
+            form.setFieldsValue(
+                {
+                    origin: oriHospital.name,
+                    institution: hospitalEdit.institution,
+                    destination: destHospital.name
+                })
+       
         })();
     }, []);
 
@@ -65,14 +71,14 @@ function HospitalSearching(props: any) {
 
     const formItemLayout = {
         labelCol: {
-            xs: { span: 24 },
-            sm: { span: 8 },
-            md: { span: 8 },
+            xs: {span: 24},
+            sm: {span: 8},
+            md: {span: 8},
         },
         wrapperCol: {
-            xs: { span: 24 },
-            sm: { span: 16 },
-            md: { span: 8 },
+            xs: {span: 24},
+            sm: {span: 16},
+            md: {span: 8},
         },
     };
 
@@ -96,7 +102,7 @@ function HospitalSearching(props: any) {
                 >
                     <Select
                         showSearch
-                        placeholder="Seleccione un establecimiento de salud"
+                        placeholder="Seleccione una institución"
                         onSelect={(value) => {
                             props.onOrigin(+value);
                             setSelectedOrigin(+value);
@@ -158,7 +164,7 @@ function HospitalSearching(props: any) {
                             console.log(+value)
                         }}
                     >
-                        {hospitals.filter(h=>h.id !== selectedOrigin).map(
+                        {hospitals.map(
                             (h: any) => (
                                 <Option key={h.name} value={h.id} label={h.name}>
                                     {h.name}
@@ -173,7 +179,7 @@ function HospitalSearching(props: any) {
                     <Button
                         type="primary"
                         htmlType="submit"
-                        style={{ marginRight: "8px" }}
+                        style={{marginRight: "8px"}}
                     >
                         Siguiente
                     </Button>
@@ -182,7 +188,7 @@ function HospitalSearching(props: any) {
                         Reiniciar campos
                     </Button>
                     {current > 0 && (
-                        <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+                        <Button style={{margin: "0 8px"}} onClick={() => prev()}>
                             Anterior
                         </Button>
                     )}
@@ -196,4 +202,4 @@ function HospitalSearching(props: any) {
 
 }
 
-export default HospitalSearching;
+export default HospitalSearchingEdit;

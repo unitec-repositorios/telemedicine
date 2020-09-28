@@ -17,13 +17,19 @@ export async function all() {
   return response.data as ReferenceACSPSForm[];
 }
 
-export async function findById(id: number) {
+export async function findById2(id: number) {
   const response = await axios.get(`${baseUrl}/${id}`);
   return (response.data as ReferenceACSPSForm[])[0];
+  // return response.data as Hospital;
 }
 
 export async function remove(id: number) {
   await axios.delete(`${baseUrl}/${id}`);
+}
+
+export async function update(reference: ReferenceACSPSForm) {
+  console.log(reference.Id);
+  await axios.put(`${baseUrl}/${reference.Id}`, reference);
 }
 
 export async function allR() {

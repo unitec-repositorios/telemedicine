@@ -1,19 +1,22 @@
-import React, {useEffect, useState} from "react";
+import React, {useState, useEffect} from "react";
 import {Steps} from "antd";
-import ReferenceInformation from "./steps/ReferenceInformation";
-import HospitalSearching from "./steps/HospitalSearching";
-import {PatientReferenceInformation, RRForm} from "../referenceFormModels";
-import PatientReference from "./steps/PatientReference";
+import {PatientReferenceInformation, RRForm, ReferenceEditPatience} from "../referenceFormModels";
+import PatientReferenceEdit from "./steps/PatientReferenceEdit";
+import HospitalSearchingEdit from "./steps/HospitalSearchingEdit";
+import ReferenceInformationEdit from "./steps/ReferenceInformationEdit";
 
 const {Step} = Steps;
 
-function Stepper(props: any) {
+function StepperEdit(props: any) {
     const [current, setCurrent] = useState(0);
     const [reference, setReference] = useState({} as RRForm);
+    const [referenceId, setReferenceId] = useState({} as ReferenceEditPatience);
+    const passId = props.id
+
+
     const changeCurrent = (current: number) => {
         setCurrent(current);
     };
-
 
     const originHandler = (originHfId: number) => {
         setReference({...reference, originHfId});
@@ -35,9 +38,6 @@ function Stepper(props: any) {
             address: patient.address,
             companion: patient.companion,
             phone: patient.phone,
-            selectedPatient: patient.selectedPatient,
-            lastName: patient.lastName
-
         })
     }
 
@@ -55,34 +55,34 @@ function Stepper(props: any) {
         {
             title: "Paciente",
             content: (
-                <PatientReference current={current} changeCurrent={changeCurrent}
-                                  referenceState={reference} setPatientInfo={setPatientInfo}/>
+                <PatientReferenceEdit current={current} changeCurrent={changeCurrent}
+                                  referenceState={reference} setPatientInfo={setPatientInfo} 
+                                  passId={passId}/>
             ),
         },
         {
             title: "Establecimiento de Salud",
             content: (
-                <HospitalSearching
+                <HospitalSearchingEdit
                     onOrigin={originHandler}
                     onDestination={destinationHandler}
                     onInstitution={institutionHandler}
                     length={3}
-                    referenceState={reference}
                     current={current}
                     changeCurrent={changeCurrent}
-
+                    passId={passId}
                 />
             ),
         },
         {
             title: "Diagnostico",
             content: (
-                <ReferenceInformation
+                <ReferenceInformationEdit
                     length={3}
                     current={current}
                     changeCurrent={changeCurrent}
-                    referenceState={{...reference}}
-                    setReference={setReference}
+                    referenceState={reference}
+                    passId={passId}
                 />
             ),
         },
@@ -101,4 +101,4 @@ function Stepper(props: any) {
     );
 }
 
-export default Stepper;
+export default StepperEdit;

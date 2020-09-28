@@ -28,14 +28,14 @@ export async function findById(id: number) {
 
 export async function searchById(id: string) {
   const response = await axios.get(`${baseUrl}`, {
-    params :{
+    params: {
       idNumber: id,
       limit: 50,
-      multipleResults: true
-    }
+      multipleResults: true,
+    },
   });
 
-  return (response.data as Patient[]);
+  return response.data as Patient[];
 }
 
 export async function update(patient: Patient) {
