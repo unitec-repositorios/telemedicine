@@ -22,7 +22,7 @@ export default function PatientReference(props: any) {
     const [fetching, setFetching] = useState(true);
     const [patients, setPatients] = useState(defaultPatient == null ? [] as Patient[] : [defaultPatient] as Patient[]);
     const [patient, setPatient] = useState(defaultPatient == null ? {} as Patient : defaultPatient);
-    const [hiddenPatientInfo, setHiddenPatientInfo] = useState(true);
+    const [hiddenPatientInfo, setHiddenPatientInfo] = useState(defaultPatient == null);
     const [idPatient, setIdPatient] = useState("");
     const [namePatient, setNamePatient] = useState("");
     const {referenceId, setReferenceId} = props;
@@ -53,11 +53,12 @@ export default function PatientReference(props: any) {
     }, []);
 
     const handleChange = async (value: any) => {
-        setPatient({ id: value.value, name: value.label } as Patient);
-        const patientTemp = await findById(value.value);
+        const foundPatient = patients.find(p => p.id === value);
+        setPatient(foundPatient);
+        const patientTemp = await findById(value);
         if (patientTemp !== undefined) {
             setIdPatient(patientTemp.idNumber);
-            setNamePatient(value.label);
+            setNamePatient(patientTemp.name);
             setHiddenPatientInfo(false);
         }
     };
@@ -156,7 +157,7 @@ export default function PatientReference(props: any) {
                             <Option
                                 key={d.id}
                                 value={d.id}
-                            >{`${d.name} ${d.firstLastName} | ${d.idNumber}`}</Option>
+                            >{`${d.name} ${d.firstLastName}`}</Option>
                         ))}
                     </Select>
                 </Form.Item>

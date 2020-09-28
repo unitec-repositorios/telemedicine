@@ -41,106 +41,46 @@ function ReferenceInformation(props: any) {
         physicalExamination.attentionRequired = values;
         setReference({...referenceState, physicalExamination} as RRForm);
     }
-    
-  const onFinish = (values: ReferenceForm) => {
-    const vitalSignsFormJson = {
-        bloodPressure: values.bloodPressure,
-        respiratoryRate: values.respiratoryRate,
-        pulse: values.pulse,
-        heartRate: values.heartRate,
-        temperature: values.temperature,
-        weight: values.weight,
-        sizePerson: values.sizePerson,
+
+    const prev = () => {
+        let value = current - 1;
+        changeCurrent(value);
     };
 
-    const obgynFormJson = {
-        fum: values.fum,
-        fpp: values.fpp,
-        pregnancy: values.pregnancy,
-        birth: values.birth,
-        cesareanSections: values.cesareanSections,
-        livingChildren: values.livingChildren,
-        deadChildren: values.deadChildren,
-        deaths: values.deaths,
-        abortions: values.abortions,
-    };
-
-    const physicalExaminationFormJson = {
-        head: values.head,
-        orl: values.orl,
-        eyes: values.eyes,
-        neck: values.neck,
-        torax: values.torax,
-        abdomen: values.abdomen,
-        genitals: values.genitals,
-        extremities: values.extremities,
-        neurological: values.neurological,
-    };
-
-    if (referenceState.motive) {
-        form.setFieldsValue({
-            ...referenceState,
-            ...referenceState.vitalSigns,
-            ...referenceState.obGyn,
-            ...referenceState.physicalExamination,
-        })
-    }
 
     const onFinish = (values: ReferenceForm) => {
         const vitalSignsFormJson = {
-            vitalSignsJson: {
-                bloodPressure: values.bloodPressure,
-                respiratoryRate: values.respiratoryRate,
-                pulse: values.pulse,
-                heartRate: values.heartRate,
-                temperature: values.temperature,
-                weight: values.weight,
-                sizePerson: values.sizePerson,
-            },
+            bloodPressure: values.bloodPressure,
+            respiratoryRate: values.respiratoryRate,
+            pulse: values.pulse,
+            heartRate: values.heartRate,
+            temperature: values.temperature,
+            weight: values.weight,
+            sizePerson: values.sizePerson,
         };
 
-    (async () => {
-      try {
-        await create({
-          type: "normal",
-          originHfId: props.referenceState.originHfId,
-          destinationHfId: props.referenceState.destinationHfId,
-          institution: props.referenceState.institution,
-          patientId: props.referenceState.patientId,
-          motive: values.motive,
-          descriptionMotive: values.descriptionMotive,
-          symptoms: values.symptoms,
-          medicalSummary: values.medicalSummary,
-          vitalSigns: JSON.stringify(vitalSignsFormJson),
-          obGyn: JSON.stringify(obgynFormJson),
-          physicalExamination: JSON.stringify(physicalExaminationFormJson),
-          complementaryExams: values.complementaryExams,
-          diagnosticImpression: values.diagnosticImpression,
-          observations: values.observations,
-          risk: Boolean(values.risk),
-          attentionRequired: attentionValue,
-          madeBy: madeByValue,
-          contactedHf: Boolean(values.contactedHf),
-          contactId: values.contactId,
-          date: new Date(values.date),
-          address: props.referenceState.address,
-          companion: props.referenceState.companion,
-          phone: props.referenceState.phone,
-          relationship: props.referenceState.relationship
-        });
+        const obgynFormJson = {
+            fum: values.fum,
+            fpp: values.fpp,
+            pregnancy: values.pregnancy,
+            birth: values.birth,
+            cesareanSections: values.cesareanSections,
+            livingChildren: values.livingChildren,
+            deadChildren: values.deadChildren,
+            deaths: values.deaths,
+            abortions: values.abortions,
+        };
 
-        const physicalExamination = {
-            physicalExaminationFormJson: {
-                head: values.head,
-                orl: values.orl,
-                eyes: values.eyes,
-                neck: values.neck,
-                torax: values.torax,
-                abdomen: values.abdomen,
-                genitals: values.genitals,
-                extremities: values.extremities,
-                neurological: values.neurological,
-            },
+        const physicalExaminationFormJson = {
+            head: values.head,
+            orl: values.orl,
+            eyes: values.eyes,
+            neck: values.neck,
+            torax: values.torax,
+            abdomen: values.abdomen,
+            genitals: values.genitals,
+            extremities: values.extremities,
+            neurological: values.neurological,
         };
 
         //Decide whether to get the value from the select or from the input other
@@ -158,6 +98,13 @@ function ReferenceInformation(props: any) {
             attentionValue = values.attentionRequired;
         }
 
+        form.setFieldsValue({
+            ...referenceState,
+            ...referenceState.vitalSigns,
+            ...referenceState.obGyn,
+            ...referenceState.physicalExamination,
+        });
+
         (async () => {
             try {
                 await create({
@@ -172,7 +119,7 @@ function ReferenceInformation(props: any) {
                     medicalSummary: values.medicalSummary,
                     vitalSigns: JSON.stringify(vitalSignsFormJson),
                     obGyn: JSON.stringify(obgynFormJson),
-                    physicalExamination: JSON.stringify(physicalExamination),
+                    physicalExamination: JSON.stringify(physicalExaminationFormJson),
                     complementaryExams: values.complementaryExams,
                     diagnosticImpression: values.diagnosticImpression,
                     observations: values.observations,
@@ -188,9 +135,8 @@ function ReferenceInformation(props: any) {
                     relationship: props.referenceState.relationship
                 });
 
-
-                await navigate(`/referenceForm`);
-                message.success("La referencia se ha guardado exitosamente.");
+                form.resetFields();
+                message.success("Elementos se han guardado exitosamente.");
             } catch (error) {
                 console.log(error);
                 message.error("Ocurrió un error al guardar los elementos.");
@@ -223,6 +169,7 @@ function ReferenceInformation(props: any) {
             },
         },
     };
+
 
     return (
         <>
@@ -274,7 +221,10 @@ function ReferenceInformation(props: any) {
                     ]}
                 >
                     <Input.TextArea
-                        onChange={event => setReference({...referenceState, symptoms: event.target.value} as RRForm)}/>
+                        onChange={event => setReference({
+                            ...referenceState,
+                            symptoms: event.target.value
+                        } as RRForm)}/>
                 </Form.Item>
 
                 <Form.Item

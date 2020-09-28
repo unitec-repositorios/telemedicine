@@ -61,12 +61,12 @@ export interface RRForm {
     contactedHf: boolean;
     contactId: string;
     date: Date;
-    companion: string;
-    lastName: string;
+    companion?: string;
+    lastName?: string;
     relationship: string;
     address: string;
     phone: string;
-    selectedPatient: Patient
+    selectedPatient?: Patient
 }
 
 export interface ReferenceEditPatience {
