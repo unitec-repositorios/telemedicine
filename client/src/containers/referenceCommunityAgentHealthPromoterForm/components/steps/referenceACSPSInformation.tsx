@@ -153,22 +153,20 @@ function ReferenceACSPSInformation(props: any) {
         </Form.Item>
 
         <Form.Item
-          name="phone"
-          label="Número de Teléfono"
-          rules={[
-            {
-              required: true,
-              message: "El campo es requerido",
-              whitespace: true,
-            },
-            {
-              pattern: /\d{4}/,
-              message: "Número de Teléfono incompleto. ",
-            },
-          ]}
-        >
-          <MaskedInput mask="1111 1111" />
-        </Form.Item>
+                        
+                        name="phoneNumber"
+                    label="Número de Teléfono"
+                        
+                        rules={[
+
+                          {
+                            pattern: /-\d{4}/g,
+                            message: "Número de teléfono incompleto. ",
+                          },
+                        ]}
+                      >
+                        <MaskedInput mask="+(111) 1111-1111" />
+                      </Form.Item>
 
         <Form.Item
           name="email"

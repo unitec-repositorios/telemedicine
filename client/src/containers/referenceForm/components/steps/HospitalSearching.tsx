@@ -160,7 +160,7 @@ function HospitalSearching(props: any) {
                             console.log(+value)
                         }}
                     >
-                        {hospitals.map(
+                        {hospitals.filter(h=>h.id !== selectedOrigin).map(
                             (h: any) => (
                                 <Option key={h.name} value={h.id} label={h.name}>
                                     {h.name}
