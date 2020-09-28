@@ -41,7 +41,18 @@ function HospitalSearching(props: any) {
         (async () => {
             const data = await all();
             setHospitals(data);
-            console.log(data);
+
+            if(props.referenceState.originHfId){
+                const {originHfId, institution, destinationHfId } = props.referenceState;
+                form.setFieldsValue(
+                    {
+                        institution,
+                        origin: originHfId,
+                        destination: destinationHfId
+                    }
+                )
+            }
+
         })();
     }, []);
 

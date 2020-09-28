@@ -68,6 +68,7 @@ function Stepper(props: any) {
                     onDestination={destinationHandler}
                     onInstitution={institutionHandler}
                     length={3}
+                    referenceState={reference}
                     current={current}
                     changeCurrent={changeCurrent}
 
