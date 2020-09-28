@@ -12,8 +12,8 @@ interface PatientProps extends RouteComponentProps { }
 
 function PatientTable(props: PatientProps) {
   const [patients, setPatients] = useState<Patient[]>([]);
-	const [filterTable, setFilterTable] = useState<Patient[]>([]);
-
+  const [filterTable, setFilterTable] = useState<Patient[]>([]);
+  const [currentPatients, setCurrentPatients] = useState<Patient[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,6 +21,7 @@ function PatientTable(props: PatientProps) {
       const data = await all();
       setPatients(data);
       setLoading(false);
+      setCurrentPatients(data);
     })();
   }, []);
 
@@ -36,19 +37,40 @@ function PatientTable(props: PatientProps) {
       setPatients(
         patients.filter((currentPatients) => currentPatients.id !== id)
       );
+      setCurrentPatients(
+        patients.filter((currentPatients) => currentPatients.id !== id)
+      );
     } catch (error) {
       message.error("Ocurrió un error al borrar el paciente. ");
     }
   };
 
-	const onSearch = (value: string) => {
-		const filter = patients.filter(o =>
-			Object.values(o).some(v =>
-				String(v).toLowerCase().includes(value.toLowerCase())
-			)
-		);
-		setFilterTable(filter);
-	}
+  const onSearch = (value: string) => {
+    setPatients(currentPatients);
+    let filterWords = value.split(" ");
+    let filteredTable = patients
+    let multipleSearch = currentPatients
+    for (let word of filterWords) {
+      filteredTable = multipleSearch.filter((o) =>
+        Object.values(o).some((v) =>
+          String(v).toLowerCase().includes(word.toLowerCase())
+        )
+      )
+      if (filteredTable.length === 0) {
+        break
+      }
+      multipleSearch = filteredTable
+    }
+
+    if (filteredTable.length === 0 && value !== "") {
+      setPatients([]);
+      setFilterTable([]);
+    } else if (value === "") {
+      setFilterTable([]);
+    } else {
+      setFilterTable(filteredTable);
+    }
+  };
 
   const columns: ColumnType<Patient>[] = [
     {
@@ -56,25 +78,26 @@ function PatientTable(props: PatientProps) {
       dataIndex: "idNumber",
       key: "idNumber",
       width: 150,
-			sorter: (a:any, b:any) => a.idNumber - b.idNumber,
+      sorter: (a: any, b: any) => a.idNumber - b.idNumber,
     },
     {
       title: "Nombre",
       dataIndex: "name",
       key: "name",
-			sorter: (a:any, b:any) => a.name.localeCompare(b.name),
+      sorter: (a: any, b: any) => a.name.localeCompare(b.name),
     },
     {
       title: "Primer Apellido",
       dataIndex: "firstLastName",
       key: "lastName",
-			sorter: (a:any, b:any) => a.lastName.localeCompare(b.lastName),
+      sorter: (a: any, b: any) => a.lastName.localeCompare(b.lastName),
     },
     {
       title: "Segundo Apellido",
       dataIndex: "secondLastName",
       key: "secondLastName",
-			sorter: (a:any, b:any) => a.secondLastName.localeCompare(b.secondLastName),
+      sorter: (a: any, b: any) =>
+        a.secondLastName.localeCompare(b.secondLastName),
     },
     {
       title: "Fecha de Nacimiento",
@@ -97,13 +120,13 @@ function PatientTable(props: PatientProps) {
       dataIndex: "email",
       key: "email",
       width: 200,
-			sorter: (a:any, b:any) => a.email.localeCompare(b.email),
+      sorter: (a: any, b: any) => a.email.localeCompare(b.email),
     },
     {
       title: "Género",
       dataIndex: "gender",
       key: "gender",
-			sorter: (a:any, b:any) => a.gender.localeCompare(b.gender),
+      sorter: (a: any, b: any) => a.gender.localeCompare(b.gender),
     },
     {
       title: "Acciones",
@@ -151,15 +174,15 @@ function PatientTable(props: PatientProps) {
         </Button>
       </Link>
       <Spin spinning={loading}>
-			<Input.Search
-				style={{ margin: "0 0 10px 600px", width: "400px" }}
-        placeholder="Buscar"
-        enterButton
-				onSearch={onSearch}
-			/>
+        <Input.Search
+          style={{ margin: "0 0 10px 600px", width: "400px" }}
+          placeholder="Buscar"
+          enterButton
+          onSearch={onSearch}
+        />
         <Table
           pagination={{ defaultPageSize: 10 }}
-          dataSource={!filterTable.length ? patients: filterTable}
+          dataSource={!filterTable.length ? patients : filterTable}
           columns={columns}
           rowKey="idNumber"
           locale={{ emptyText: "Sin información" }}

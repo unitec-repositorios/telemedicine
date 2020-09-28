@@ -1,21 +1,21 @@
-import {Button, Form, Select} from "antd";
-import {Hospital} from '../../../hospitals/hospitalModels';
-import React, {useEffect, useState} from "react";
-import {all} from "../../../hospitals/hospitalService";
+import { Button, Form, Select } from "antd";
+import { Hospital } from '../../../hospitals/hospitalModels';
+import React, { useEffect, useState } from "react";
+import { all } from "../../../hospitals/hospitalService";
 
 export interface SearchForm {
     [key: string]: string;
 }
 
 function HospitalSearching(props: any) {
-    const {Option} = Select;
+    const { Option } = Select;
     const [form] = Form.useForm();
     const [hidden, setHidden] = useState(true);
     const [hospitals, setHospitals] = useState<Hospital[]>([]);
     const [selectedOrigin, setSelectedOrigin] = useState(0);
     const [selectedDestination, setSelectedDestination] = useState(0);
     const [selectedInstitution, setSelectedInstitution] = useState("");
-    const {current, changeCurrent} = props;
+    const { current, changeCurrent } = props;
 
     const tailFormItemLayout = {
         wrapperCol: {
@@ -54,14 +54,14 @@ function HospitalSearching(props: any) {
 
     const formItemLayout = {
         labelCol: {
-            xs: {span: 24},
-            sm: {span: 8},
-            md: {span: 8},
+            xs: { span: 24 },
+            sm: { span: 8 },
+            md: { span: 8 },
         },
         wrapperCol: {
-            xs: {span: 24},
-            sm: {span: 16},
-            md: {span: 8},
+            xs: { span: 24 },
+            sm: { span: 16 },
+            md: { span: 8 },
         },
     };
 
@@ -162,7 +162,7 @@ function HospitalSearching(props: any) {
                     <Button
                         type="primary"
                         htmlType="submit"
-                        style={{marginRight: "8px"}}
+                        style={{ marginRight: "8px" }}
                     >
                         Siguiente
                     </Button>
@@ -171,7 +171,7 @@ function HospitalSearching(props: any) {
                         Reiniciar campos
                     </Button>
                     {current > 0 && (
-                        <Button style={{margin: "0 8px"}} onClick={() => prev()}>
+                        <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
                             Anterior
                         </Button>
                     )}

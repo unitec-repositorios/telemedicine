@@ -28,6 +28,7 @@ namespace Core.Patients
             var data = _patientRepository
                 .Filter(patient => !patient.Disabled)
                 .Where(x => id == null || x.Id == id)
+                .Where(x => idNumber == null || x.IdNumber == idNumber)
                 .Where(x => foreignIdNumber == null || x.IdNumber == foreignIdNumber)
                 .Where(x => email == null || x.Email == email);
 

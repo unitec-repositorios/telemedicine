@@ -1,25 +1,31 @@
-import React, { useEffect, useState, MouseEventHandler } from "react";
-import { Input, Button, Table, Popconfirm, message, Pagination, Spin } from "antd";
+import React, { useEffect, useState } from "react";
+import {
+  Input,
+  Button,
+  Table,
+  Popconfirm,
+  message,
+  Spin,
+} from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Link, RouteComponentProps, navigate } from "@reach/router";
-import { TableProps } from "antd/lib/table";
 import { Hospital } from "./hospitalModels";
 import MainTitle from "../../components/MainTitle";
 import { all, remove } from "./hospitalService";
-import { table } from "console";
 
-interface HospitalProps extends RouteComponentProps {}
+interface HospitalProps extends RouteComponentProps { }
 
 function HospitalTable(props: HospitalProps) {
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
-	const [filterTable, setFilterTable] = useState<Hospital[]>([]);
-
+  const [filterTable, setFilterTable] = useState<Hospital[]>([]);
+  const [currentHospitals, setCurrentHospitals] = useState<Hospital[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     (async () => {
       const data = await all();
       setHospitals(data);
       setLoading(false);
+      setCurrentHospitals(data);
     })();
   }, []);
 
@@ -35,50 +41,71 @@ function HospitalTable(props: HospitalProps) {
       setHospitals(
         hospitals.filter((currentNetwork) => currentNetwork.id !== id)
       );
+      setCurrentHospitals(
+        hospitals.filter((currentNetwork) => currentNetwork.id !== id)
+      );
     } catch (error) {
       message.error("Ocurrió un error al borrar el Hospital");
     }
   };
 
-	const onSearch = (value: string) => {
-		const filter = hospitals.filter(o =>
-			Object.values(o).some(v =>
-				String(v).toLowerCase().includes(value.toLowerCase())
-			)
-		);
-		setFilterTable(filter);
-	}
+  const onSearch = (value: string) => {
+    setHospitals(currentHospitals);
+    let filterWords = value.split(" ");
+    let filteredTable = hospitals
+    let multipleSearch = currentHospitals
+    for (let word of filterWords) {
+      filteredTable = multipleSearch.filter((o) =>
+        Object.values(o).some((v) =>
+          String(v).toLowerCase().includes(word.toLowerCase())
+        )
+      )
+      if (filteredTable.length === 0) {
+        break
+      }
+      multipleSearch = filteredTable
+    }
+
+    if (filteredTable.length === 0 && value !== "") {
+      setHospitals([]);
+      setFilterTable([]);
+    } else if (value === "") {
+      setFilterTable([]);
+    } else {
+      setFilterTable(filteredTable);
+    }
+  };
 
   const columns = [
     {
       title: "Código",
       dataIndex: "code",
       key: "code",
-			sorter: (a:any, b:any) => a.code - b.code,
+      sorter: (a: any, b: any) => a.code - b.code,
     },
     {
       title: "Nombre",
       dataIndex: "name",
       key: "name",
-			sorter: (a:any, b:any) => a.name.localeCompare(b.name),
+      sorter: (a: any, b: any) => a.name.localeCompare(b.name),
     },
     {
       title: "Departamento",
       dataIndex: "department",
       key: "department",
-			sorter: (a:any, b:any) => a.department.localeCompare(b.department),
+      sorter: (a: any, b: any) => a.department.localeCompare(b.department),
     },
     {
       title: "Municipio",
       dataIndex: "city",
       key: "city",
-			sorter: (a:any, b:any) => a.city.localeCompare(b.city),
+      sorter: (a: any, b: any) => a.city.localeCompare(b.city),
     },
     {
       title: "Red",
       dataIndex: "network",
       key: "network",
-			sorter: (a:any, b:any) => a.network.localeCompare(b.network),
+      sorter: (a: any, b: any) => a.network.localeCompare(b.network),
     },
     {
       title: "Acciones",
@@ -122,14 +149,14 @@ function HospitalTable(props: HospitalProps) {
         </Button>
       </Link>
       <Spin spinning={loading}>
-				<Input.Search
-					style={{ margin: "0 0 10px 600px", width: "400px" }}
-        	placeholder="Buscar"
-        	enterButton
-					onSearch={onSearch}
-				/>
+        <Input.Search
+          style={{ margin: "0 0 10px 600px", width: "400px" }}
+          placeholder="Buscar"
+          enterButton
+          onSearch={onSearch}
+        />
         <Table
-          dataSource={!filterTable.length ? hospitals: filterTable}
+          dataSource={!filterTable.length ? hospitals : filterTable}
           pagination={{ defaultPageSize: 10 }}
           columns={columns}
           rowKey="code"
