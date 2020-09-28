@@ -47,10 +47,10 @@ function AddNetworkForm(props: AddNetworkProps) {
 
   const onFinish = (values: NetworkForm) => {
     (async () => {
-      values.name = values.name.charAt(0).toUpperCase() + values.name.slice(1);
+      values.name = values.name.toLocaleLowerCase();
       try {
         await create({
-          name: values.name,
+          name: values.name.charAt(0).toUpperCase() + values.name.slice(1),
         });
         form.resetFields();
         message.success("La red ha sido creada existosamente");
