@@ -1,11 +1,12 @@
-import React, {useEffect, useState} from "react";
-import {Button, Input, Table} from "antd";
-import {Link, RouteComponentProps} from "@reach/router";
-import {Reference} from "../referenceFormModels";
+import React, { useEffect, useState } from "react";
+import { Button, Input, Table, Popconfirm, message } from "antd";
+import { Link, RouteComponentProps, navigate } from "@reach/router";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Reference } from "../referenceFormModels";
 import MainTitle from "../../../components/MainTitle";
-import {allR} from "../referenceFormService"
-import {all} from "../../hospitals/hospitalService"
-import {all as allPatients} from "../../patients/patientService"
+import { allR, remove } from "../referenceFormService"
+import { all } from "../../hospitals/hospitalService"
+import { all as allPatients } from "../../patients/patientService"
 
 interface ReferenceProps extends RouteComponentProps {
 }
@@ -51,6 +52,21 @@ function ReferenceTable(props: ReferenceProps) {
         setFilterTable(filter);
     }
 
+    const onDelete = async (id: number) => {
+        try {
+            console.log('demo')
+            await remove(id);
+            message.info("El Hospital ha sido borrado");
+        } catch (error) {
+            message.error("Ocurrió un error al borrar el Hospital");
+        }
+    };
+
+    const onEdit = async (event: React.MouseEvent<HTMLButtonElement>) => {
+        const id = event.currentTarget.dataset.id;
+        await navigate(`/referenceForm/edit/${id}`);
+    };
+
     const columns = [
         {
             title: "Codigo",
@@ -75,18 +91,50 @@ function ReferenceTable(props: ReferenceProps) {
             dataIndex: "destination",
             key: "destination",
             sorter: (a: any, b: any) => a.destination.localeCompare(b.destination),
+        },
+        {
+            title: "Acciones",
+            dataIndex: "actions",
+            key: "actions",
+            render: (text: string, record: Table) => (
+                <div>
+                    {" "}
+                    <Button
+                        onClick={onEdit}
+                        data-id={record.id}
+                        type="primary"
+                        icon={<EditOutlined />}
+                        style={{ height: "40px", width: "40px", marginLeft: "2px" }}
+                    />
+                    <Popconfirm
+                        placement="top"
+                        title="¿Está seguro que sea eliminar el registro?"
+                        onConfirm={() => onDelete(record.id)}
+                        okText="Si"
+                        cancelText="No"
+                    >
+                        <Button
+                            data-id={record.id}
+                            type="primary"
+                            danger
+                            icon={<DeleteOutlined />}
+                            style={{ height: "40px", width: "40px", marginLeft: "2px" }}
+                        />
+                    </Popconfirm>
+                </div>
+            ),
         }
     ]
     return (
         <div>
             <MainTitle>Referencia Respuesta</MainTitle>
             <Link to="/referenceForm/add">
-                <Button type="primary" style={{marginBottom: "20px"}}>
+                <Button type="primary" style={{ marginBottom: "20px" }}>
                     Agregar
                 </Button>
             </Link>
             <Input.Search
-                style={{margin: "0 0 10px 600px", width: "400px"}}
+                style={{ margin: "0 0 10px 600px", width: "400px" }}
                 placeholder="Buscar"
                 enterButton
                 onSearch={onSearch}
@@ -95,7 +143,7 @@ function ReferenceTable(props: ReferenceProps) {
                 dataSource={!filterTable.length ? table : filterTable}
                 columns={columns}
                 rowKey="name"
-                locale={{emptyText: "Sin Informacion."}}
+                locale={{ emptyText: "Sin Informacion." }}
             />
         </div>
     );

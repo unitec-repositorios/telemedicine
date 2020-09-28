@@ -73,6 +73,27 @@ namespace Api.Modules.ReferencesACS_PS
             await _referenceACS_PSService.Create(reference);
         }
 
+        [HttpPut("{id:int}")]
+        public async Task Put(int id, ReferenceCommunityAgentHealthPromoterViewModel referenceACS_PSViewModel)
+        {
 
+            var reference = new ReferenceCommunityAgentHealthPromoter
+            {
+                Id = referenceACS_PSViewModel.Id,
+                Date = referenceACS_PSViewModel.Date,
+                Community = referenceACS_PSViewModel.Community,
+                PatientId = referenceACS_PSViewModel.PatientId,
+                Motive = referenceACS_PSViewModel.Motive,
+                Referrer = referenceACS_PSViewModel.Referrer,
+                ReferrerPhone = referenceACS_PSViewModel.ReferrerPhone,
+                ReferrerEmail = referenceACS_PSViewModel.ReferrerEmail,
+                ActionTaken = referenceACS_PSViewModel.ActionTaken,
+                OriginHfId = referenceACS_PSViewModel.OriginHfId,
+                DestinationHfId = referenceACS_PSViewModel.DestinationHfId,
+
+            };
+
+            await _referenceACS_PSService.Update(id, reference);
+        }
     }
 }

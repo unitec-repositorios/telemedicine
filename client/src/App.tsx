@@ -16,6 +16,9 @@ import AddRRForm from "./containers/referenceForm/components/AddReferenceForm";
 import AddRRACSPS from "./containers/referenceCommunityAgentHealthPromoterForm/components/addReferenceCommunityAgentHealthPromoterForm";
 import ReferenceTable from "./containers/referenceForm/components/ReferenceTable";
 import ReferenceACPSTable from "./containers/referenceCommunityAgentHealthPromoterForm/components/referenceCommunityAgentHealthPromoterTable";
+import StepperEdit from "./containers/referenceForm/components/EditReferenceForm"
+import StepperEditACSPS from "./containers/referenceCommunityAgentHealthPromoterForm/components/editReferenceCommunityAgentHealthPromoterForm";
+
 function App() {
   return (
     <div className="App">
@@ -31,7 +34,9 @@ function App() {
           <AddNetworkForm path="networks/add" />
           <EditNetworkForm path="networks/edit/:id" />
           <AddRRForm path="referenceForm/add" />
+          <StepperEdit path="referenceForm/edit/:id" />
           <AddRRACSPS path="referenceACSPSForm/add" />
+          <StepperEditACSPS path="referenceACSPSForm/edit/:id" />
           <ReferenceTable path="referenceForm" />
           <ReferenceACPSTable path="referenceACSPSForm" />
         </Dashboard>
