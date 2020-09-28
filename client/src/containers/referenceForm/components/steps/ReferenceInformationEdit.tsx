@@ -1,4 +1,4 @@
-import React, {useState, Props} from "react";
+import React, { useState, Props, useEffect } from "react";
 import {
     Button,
     Form,
@@ -9,16 +9,15 @@ import {
     DatePicker,
 } from "antd";
 import moment from "moment";
-import {create} from "../../referenceFormService";
-import {navigate} from "@reach/router";
-import {RRForm} from "../../referenceFormModels";
+import { create, update } from "../../referenceFormService";
+import { findById2 } from "../../referenceFormService";
 
 export interface ReferenceForm {
     [key: string]: string;
 }
 
-function ReferenceInformation(props: any) {
-    const {current, length, changeCurrent, referenceState, setReference} = props;
+function ReferenceInformationEdit(props: any) {
+    const { current, length, changeCurrent } = props;
 
     const [form] = Form.useForm();
     const [madeBycurrent, setMadeByCurrent] = useState(false);
@@ -27,120 +26,118 @@ function ReferenceInformation(props: any) {
     const handleSelectReferenceAnswer = (value: string) => {
         if (value.toLowerCase() == "otros") setMadeByCurrent(true);
         else setMadeByCurrent(false);
-
-        const physicalExamination = {...referenceState.physicalExamination};
-        physicalExamination.madeBy = value;
-        setReference({...referenceState, physicalExamination} as RRForm);
     };
 
     const handleSelectAttentionAnswer = (values: string) => {
         if (values.toLowerCase() == "otros") setAttentionCurrent(true);
         else setAttentionCurrent(false);
-
-        const physicalExamination = {...referenceState.physicalExamination};
-        physicalExamination.attentionRequired = values;
-        setReference({...referenceState, physicalExamination} as RRForm);
-    }
-    
-  const onFinish = (values: ReferenceForm) => {
-    const vitalSignsFormJson = {
-        bloodPressure: values.bloodPressure,
-        respiratoryRate: values.respiratoryRate,
-        pulse: values.pulse,
-        heartRate: values.heartRate,
-        temperature: values.temperature,
-        weight: values.weight,
-        sizePerson: values.sizePerson,
     };
 
-    const obgynFormJson = {
-        fum: values.fum,
-        fpp: values.fpp,
-        pregnancy: values.pregnancy,
-        birth: values.birth,
-        cesareanSections: values.cesareanSections,
-        livingChildren: values.livingChildren,
-        deadChildren: values.deadChildren,
-        deaths: values.deaths,
-        abortions: values.abortions,
+    const prev = () => {
+        let value = current - 1;
+        changeCurrent(value);
     };
 
-    const physicalExaminationFormJson = {
-        head: values.head,
-        orl: values.orl,
-        eyes: values.eyes,
-        neck: values.neck,
-        torax: values.torax,
-        abdomen: values.abdomen,
-        genitals: values.genitals,
-        extremities: values.extremities,
-        neurological: values.neurological,
-    };
 
-    if (referenceState.motive) {
-        form.setFieldsValue({
-            ...referenceState,
-            ...referenceState.vitalSigns,
-            ...referenceState.obGyn,
-            ...referenceState.physicalExamination,
-        })
-    }
+    useEffect(() => {
+        (async () => {
+
+            const referenceEdit = await findById2(props.passId ?? 1);
+
+            var vitals = JSON.parse(referenceEdit.vitalSigns)
+            var oby = JSON.parse(referenceEdit.obGyn)
+            var physical = JSON.parse(referenceEdit.physicalExamination)
+            var aa = oby.fum
+
+            var madeByValue: string;
+            if (referenceEdit.risk == true) {
+                madeByValue = "Sin Riesgo";
+            } else {
+                madeByValue = "Con Riesgo";
+            }
+
+            var contactValue: string;
+            if (referenceEdit.contactedHf == true) {
+                contactValue = "Si";
+            } else {
+                contactValue = "No";
+            }
+
+            console.log(aa)
+            form.setFieldsValue(
+                {
+                    motive: referenceEdit.motive,
+                    symptoms: referenceEdit.symptoms,
+                    descriptionMotive: referenceEdit.descriptionMotive,
+                    medicalSummary: referenceEdit.medicalSummary,
+                    bloodPressure: vitals.bloodPressure,
+                    heartRate: vitals.heartRate,
+                    pulse: vitals.pulse,
+                    respiratoryRate: vitals.respiratoryRate,
+                    sizePerson: vitals.sizePerson,
+                    temperature: vitals.temperature,
+                    weight: vitals.weight,
+                    birth: oby.birth,
+                    cesareanSections: oby.cesareanSections,
+                    deadChildren: oby.deadChildren,
+                    deaths: oby.deaths,
+                    livingChildren: oby.livingChildren,
+                    pregnancy: oby.pregnancy,
+                    abortions: oby.abortions,
+                    abdomen: physical.abdomen,
+                    extremities: physical.extremities,
+                    eyes: physical.eyes,
+                    genitals: physical.genitals,
+                    head: physical.head,
+                    neck: physical.neck,
+                    neurological: physical.neurological,
+                    orl: physical.orl,
+                    torax: physical.torax,
+                    complementaryExams: referenceEdit.complementaryExams,
+                    risk: madeByValue,
+                    diagnosticImpression: referenceEdit.diagnosticImpression,
+                    observations: referenceEdit.observations,
+                    madeBy: referenceEdit.madeBy,
+                    attentionRequired: referenceEdit.attentionRequired,
+                    contactedHf: contactValue,
+                    contactId: referenceEdit.contactId,
+                })
+        })();
+    }, []);
 
     const onFinish = (values: ReferenceForm) => {
         const vitalSignsFormJson = {
-            vitalSignsJson: {
-                bloodPressure: values.bloodPressure,
-                respiratoryRate: values.respiratoryRate,
-                pulse: values.pulse,
-                heartRate: values.heartRate,
-                temperature: values.temperature,
-                weight: values.weight,
-                sizePerson: values.sizePerson,
-            },
+            bloodPressure: values.bloodPressure,
+            respiratoryRate: values.respiratoryRate,
+            pulse: values.pulse,
+            heartRate: values.heartRate,
+            temperature: values.temperature,
+            weight: values.weight,
+            sizePerson: values.sizePerson,
         };
 
-    (async () => {
-      try {
-        await create({
-          type: "normal",
-          originHfId: props.referenceState.originHfId,
-          destinationHfId: props.referenceState.destinationHfId,
-          institution: props.referenceState.institution,
-          patientId: props.referenceState.patientId,
-          motive: values.motive,
-          descriptionMotive: values.descriptionMotive,
-          symptoms: values.symptoms,
-          medicalSummary: values.medicalSummary,
-          vitalSigns: JSON.stringify(vitalSignsFormJson),
-          obGyn: JSON.stringify(obgynFormJson),
-          physicalExamination: JSON.stringify(physicalExaminationFormJson),
-          complementaryExams: values.complementaryExams,
-          diagnosticImpression: values.diagnosticImpression,
-          observations: values.observations,
-          risk: Boolean(values.risk),
-          attentionRequired: attentionValue,
-          madeBy: madeByValue,
-          contactedHf: Boolean(values.contactedHf),
-          contactId: values.contactId,
-          date: new Date(values.date),
-          address: props.referenceState.address,
-          companion: props.referenceState.companion,
-          phone: props.referenceState.phone,
-          relationship: props.referenceState.relationship
-        });
+        const obgynFormJson = {
+            fum: values.fum,
+            fpp: values.fpp,
+            pregnancy: values.pregnancy,
+            birth: values.birth,
+            cesareanSections: values.cesareanSections,
+            livingChildren: values.livingChildren,
+            deadChildren: values.deadChildren,
+            deaths: values.deaths,
+            abortions: values.abortions,
+        };
 
         const physicalExamination = {
-            physicalExaminationFormJson: {
-                head: values.head,
-                orl: values.orl,
-                eyes: values.eyes,
-                neck: values.neck,
-                torax: values.torax,
-                abdomen: values.abdomen,
-                genitals: values.genitals,
-                extremities: values.extremities,
-                neurological: values.neurological,
-            },
+            head: values.head,
+            orl: values.orl,
+            eyes: values.eyes,
+            neck: values.neck,
+            torax: values.torax,
+            abdomen: values.abdomen,
+            genitals: values.genitals,
+            extremities: values.extremities,
+            neurological: values.neurological,
         };
 
         //Decide whether to get the value from the select or from the input other
@@ -158,14 +155,35 @@ function ReferenceInformation(props: any) {
             attentionValue = values.attentionRequired;
         }
 
+
         (async () => {
+            const referenceEdit = await findById2(props.passId ?? 1);
+            var TempInstitution: string;
+            if (props.referenceState.institution === undefined) {
+                TempInstitution = referenceEdit.institution;
+                console.log("Enter If", TempInstitution);
+            }
+            else{
+                TempInstitution = props.referenceState.institution;
+                console.log("Enter Else", TempInstitution);
+            }
+            var TempPatient: number;
+            if(props.referenceState.patientId === undefined){
+                TempPatient = referenceEdit.patientId;
+            }
+            else{
+                TempPatient = props.referenceState.patientId
+                
+            }
+            console.log(TempPatient)
             try {
-                await create({
+                await update({
+                    id: parseInt(props.passId),
                     type: "normal",
                     originHfId: props.referenceState.originHfId,
                     destinationHfId: props.referenceState.destinationHfId,
-                    institution: props.referenceState.institution,
-                    patientId: props.referenceState.patientId,
+                    institution: TempInstitution,
+                    patientId: TempPatient,
                     motive: values.motive,
                     descriptionMotive: values.descriptionMotive,
                     symptoms: values.symptoms,
@@ -188,9 +206,8 @@ function ReferenceInformation(props: any) {
                     relationship: props.referenceState.relationship
                 });
 
-
-                await navigate(`/referenceForm`);
-                message.success("La referencia se ha guardado exitosamente.");
+                form.resetFields();
+                message.success("Elementos se han guardado exitosamente.");
             } catch (error) {
                 console.log(error);
                 message.error("Ocurrió un error al guardar los elementos.");
@@ -200,14 +217,14 @@ function ReferenceInformation(props: any) {
 
     const formItemLayout = {
         labelCol: {
-            xs: {span: 24},
-            sm: {span: 8},
-            md: {span: 8},
+            xs: { span: 24 },
+            sm: { span: 8 },
+            md: { span: 8 },
         },
         wrapperCol: {
-            xs: {span: 24},
-            sm: {span: 16},
-            md: {span: 8},
+            xs: { span: 24 },
+            sm: { span: 16 },
+            md: { span: 8 },
         },
     };
 
@@ -244,9 +261,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Select onSelect={(value) => {
-                        setReference({...referenceState, motive: value} as RRForm)
-                    }}>
+                    <Select>
                         <Select.Option value="Diagnostico">Diagnostico</Select.Option>
                         <Select.Option value="Tratamiento">Tratamiento</Select.Option>
                         <Select.Option value="Seguimiento">Seguimiento</Select.Option>
@@ -273,8 +288,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input.TextArea
-                        onChange={event => setReference({...referenceState, symptoms: event.target.value} as RRForm)}/>
+                    <Input.TextArea />
                 </Form.Item>
 
                 <Form.Item
@@ -296,11 +310,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input.TextArea onChange={(event) => {
-
-
-                        setReference({...referenceState, descriptionMotive: event.target.value} as RRForm)
-                    }}/>
+                    <Input.TextArea />
                 </Form.Item>
 
                 <Form.Item
@@ -322,10 +332,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input.TextArea onChange={(event) => setReference({
-                        ...referenceState,
-                        medicalSummary: event.target.value
-                    } as RRForm)}/>
+                    <Input.TextArea />
                 </Form.Item>
 
                 <Divider orientation="left">Signos vitales</Divider>
@@ -345,12 +352,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input onChange={event => {
-
-                        const vitalSigns = {...referenceState.vitalSigns};
-                        vitalSigns.bloodPressure = event.target.value;
-                        setReference({...referenceState, vitalSigns} as RRForm)
-                    }}/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
@@ -368,11 +370,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input onChange={event => {
-                        const vitalSigns = {...referenceState.vitalSigns};
-                        vitalSigns.respiratoryRate = event.target.value;
-                        setReference({...referenceState, vitalSigns} as RRForm);
-                    }}/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
@@ -390,11 +388,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input onChange={event => {
-                        const vitalSigns = {...referenceState.vitalSigns};
-                        vitalSigns.pulse = event.target.value;
-                        setReference({...referenceState, vitalSigns} as RRForm);
-                    }}/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
@@ -412,11 +406,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input onChange={event => {
-                        const vitalSigns = {...referenceState.vitalSigns};
-                        vitalSigns.heartRate = event.target.value;
-                        setReference({...referenceState, vitalSigns} as RRForm);
-                    }}/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
@@ -434,11 +424,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input onChange={event => {
-                        const vitalSigns = {...referenceState.vitalSigns};
-                        vitalSigns.temperature = event.target.value;
-                        setReference({...referenceState, vitalSigns} as RRForm);
-                    }}/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
@@ -456,11 +442,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input onChange={event => {
-                        const vitalSigns = {...referenceState.vitalSigns};
-                        vitalSigns.weight = event.target.value;
-                        setReference({...referenceState, vitalSigns} as RRForm);
-                    }}/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
@@ -478,221 +460,174 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input onChange={event => {
-                        const vitalSigns = {...referenceState.vitalSigns};
-                        vitalSigns.sizePerson = event.target.value;
-                        setReference({...referenceState, vitalSigns} as RRForm);
-                    }}/>
+                    <Input />
                 </Form.Item>
 
-                {
-                    props.referenceState.selectedPatient.gender !== 'Masculino' && (<div>
+                <Divider orientation="left">Datos Gineco Obstétricos</Divider>
 
-                        <Divider orientation="left">Datos Gineco Obstétricos</Divider>
+                <Form.Item
+                    label="FUM"
+                    name="fum"
+                    rules={[
+                        {
+                            required: true,
+                            message: "FUM es un campo requerido",
+                        },
+                    ]}
+                >
+                    <DatePicker
+                        style={{ width: "100%" }}
+                        format={"DD-MM-YYYY"}
+                        placeholder="Ingrese fecha"
+                        disabledDate={(d) =>
+                            !d || d.isSameOrBefore("1940-01-01") || d.isAfter(moment())
+                        }
+                    />
+                </Form.Item>
 
-                        <Form.Item
-                            label="FUM"
-                            name="fum"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "FUM es un campo requerido",
-                                },
-                            ]}
-                        >
-                            <DatePicker
-                                style={{width: "100%"}}
-                                format={"DD-MM-YYYY"}
-                                placeholder="Ingrese fecha"
-                                onChange={value => {
+                <Form.Item
+                    label="FPP"
+                    name="fpp"
+                    rules={[
+                        {
+                            required: true,
+                            message: "FPP es un campo requerido",
+                        },
+                    ]}
+                >
+                    <DatePicker
+                        style={{ width: "100%" }}
+                        format={"DD-MM-YYYY"}
+                        placeholder="Ingrese fecha"
+                        disabledDate={(d) => !d || d.isSameOrBefore("1940-01-01")}
+                    />
+                </Form.Item>
 
-                                    const obGyn = {...referenceState.obGyn};
-                                    obGyn.fum = value;
-                                    setReference({...referenceState, obGyn} as RRForm);
-                                }}
-                                disabledDate={(d) =>
-                                    !d || d.isSameOrBefore("1940-01-01") || d.isAfter(moment())
-                                }
-                            />
-                        </Form.Item>
+                <Form.Item
+                    name="pregnancy"
+                    label="Embarazos"
+                    rules={[
+                        {
+                            required: true,
+                            message: "El campo es requerido",
+                            whitespace: true,
+                        },
+                        {
+                            pattern: /^(\d)+$/g,
+                            message: "Sólo se permiten números.",
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
 
-                        <Form.Item
-                            label="FPP"
-                            name="fpp"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "FPP es un campo requerido",
-                                },
-                            ]}
-                        >
-                            <DatePicker
-                                style={{width: "100%"}}
-                                format={"DD-MM-YYYY"}
-                                placeholder="Ingrese fecha"
-                                disabledDate={(d) => !d || d.isSameOrBefore("1940-01-01")}
-                                onChange={value => {
-                                    const obGyn = {...referenceState.obGyn};
-                                    obGyn.fpp = value;
-                                    setReference({...referenceState, obGyn} as RRForm);
-                                }}
-                            />
-                        </Form.Item>
+                <Form.Item
+                    name="birth"
+                    label="Partos"
+                    rules={[
+                        {
+                            required: true,
+                            message: "El campo es requerido",
+                            whitespace: true,
+                        },
+                        {
+                            pattern: /^(\d)+$/g,
+                            message: "Sólo se permiten números.",
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
 
-                        <Form.Item
-                            name="pregnancy"
-                            label="Embarazos"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "El campo es requerido",
-                                    whitespace: true,
-                                },
-                                {
-                                    pattern: /^(\d)+$/g,
-                                    message: "Sólo se permiten números.",
-                                },
-                            ]}
-                        >
-                            <Input onChange={event => {
-                                const obGyn = {...referenceState.obGyn};
-                                obGyn.pregnancy = event.target.value;
-                                setReference({...referenceState, obGyn} as RRForm);
-                            }}/>
-                        </Form.Item>
+                <Form.Item
+                    name="cesareanSections"
+                    label="Cesareas"
+                    rules={[
+                        {
+                            required: true,
+                            message: "El campo es requerido",
+                            whitespace: true,
+                        },
+                        {
+                            pattern: /^(\d)+$/g,
+                            message: "Sólo se permiten números.",
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
 
-                        <Form.Item
-                            name="birth"
-                            label="Partos"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "El campo es requerido",
-                                    whitespace: true,
-                                },
-                                {
-                                    pattern: /^(\d)+$/g,
-                                    message: "Sólo se permiten números.",
-                                },
-                            ]}
-                        >
-                            <Input onChange={event => {
-                                const obGyn = {...referenceState.obGyn};
-                                obGyn.birth = event.target.value;
-                                setReference({...referenceState, obGyn} as RRForm);
-                            }}/>
-                        </Form.Item>
+                <Form.Item
+                    name="livingChildren"
+                    label="Hijos vivos"
+                    rules={[
+                        {
+                            required: true,
+                            message: "El campo es requerido",
+                            whitespace: true,
+                        },
+                        {
+                            pattern: /^(\d)+$/g,
+                            message: "Sólo se permiten números.",
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
 
-                        <Form.Item
-                            name="cesareanSections"
-                            label="Cesareas"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "El campo es requerido",
-                                    whitespace: true,
-                                },
-                                {
-                                    pattern: /^(\d)+$/g,
-                                    message: "Sólo se permiten números.",
-                                },
-                            ]}
-                        >
-                            <Input onChange={event => {
-                                const obGyn = {...referenceState.obGyn};
-                                obGyn.cesareanSections = event.target.value;
-                                setReference({...referenceState, obGyn} as RRForm);
-                            }}/>
-                        </Form.Item>
+                <Form.Item
+                    name="deadChildren"
+                    label="Hijos Muertos"
+                    rules={[
+                        {
+                            required: true,
+                            message: "El campo es requerido",
+                            whitespace: true,
+                        },
+                        {
+                            pattern: /^(\d)+$/g,
+                            message: "Sólo se permiten números.",
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
 
-                        <Form.Item
-                            name="livingChildren"
-                            label="Hijos vivos"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "El campo es requerido",
-                                    whitespace: true,
-                                },
-                                {
-                                    pattern: /^(\d)+$/g,
-                                    message: "Sólo se permiten números.",
-                                },
-                            ]}
-                        >
-                            <Input onChange={event => {
-                                const obGyn = {...referenceState.obGyn};
-                                obGyn.livingChildren = event.target.value;
-                                setReference({...referenceState, obGyn} as RRForm);
-                            }}/>
-                        </Form.Item>
+                <Form.Item
+                    name="deaths"
+                    label="Obitos"
+                    rules={[
+                        {
+                            required: true,
+                            message: "El campo es requerido",
+                            whitespace: true,
+                        },
+                        {
+                            pattern: /^(\d)+$/g,
+                            message: "Sólo se permiten números.",
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
 
-                        <Form.Item
-                            name="deadChildren"
-                            label="Hijos Muertos"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "El campo es requerido",
-                                    whitespace: true,
-                                },
-                                {
-                                    pattern: /^(\d)+$/g,
-                                    message: "Sólo se permiten números.",
-                                },
-                            ]}
-                        >
-                            <Input onChange={event => {
-                                const obGyn = {...referenceState.obGyn};
-                                obGyn.deadChildren = event.target.value;
-                                setReference({...referenceState, obGyn} as RRForm);
-                            }}/>
-                        </Form.Item>
-
-                        <Form.Item
-                            name="deaths"
-                            label="Obitos"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "El campo es requerido",
-                                    whitespace: true,
-                                },
-                                {
-                                    pattern: /^(\d)+$/g,
-                                    message: "Sólo se permiten números.",
-                                },
-                            ]}
-                        >
-                            <Input onChange={event => {
-                                const obGyn = {...referenceState.obGyn};
-                                obGyn.deaths = event.target.value;
-                                setReference({...referenceState, obGyn} as RRForm);
-                            }}/>
-                        </Form.Item>
-
-                        <Form.Item
-                            name="abortions"
-                            label="Abortos"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "El campo es requerido",
-                                    whitespace: true,
-                                },
-                                {
-                                    pattern: /^(\d)+$/g,
-                                    message: "Sólo se permiten números.",
-                                },
-                            ]}
-                        >
-                            <Input onChange={event => {
-                                const obGyn = {...referenceState.obGyn};
-                                obGyn.abortions = event.target.value;
-                                setReference({...referenceState, obGyn} as RRForm);
-                            }}/>
-                        </Form.Item>
-                    </div>)}
+                <Form.Item
+                    name="abortions"
+                    label="Abortos"
+                    rules={[
+                        {
+                            required: true,
+                            message: "El campo es requerido",
+                            whitespace: true,
+                        },
+                        {
+                            pattern: /^(\d)+$/g,
+                            message: "Sólo se permiten números.",
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
 
                 <Divider orientation="left">Examen físico</Divider>
 
@@ -715,11 +650,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input onChange={event => {
-                        const physicalExamination = {...referenceState.physicalExamination};
-                        physicalExamination.head = event.target.value;
-                        setReference({...referenceState, physicalExamination} as RRForm);
-                    }}/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
@@ -741,11 +672,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input onChange={event => {
-                        const physicalExamination = {...referenceState.physicalExamination};
-                        physicalExamination.orl = event.target.value;
-                        setReference({...referenceState, physicalExamination} as RRForm);
-                    }}/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
@@ -767,11 +694,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input onChange={event => {
-                        const physicalExamination = {...referenceState.physicalExamination};
-                        physicalExamination.eyes = event.target.value;
-                        setReference({...referenceState, physicalExamination} as RRForm);
-                    }}/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
@@ -793,11 +716,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input onChange={event => {
-                        const physicalExamination = {...referenceState.physicalExamination};
-                        physicalExamination.neck = event.target.value;
-                        setReference({...referenceState, physicalExamination} as RRForm);
-                    }}/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
@@ -819,11 +738,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input onChange={event => {
-                        const physicalExamination = {...referenceState.physicalExamination};
-                        physicalExamination.torax = event.target.value;
-                        setReference({...referenceState, physicalExamination} as RRForm);
-                    }}/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
@@ -845,11 +760,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input onChange={event => {
-                        const physicalExamination = {...referenceState.physicalExamination};
-                        physicalExamination.abdomen = event.target.value;
-                        setReference({...referenceState, physicalExamination} as RRForm);
-                    }}/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
@@ -871,11 +782,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input onChange={event => {
-                        const physicalExamination = {...referenceState.physicalExamination};
-                        physicalExamination.genitals = event.target.value;
-                        setReference({...referenceState, physicalExamination} as RRForm);
-                    }}/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
@@ -897,11 +804,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input onChange={event => {
-                        const physicalExamination = {...referenceState.physicalExamination};
-                        physicalExamination.extremities = event.target.value;
-                        setReference({...referenceState, physicalExamination} as RRForm);
-                    }}/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
@@ -923,11 +826,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input onChange={event => {
-                        const physicalExamination = {...referenceState.physicalExamination};
-                        physicalExamination.neurological = event.target.value;
-                        setReference({...referenceState, physicalExamination} as RRForm);
-                    }}/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
@@ -949,11 +848,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input.TextArea onChange={event => {
-                        const physicalExamination = {...referenceState.physicalExamination};
-                        physicalExamination.complementaryExams = event.target.value;
-                        setReference({...referenceState, physicalExamination} as RRForm);
-                    }}/>
+                    <Input.TextArea />
                 </Form.Item>
 
                 <Form.Item
@@ -966,11 +861,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Select onChange={value => {
-                        const physicalExamination = {...referenceState.physicalExamination};
-                        physicalExamination.risk = value;
-                        setReference({...referenceState, physicalExamination} as RRForm);
-                    }}>
+                    <Select>
                         <Select.Option value="False">Sin Riesgo</Select.Option>
                         <Select.Option value="True">Con Riesgo</Select.Option>
                     </Select>
@@ -995,11 +886,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input.TextArea onChange={event => {
-                        const physicalExamination = {...referenceState.physicalExamination};
-                        physicalExamination.diagnosticImpression = event.target.value;
-                        setReference({...referenceState, physicalExamination} as RRForm);
-                    }}/>
+                    <Input.TextArea />
                 </Form.Item>
 
                 <Form.Item
@@ -1021,11 +908,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input.TextArea onChange={event => {
-                        const physicalExamination = {...referenceState.physicalExamination};
-                        physicalExamination.observations = event.target.value;
-                        setReference({...referenceState, physicalExamination} as RRForm);
-                    }}/>
+                    <Input.TextArea />
                 </Form.Item>
 
                 <Form.Item
@@ -1042,10 +925,10 @@ function ReferenceInformation(props: any) {
                         <Select.Option value="Medico General">Medico General</Select.Option>
                         <Select.Option value="Medico Especialista">
                             Medico Especialista
-                        </Select.Option>
+            </Select.Option>
                         <Select.Option value="Auxiliar Enfermeria">
                             Auxiliar Enfermeria
-                        </Select.Option>
+            </Select.Option>
                         <Select.Option value="Otros">Otros</Select.Option>
                     </Select>
                 </Form.Item>
@@ -1066,11 +949,7 @@ function ReferenceInformation(props: any) {
                             },
                         ]}
                     >
-                        <Input onChange={event => {
-                            const physicalExamination = {...referenceState.physicalExamination};
-                            physicalExamination.othersMadeBy = event.target.value;
-                            setReference({...referenceState, physicalExamination} as RRForm);
-                        }}/>
+                        <Input />
                     </Form.Item>
                 ) : null}
 
@@ -1087,11 +966,11 @@ function ReferenceInformation(props: any) {
                     <Select onChange={handleSelectAttentionAnswer}>
                         <Select.Option value="Consulta Externa">
                             Consulta Externa
-                        </Select.Option>
+            </Select.Option>
                         <Select.Option value="Emergencia">Emergencia</Select.Option>
                         <Select.Option value="Hospitalizacion">
                             Hospitalizacion
-                        </Select.Option>
+            </Select.Option>
                         <Select.Option value="Otros">Otros</Select.Option>
                     </Select>
                 </Form.Item>
@@ -1112,11 +991,7 @@ function ReferenceInformation(props: any) {
                             },
                         ]}
                     >
-                        <Input onChange={event => {
-                            const physicalExamination = {...referenceState.physicalExamination};
-                            physicalExamination.othersAttention = event.target.value;
-                            setReference({...referenceState, physicalExamination} as RRForm);
-                        }}/>
+                        <Input />
                     </Form.Item>
                 ) : null}
 
@@ -1130,11 +1005,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Select onSelect={value => {
-                        const physicalExamination = {...referenceState.physicalExamination};
-                        physicalExamination.contactedHf = value;
-                        setReference({...referenceState, physicalExamination} as RRForm);
-                    }}>
+                    <Select>
                         <Select.Option value="False">No</Select.Option>
                         <Select.Option value="True">Si</Select.Option>
                     </Select>
@@ -1155,11 +1026,7 @@ function ReferenceInformation(props: any) {
                         },
                     ]}
                 >
-                    <Input onChange={event => {
-                        const physicalExamination = {...referenceState.physicalExamination};
-                        physicalExamination.contactId = event.target.value;
-                        setReference({...referenceState, physicalExamination} as RRForm);
-                    }}/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item
@@ -1173,33 +1040,28 @@ function ReferenceInformation(props: any) {
                     ]}
                 >
                     <DatePicker
-                        style={{width: "100%"}}
+                        style={{ width: "100%" }}
                         format={"DD-MM-YYYY"}
                         placeholder="Ingrese fecha"
                         disabledDate={(d) =>
                             !d || d.isSameOrBefore("1940-01-01") || d.isAfter(moment())
                         }
-                        onChange={value => {
-                            const physicalExamination = {...referenceState.physicalExamination};
-                            physicalExamination.date = value;
-                            setReference({...referenceState, physicalExamination} as RRForm);
-                        }}
                     />
                 </Form.Item>
                 <Form.Item {...tailFormItemLayout}>
                     <Button
                         type="primary"
                         htmlType="submit"
-                        style={{marginRight: "8px"}}
+                        style={{ marginRight: "8px" }}
                     >
                         Guardar
-                    </Button>
+              </Button>
 
                     <Button htmlType="button" onClick={() => form.resetFields()}>
                         Reiniciar campos
-                    </Button>
+              </Button>
                     {current > 0 && (
-                        <Button style={{margin: "0 8px"}} onClick={() => prev()}>
+                        <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
                             Anterior
                         </Button>
                     )}
@@ -1209,4 +1071,4 @@ function ReferenceInformation(props: any) {
     );
 }
 
-export default ReferenceInformation;
+export default ReferenceInformationEdit;

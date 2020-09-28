@@ -69,6 +69,10 @@ export interface RRForm {
     selectedPatient: Patient
 }
 
+export interface ReferenceEditPatience {
+    id:number
+}
+
 export interface Reference {
   id: number;
   patientId: number;

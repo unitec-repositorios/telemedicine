@@ -58,8 +58,29 @@ namespace Core.ReferencesACS_PS
                             OriginHF = newOriginHF,
 							DestinationHF = newDestinationHF
 						};
-            await _referenceACS_PSRepository.Add(reference);
+
+            await _referenceACS_PSRepository.Add(newReference);
         }
 
-    }
+		public async Task Update(int id, ReferenceCommunityAgentHealthPromoter reference)
+		{
+			var newOriginHF = await _hospitalRepository.FindById(reference.OriginHfId);
+			var newDestinationHF = await _hospitalRepository.FindById(reference.DestinationHfId);
+
+            var updateReference = await _referenceACS_PSRepository.FindById(id);
+            updateReference.Community = reference.Community;
+            updateReference.Referrer = reference.Referrer;
+            updateReference.ReferrerPhone = reference.ReferrerPhone;
+            updateReference.ReferrerEmail = reference.ReferrerEmail;
+            updateReference.ActionTaken = reference.ActionTaken;
+            updateReference.PatientId = reference.PatientId;
+            updateReference.Motive = reference.Motive;
+            updateReference.Date = reference.Date;
+            updateReference.OriginHF = newOriginHF;
+            updateReference.DestinationHF = newDestinationHF;
+
+            await _referenceACS_PSRepository.Update(updateReference);
+		}
+
+	}
 }
