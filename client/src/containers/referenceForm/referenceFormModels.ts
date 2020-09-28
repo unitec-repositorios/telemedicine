@@ -1,3 +1,5 @@
+import {Patient} from "../patients/patientModels";
+
 export interface CreateRRForm {
     type: string;
     originHfId: number;
@@ -29,9 +31,11 @@ export interface CreateRRForm {
 export interface PatientReferenceInformation {
     patientId: number;
     companion: string;
+    lastName: string;
     relationship: string;
     address: string;
     phone: string;
+    selectedPatient: Patient
 }
 
 export interface RRForm {
@@ -45,9 +49,9 @@ export interface RRForm {
     descriptionMotive: string;
     symptoms: string;
     medicalSummary: string;
-    vitalSigns: string;
-    obGyn: string;
-    physicalExamination: string;
+    vitalSigns: any;
+    obGyn: any;
+    physicalExamination: any;
     complementaryExams: string;
     diagnosticImpression: string;
     observations: string;
@@ -57,10 +61,12 @@ export interface RRForm {
     contactedHf: boolean;
     contactId: string;
     date: Date;
-    companion: string;
+    companion?: string;
+    lastName?: string;
     relationship: string;
     address: string;
     phone: string;
+    selectedPatient?: Patient
 }
 
 export interface ReferenceEditPatience {

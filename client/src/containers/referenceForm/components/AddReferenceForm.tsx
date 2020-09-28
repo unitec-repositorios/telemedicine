@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Steps} from "antd";
 import ReferenceInformation from "./steps/ReferenceInformation";
 import HospitalSearching from "./steps/HospitalSearching";
@@ -13,6 +13,7 @@ function Stepper(props: any) {
     const changeCurrent = (current: number) => {
         setCurrent(current);
     };
+
 
     const originHandler = (originHfId: number) => {
         setReference({...reference, originHfId});
@@ -34,7 +35,8 @@ function Stepper(props: any) {
             address: patient.address,
             companion: patient.companion,
             phone: patient.phone,
-
+            selectedPatient: patient.selectedPatient,
+            lastName: patient.lastName
 
         })
     }
@@ -65,6 +67,7 @@ function Stepper(props: any) {
                     onDestination={destinationHandler}
                     onInstitution={institutionHandler}
                     length={3}
+                    referenceState={reference}
                     current={current}
                     changeCurrent={changeCurrent}
 
@@ -78,7 +81,8 @@ function Stepper(props: any) {
                     length={3}
                     current={current}
                     changeCurrent={changeCurrent}
-                    referenceState={reference}
+                    referenceState={{...reference}}
+                    setReference={setReference}
                 />
             ),
         },

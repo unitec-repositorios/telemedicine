@@ -147,3 +147,7 @@ server/src/Core/bin/Debug/netcoreapp3.1/
 server/src/Data/bin/Debug/netcoreapp3.1/
 
 *.pdb
+
+server/src/Domain/bin/Debug/netcoreapp3.1/
+
+server/.vs/Telemedicine/v16/
