@@ -47,7 +47,7 @@ function ReferenceACSPSInformationEdit(props: any) {
                     Id: parseInt(props.passId),
                     date: new Date("09/03/2020"),
                     community: "Not Set",
-                    patientId: "Not Set",
+          					patientId: props.referenceState.patientId,
                     motive: values.motive,
                     referrer: values.referrer,
                     referrerPhone: values.phone,
