@@ -1,7 +1,7 @@
 export interface CreateReferenceACSPSForm {
   date: Date;
   community: string;
-  patientId: string;
+  patientId: number;
   motive: string;
   referrer: string;
   referrerPhone: string;
@@ -15,7 +15,7 @@ export interface ReferenceACSPSForm {
   Id: number;
   date: Date;
   community: string;
-  patientId: string;
+  patientId: number;
   motive: string;
   referrer: string;
   referrerPhone: string;

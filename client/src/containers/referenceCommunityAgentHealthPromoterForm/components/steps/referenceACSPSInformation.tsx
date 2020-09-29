@@ -28,7 +28,7 @@ function ReferenceACSPSInformation(props: any) {
         await create({
           date: new Date("09/03/2020"),
           community: "Not Set",
-          patientId: "Not Set",
+          patientId: props.referenceState.patientId,
           motive: values.motive,
           referrer: values.referrer,
           referrerPhone: values.phone,
@@ -39,6 +39,7 @@ function ReferenceACSPSInformation(props: any) {
         });
 
         await navigate(`/referenceACSPSForm`);
+				navigate('/referenceACSPSForm');
         message.success("La referencia se ha guardado exitosamente.");
       } catch (error) {
         console.log(error);
