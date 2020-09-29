@@ -101,10 +101,10 @@ namespace Core.References
 			updateReference.ContactedHf = reference.ContactedHf;
 			updateReference.ContactId = reference.ContactId;
 			updateReference.Date = reference.Date;
-				updateReference.Companion = reference.Companion,
-				updateReference.Relationship = reference.Relationship,
-				updateReference.Address = reference.Address,
-				updateReference.Phone = reference.Phone,
+				updateReference.Companion = reference.Companion;
+				updateReference.Relationship = reference.Relationship;
+				updateReference.Address = reference.Address;
+				updateReference.Phone = reference.Phone;
 			updateReference.OriginHF = newOriginHF;
 			updateReference.DestinationHF = newDestinationHF;
 
