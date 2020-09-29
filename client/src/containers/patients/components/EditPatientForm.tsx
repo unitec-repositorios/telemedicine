@@ -129,9 +129,9 @@ function EditPatientForm(props: EditPatientFormProps) {
   useEffect(() => {
     (async () => {
       const patient = await findById(props.id ?? 1);
-      setPatient({ ...patient, dateOfBirth: patient.dateOfBirth.toDate() });
+      setPatient({ ...patient, dateOfBirth: patient.dateOfBirth });
       patient.contacts = JSON.parse(patient.contacts);
-      setCurrentDate(patient.dateOfBirth);
+      setCurrentDate(moment(patient.dateOfBirth));
       setCurrentIdNumber(patient.idNumber);
       if (patient.nationality === "extranjero") {
         form.setFieldsValue({

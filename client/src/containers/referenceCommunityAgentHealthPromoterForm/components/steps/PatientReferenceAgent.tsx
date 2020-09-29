@@ -18,7 +18,7 @@ export default function PatientReferenceAgent(props: any) {
 
 
     const {Option} = Select;
-    const {current, changeCurrent} = props;
+    const {current, changeCurrent, setPatientInfo} = props;
     const [fetching, setFetching] = useState(true);
     const [patients, setPatients] = useState(defaultPatient == null ? [] as Patient[] : [defaultPatient] as Patient[]);
     const [patient, setPatient] = useState(defaultPatient == null ? {} as Patient : defaultPatient);
@@ -86,15 +86,7 @@ export default function PatientReferenceAgent(props: any) {
     }
 
     const onFinish = (values: any) => {
-        props.setPatientInfo({
-            companion: values.name,
-            lastName: values.lastName,
-            phone: values.phoneNumber,
-            address: values.address,
-            relationship: values.relationShip,
-            patientId: patient.id,
-            selectedPatient: patient
-        } as PatientReferenceInformation)
+				props.setPatientInfo(patient.id);
         changeCurrent(current + 1);
     }
 
@@ -150,61 +142,6 @@ export default function PatientReferenceAgent(props: any) {
                             >{`${d.name} ${d.firstLastName} | ${d.idNumber}`}</Option>
                         ))}
                     </Select>
-                </Form.Item>
-                <Divider orientation="left">Acompañante</Divider>
-                <Form.Item
-                    name="name"
-                    label="Primer nombre"
-
-                >
-                    <Input/>
-                </Form.Item>
-                <Form.Item
-                    name="lastName"
-                    label="Primer apellido"
-
-                >
-                    <Input/>
-                </Form.Item>
-                <Form.Item
-                    name="phoneNumber"
-                    label="Número de Teléfono"
-                >
-                    <MaskedInput mask="+(111) 1111-1111"/>
-                </Form.Item>
-                <Form.Item
-                    name="relationShip"
-                    label="Parentesco"
-                >
-                    <Select
-                        showSearch
-                        placeholder="Selecciona tipo parentesco."
-                        optionFilterProp="children"
-                        filterOption={(input, option) =>
-                            option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                        }
-                    >
-                        <Option value="Padre o Madre">Padre o Madre</Option>
-                        <Option value="Hijo">Hijo</Option>
-                        <Option value="Abuelo">Abuelo</Option>
-                        <Option value="Hermano">Hermano</Option>
-                        <Option value="Nieto">Nieto</Option>
-                        <Option value="Tío">Tío</Option>
-                        <Option value="Primo">Primo</Option>
-                        <Option value="Sobrino">Sobrino</Option>
-                        <Option value="Suegro">Suegro</Option>
-                        <Option value="Yerno o Nuera">Yerno o Nuera</Option>
-                        <Option value="Padrastro o Madrastra">Padrastro o Madrastra</Option>
-                        <Option value="Hermanastro">Hermanastro</Option>
-                        <Option value="Cuñado">Cuñado</Option>
-                    </Select>
-                </Form.Item>
-                <Form.Item
-                    name="address"
-                    label="Dirección"
-
-                >
-                    <TextArea rows={4}/>
                 </Form.Item>
                 <Form.Item {...tailFormItemLayout}>
                     <Button type="primary" htmlType={"submit"} style={{margin: "0 8px"}}>

@@ -54,11 +54,14 @@ function ReferenceTable(props: ReferenceProps) {
 
     const onDelete = async (id: number) => {
         try {
-            console.log('demo')
             await remove(id);
-            message.info("El Hospital ha sido borrado");
+						setTable(
+							table.filter((ref) => ref.id !== id)
+						);
+            message.info("La referencia ha sido borrada");
+
         } catch (error) {
-            message.error("Ocurrió un error al borrar el Hospital");
+            message.error("Ocurrió un error al borrar la referencia");
         }
     };
 

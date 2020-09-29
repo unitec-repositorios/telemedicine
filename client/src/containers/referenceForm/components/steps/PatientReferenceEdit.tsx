@@ -58,6 +58,7 @@ export default function PatientReferenceEdit(props: any) {
                     relationShip: referenceEdit.relationship,
                     address: referenceEdit.address
                 })
+						setPatient(demo)
 
         })();
     }, []);
@@ -82,7 +83,8 @@ export default function PatientReferenceEdit(props: any) {
             phone: values.phoneNumber,
             address: values.address,
             relationship: values.relationShip,
-            patientId: patient.id
+            patientId: patient.id,
+            selectedPatient: patient
         } as PatientReferenceInformation)
         changeCurrent(current + 1);
     }

@@ -1,6 +1,10 @@
 import React, {useEffect, useState} from "react";
+import {
+  ArrowLeftOutlined,
+} from "@ant-design/icons";
 import {Steps, Button, message} from "antd";
 import ReferenceACSPSInformation from "./steps/referenceACSPSInformation";
+import { Link } from "@reach/router";
 import HospitalSearching from "./steps/HospitalSearching";
 import {ReferenceACSPSForm} from "./../referenceCommunityAgentHealthPromoterModel";
 import PatientReferenceAgent from "./steps/PatientReferenceAgent";
@@ -23,6 +27,13 @@ function Stepper(props: any) {
         setReference({...reference, destinationHfId});
     };
 
+    const setPatientInfo = (patient: number) => {
+        setReference({
+            ...reference,
+            patientId: patient,
+        })
+    }
+
     const next = () => {
         let nextVal = current + 1;
         setCurrent(nextVal);
@@ -36,7 +47,12 @@ function Stepper(props: any) {
     const steps = [
         {
             title: "Paciente",
-            content: <PatientReferenceAgent referenceState={reference} />,
+            content: <PatientReferenceAgent 
+                    		current={current}
+                    		changeCurrent={changeCurrent}
+												referenceState={reference} 
+												setPatientInfo={setPatientInfo}
+										/>,
         },
         {
             title: "Establecimiento de Salud",
@@ -65,6 +81,15 @@ function Stepper(props: any) {
 
     return (
         <>
+      <Link to="/referenceACSPSForm">
+        <Button
+          type="primary"
+          shape="circle"
+          htmlType="submit"
+          icon={<ArrowLeftOutlined />}
+          style={{ marginBottom: "40px" }}
+        />
+      </Link>
             <Steps current={current} style={{marginBottom: "30px"}}>
                 {steps.map((item) => (
                     <Step key={item.title} title={item.title}/>
