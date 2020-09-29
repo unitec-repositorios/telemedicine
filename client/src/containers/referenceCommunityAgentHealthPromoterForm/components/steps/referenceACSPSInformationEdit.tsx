@@ -185,7 +185,7 @@ function ReferenceACSPSInformationEdit(props: any) {
                         },
                     ]}
                 >
-                    <MaskedInput mask="1111 1111" />
+                    <MaskedInput mask="+(111) 1111-1111" />
                 </Form.Item>
 
                 <Form.Item

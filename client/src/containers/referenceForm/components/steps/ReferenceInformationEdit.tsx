@@ -102,6 +102,7 @@ function ReferenceInformationEdit(props: any) {
                     attentionRequired: referenceEdit.attentionRequired,
                     contactedHf: contactValue,
                     contactId: referenceEdit.contactId,
+                    date: moment(referenceEdit.date)
                 })
         })();
     }, []);
@@ -204,7 +205,7 @@ function ReferenceInformationEdit(props: any) {
                     address: props.referenceState.address,
                     companion: props.referenceState.companion,
                     phone: props.referenceState.phone,
-                    relationship: props.referenceState.relationship
+                    relationship: props.referenceState.relationship,
                 });
 
                 form.resetFields();

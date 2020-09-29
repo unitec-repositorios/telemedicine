@@ -19,6 +19,7 @@ interface Table {
 function ReferenceACPSTable(props: ReferenceProps) {
   const [reference, setReference] = useState<Reference[]>([]);
   const [table, setTable] = useState<Table[]>([]);
+  const [currentTable, setCurrentTable] = useState<Table[]>([]);
   const [filterTable, setFilterTable] = useState<Table[]>([]);
 
   useEffect(() => {
@@ -34,6 +35,7 @@ function ReferenceACPSTable(props: ReferenceProps) {
       data.forEach(reg => newTable.push({ id: reg.id, patient: patients.find(p => p.id === reg.patientId)?.name || " ", origin: hospital.find(h => h.id === reg.originHfId)?.name || " ", destination: hospital.find(h => h.id === reg.destinationHfId)?.name || " " }));
 
       setTable(newTable);
+      setCurrentTable(newTable);
     })();
   }, []);
 
@@ -43,6 +45,9 @@ function ReferenceACPSTable(props: ReferenceProps) {
 			setTable(
 				table.filter((ref) => ref.id !== id)
 			);
+            setCurrentTable(
+                table.filter((ref) => ref.id !== id)
+            );
       message.info("La referencia ha sido borrada");
     } catch (error) {
       message.error("Ocurrió un error al borrar la referencia");
@@ -55,13 +60,31 @@ function ReferenceACPSTable(props: ReferenceProps) {
   };
 
   const onSearch = (value: string) => {
-    const filter = table.filter(o =>
-      Object.values(o).some(v =>
-        String(v).toLowerCase().includes(value.toLowerCase())
+    setTable(currentTable);
+    let filterWords = value.split(" ");
+    let filteredTable = table
+    let multipleSearch = currentTable
+    for (let word of filterWords) {
+      filteredTable = multipleSearch.filter((o) =>
+          Object.values(o).some((v) =>
+              String(v).toLowerCase().includes(word.toLowerCase())
+          )
       )
-    );
-    setFilterTable(filter);
-  }
+      if (filteredTable.length === 0) {
+        break
+      }
+      multipleSearch = filteredTable
+    }
+
+    if (filteredTable.length === 0 && value !== "") {
+      setTable([]);
+      setFilterTable([]);
+    } else if (value === "") {
+      setFilterTable([]);
+    } else {
+      setFilterTable(filteredTable);
+    }
+  };
 
   const columns = [
     {
@@ -130,7 +153,7 @@ function ReferenceACPSTable(props: ReferenceProps) {
             </Button>
       </Link>
       <Input.Search
-        style={{ margin: "0 0 10px 600px", width: "400px" }}
+          style={{marginLeft: "30%", width: "30%"}}
         placeholder="Buscar"
         enterButton
         onSearch={onSearch}

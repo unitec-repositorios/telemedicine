@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from "react";
 import {
-  ArrowLeftOutlined,
+    ArrowLeftOutlined,
 } from "@ant-design/icons";
 import {Steps, Button} from "antd";
-import { Link } from "@reach/router";
+import {Link} from "@reach/router";
 import {PatientReferenceInformation, RRForm, ReferenceEditPatience} from "../referenceFormModels";
 import PatientReferenceEdit from "./steps/PatientReferenceEdit";
 import HospitalSearchingEdit from "./steps/HospitalSearchingEdit";
@@ -61,8 +61,9 @@ function StepperEdit(props: any) {
             title: "Paciente",
             content: (
                 <PatientReferenceEdit current={current} changeCurrent={changeCurrent}
-                                  referenceState={reference} setPatientInfo={setPatientInfo} 
-                                  passId={passId}/>
+                                      referenceState={reference} setPatientInfo={setPatientInfo}
+                                      setReference={setReference}
+                                      passId={passId}/>
             ),
         },
         {
@@ -95,15 +96,15 @@ function StepperEdit(props: any) {
 
     return (
         <>
-      <Link to="/referenceForm">
-        <Button
-          type="primary"
-          shape="circle"
-          htmlType="submit"
-          icon={<ArrowLeftOutlined />}
-          style={{ marginBottom: "40px" }}
-        />
-      </Link>
+            <Link to="/referenceForm">
+                <Button
+                    type="primary"
+                    shape="circle"
+                    htmlType="submit"
+                    icon={<ArrowLeftOutlined/>}
+                    style={{marginBottom: "40px"}}
+                />
+            </Link>
             <Steps current={current} style={{marginBottom: "30px"}}>
                 {steps.map((item) => (
                     <Step key={item.title} title={item.title}/>
