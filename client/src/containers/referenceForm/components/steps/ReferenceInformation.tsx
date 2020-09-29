@@ -141,6 +141,7 @@ function ReferenceInformation(props: any) {
                 });
 
                 form.resetFields();
+								navigate('/referenceForm');
                 message.success("Elementos se han guardado exitosamente.");
             } catch (error) {
                 console.log(error);

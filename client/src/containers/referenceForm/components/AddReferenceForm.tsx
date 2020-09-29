@@ -1,8 +1,12 @@
 import React, {useEffect, useState} from "react";
-import {Steps} from "antd";
+import {Steps, Button} from "antd";
+import {
+  ArrowLeftOutlined,
+} from "@ant-design/icons";
 import ReferenceInformation from "./steps/ReferenceInformation";
 import HospitalSearching from "./steps/HospitalSearching";
 import {PatientReferenceInformation, RRForm} from "../referenceFormModels";
+import { Link } from "@reach/router";
 import PatientReference from "./steps/PatientReference";
 
 const {Step} = Steps;
@@ -90,6 +94,15 @@ function Stepper(props: any) {
 
     return (
         <>
+      <Link to="/referenceForm">
+        <Button
+          type="primary"
+          shape="circle"
+          htmlType="submit"
+          icon={<ArrowLeftOutlined />}
+          style={{ marginBottom: "40px" }}
+        />
+      </Link>
             <Steps current={current} style={{marginBottom: "30px"}}>
                 {steps.map((item) => (
                     <Step key={item.title} title={item.title}/>

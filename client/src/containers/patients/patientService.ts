@@ -22,7 +22,7 @@ export async function findById(id: number) {
   const patient = (response.data as Patient[])[0];
   return {
     ...patient,
-    dateOfBirth: moment(patient.dateOfBirth),
+    dateOfBirth: new Date(patient.dateOfBirth),
   };
 }
 

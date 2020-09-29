@@ -11,6 +11,7 @@ import {
 import moment from "moment";
 import { create, update } from "../../referenceFormService";
 import { findById2 } from "../../referenceFormService";
+import {navigate} from "@reach/router";
 
 export interface ReferenceForm {
     [key: string]: string;
@@ -207,6 +208,7 @@ function ReferenceInformationEdit(props: any) {
                 });
 
                 form.resetFields();
+								navigate('/referenceForm');
                 message.success("Elementos se han guardado exitosamente.");
             } catch (error) {
                 console.log(error);
@@ -463,6 +465,9 @@ function ReferenceInformationEdit(props: any) {
                     <Input />
                 </Form.Item>
 
+                {
+                    props.referenceState.selectedPatient.gender !== 'Masculino' && (<div>
+
                 <Divider orientation="left">Datos Gineco Obstétricos</Divider>
 
                 <Form.Item
@@ -628,6 +633,7 @@ function ReferenceInformationEdit(props: any) {
                 >
                     <Input />
                 </Form.Item>
+                    </div>)}
 
                 <Divider orientation="left">Examen físico</Divider>
 

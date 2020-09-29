@@ -1,5 +1,9 @@
 import React, {useState, useEffect} from "react";
-import {Steps} from "antd";
+import {
+  ArrowLeftOutlined,
+} from "@ant-design/icons";
+import {Steps, Button} from "antd";
+import { Link } from "@reach/router";
 import {PatientReferenceInformation, RRForm, ReferenceEditPatience} from "../referenceFormModels";
 import PatientReferenceEdit from "./steps/PatientReferenceEdit";
 import HospitalSearchingEdit from "./steps/HospitalSearchingEdit";
@@ -38,6 +42,7 @@ function StepperEdit(props: any) {
             address: patient.address,
             companion: patient.companion,
             phone: patient.phone,
+            selectedPatient: patient.selectedPatient,
         })
     }
 
@@ -90,6 +95,15 @@ function StepperEdit(props: any) {
 
     return (
         <>
+      <Link to="/referenceForm">
+        <Button
+          type="primary"
+          shape="circle"
+          htmlType="submit"
+          icon={<ArrowLeftOutlined />}
+          style={{ marginBottom: "40px" }}
+        />
+      </Link>
             <Steps current={current} style={{marginBottom: "30px"}}>
                 {steps.map((item) => (
                     <Step key={item.title} title={item.title}/>

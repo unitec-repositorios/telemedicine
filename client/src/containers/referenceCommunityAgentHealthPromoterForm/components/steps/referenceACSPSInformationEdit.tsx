@@ -10,6 +10,7 @@ import {
 } from "antd";
 import MaskedInput from "antd-mask-input";
 import { create, update, findById2 } from "../../referenceCommunityAgentHealthPromoterService";
+import {navigate} from "@reach/router";
 
 export interface ReferenceACSPSForm {
     [key: string]: string;
@@ -58,6 +59,7 @@ function ReferenceACSPSInformationEdit(props: any) {
                 });
 
                 form.resetFields();
+								navigate('/referenceACSPSForm');
                 message.success("Elementos se han guardado exitosamente.");
             } catch (error) {
                 console.log(error);
