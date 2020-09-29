@@ -33,6 +33,7 @@ namespace Api.Modules.ReferencesACS_PS
                     Community = reference.Community,
                     Motive = reference.Motive,
                     Referrer = reference.Referrer,
+                		PatientId = reference.PatientId,
                     ReferrerPhone = reference.ReferrerPhone,
                     ReferrerEmail = reference.ReferrerEmail,
                     ActionTaken = reference.ActionTaken,
