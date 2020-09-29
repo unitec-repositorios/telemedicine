@@ -10,7 +10,7 @@ namespace Domain.Aggregates.ReferencesACS_PS
     {
         public DateTime Date { get; set; }
         public string Community { get; set; }
-        public string PatientId { get; set; }
+        public int PatientId { get; set; }
         public string Motive { get; set; }
         public string Referrer { get; set; }
         public string ReferrerPhone { get; set; }
