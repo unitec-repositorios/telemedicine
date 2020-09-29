@@ -1,9 +1,9 @@
-import {Button, Divider, Form, Input, Spin} from "antd";
+import {Button, Divider, Form, Input, Space, Spin} from "antd";
 import MaskedInput from "antd-mask-input/build/main/lib/MaskedInput";
 import TextArea from "antd/lib/input/TextArea";
 import Select from "antd/lib/select";
 import React, {useEffect, useState} from "react";
-import {searchById} from "../../../patients/patientService"
+import {searchById, findById} from "../../../patients/patientService"
 import {Patient} from "../../../patients/patientModels";
 import {PatientReferenceInformation} from "../../../referenceForm/referenceFormModels";
 
@@ -11,17 +11,15 @@ export default function PatientReferenceAgent(props: any) {
 
     const defaultPatient = props.referenceState.selectedPatient;
 
-    const patientProps = {
-        label: 'Paciente',
-        name: "patient"
-    } as any;
-
-
     const {Option} = Select;
-    const {current, changeCurrent, setPatientInfo} = props;
+    const {current, changeCurrent} = props;
     const [fetching, setFetching] = useState(true);
     const [patients, setPatients] = useState(defaultPatient == null ? [] as Patient[] : [defaultPatient] as Patient[]);
     const [patient, setPatient] = useState(defaultPatient == null ? {} as Patient : defaultPatient);
+    const [hiddenPatientInfo, setHiddenPatientInfo] = useState(defaultPatient == null);
+    const [idPatient, setIdPatient] = useState("");
+    const [namePatient, setNamePatient] = useState("");
+    const {referenceId, setReferenceId} = props;
     const [form] = Form.useForm();
     const {
         patientId,
@@ -48,9 +46,17 @@ export default function PatientReferenceAgent(props: any) {
         })();
     }, []);
 
-    const handleChange = (value: any) => {
+    const handleChange = async (value: any) => {
+        const foundPatient = patients.find(p => p.id === value);
+        setPatient(foundPatient);
+        props.setReference({...props.referenceState, patientId: value, selectedPatient: foundPatient});
 
-        setPatient(patients.find(p => p.id === value));
+        const patientTemp = foundPatient;
+        if (patientTemp !== undefined) {
+            setIdPatient(patientTemp.idNumber);
+            setNamePatient(patientTemp.name);
+            setHiddenPatientInfo(false);
+        }
     };
 
     const formItemLayout = {
@@ -67,7 +73,7 @@ export default function PatientReferenceAgent(props: any) {
     };
 
     if (defaultPatient) {
-        patientProps.initialValue = defaultPatient.id;
+
         const {
             relationship,
             address,
@@ -80,14 +86,29 @@ export default function PatientReferenceAgent(props: any) {
             address,
             name: companion,
             phoneNumber: phone,
-            lastName
+            lastName,
+            patient: patient.id
         });
+
+        // setIdPatient(patient.idNumber);
+        // setNamePatient(patient.name);
+        // setHiddenPatientInfo(false);
 
     }
 
     const onFinish = (values: any) => {
-				props.setPatientInfo(patient.id);
+        props.setReference({
+            ...props.referenceState,
+            companion: values.name,
+            lastName: values.lastName,
+            phone: values.phoneNumber,
+            address: values.address,
+            relationship: values.relationShip,
+            patientId: patient.id,
+            selectedPatient: patient
+        });
         changeCurrent(current + 1);
+        setHiddenPatientInfo(true);
     }
 
     const tailFormItemLayout = {
@@ -118,17 +139,17 @@ export default function PatientReferenceAgent(props: any) {
                 scrollToFirstError
             >
                 <Divider orientation="left">Paciente</Divider>
-                <Form.Item  {...patientProps}
+                <Form.Item label="Número de identidad" name="patient"
 
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Paciente es un campo requerido",
-                                },
-                            ]}>
+                           rules={[
+                               {
+                                   required: true,
+                                   message: "Paciente es un campo requerido",
+                               },
+                           ]}>
                     <Select
                         showSearch
-                        placeholder="Ingrese un número de identificación"
+                        placeholder="Ingrese número identidad de paciente"
                         notFoundContent={fetching ? <Spin size="small"/> : null}
                         filterOption={false}
                         onSearch={fetchPatient}
@@ -139,18 +160,28 @@ export default function PatientReferenceAgent(props: any) {
                             <Option
                                 key={d.id}
                                 value={d.id}
-                            >{`${d.name} ${d.firstLastName} | ${d.idNumber}`}</Option>
+                            >{`${d.name} ${d.firstLastName} ${d.secondLastName}`}</Option>
                         ))}
                     </Select>
                 </Form.Item>
-                <Form.Item {...tailFormItemLayout}>
-                    <Button type="primary" htmlType={"submit"} style={{margin: "0 8px"}}>
-                        Siguiente
-                    </Button>
-                    <Button htmlType="button" onClick={() => form.resetFields()}>
-                        Reiniciar campo
-                    </Button>
+                <Form.Item
+                    name="patientInfo"
+                    label="Información del Paciente"
+                    hidden={hiddenPatientInfo}
+                >
+                    <Input
+                        placeholder="Número de identidad"
+                        value={patient.idNumber}
+                        disabled
+                        style={{marginBottom: "20px"}}/>
+                    <Input
+                        placeholder="Nombre"
+                        value={patient.name}
+                        disabled/>
+
+
                 </Form.Item>
+
             </Form>
         </>
     );

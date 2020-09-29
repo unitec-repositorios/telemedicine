@@ -164,12 +164,12 @@ export default function PatientReference(props: any) {
                 >
                     <Input
                         placeholder="Número de identidad"
-                        value={idPatient}
+                        value={patient.idNumber}
                         disabled
                         style={{ marginBottom: "20px" }} />
                     <Input
                         placeholder="Nombre"
-                        value={namePatient}
+                        value={patient.name}
                         disabled />
 
 
