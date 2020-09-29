@@ -62,6 +62,10 @@ namespace Core.References
 				Risk = reference.Risk,
 				AttentionRequired = reference.AttentionRequired,
 				MadeBy = reference.MadeBy,
+				Companion = reference.Companion,
+				Relationship = reference.Relationship,
+				Address = reference.Address,
+				Phone = reference.Phone,
 				ContactedHf = reference.ContactedHf,
 				ContactId = reference.ContactId,
 				Date = reference.Date,
@@ -97,6 +101,10 @@ namespace Core.References
 			updateReference.ContactedHf = reference.ContactedHf;
 			updateReference.ContactId = reference.ContactId;
 			updateReference.Date = reference.Date;
+				updateReference.Companion = reference.Companion,
+				updateReference.Relationship = reference.Relationship,
+				updateReference.Address = reference.Address,
+				updateReference.Phone = reference.Phone,
 			updateReference.OriginHF = newOriginHF;
 			updateReference.DestinationHF = newDestinationHF;
 
