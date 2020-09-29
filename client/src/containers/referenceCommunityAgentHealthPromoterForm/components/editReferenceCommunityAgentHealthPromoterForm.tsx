@@ -1,7 +1,7 @@
 import React, {useState} from "react";
-import { Link } from "@reach/router";
+import {Link} from "@reach/router";
 import {
-  ArrowLeftOutlined,
+    ArrowLeftOutlined,
 } from "@ant-design/icons";
 import {Steps, Button, message} from "antd";
 import {ReferenceACSPSForm} from "./../referenceCommunityAgentHealthPromoterModel";
@@ -43,7 +43,7 @@ function StepperEditACSPS(props: any) {
     const steps = [
         {
             title: "Paciente",
-            content: <PatientReferenceAgent referenceState={reference} selectedPatient={{} as Patient}/>,
+            content: <PatientReferenceAgent referenceState={reference} selectedPatient={{} as Patient} editing={true}/>,
         },
         {
             title: "Establecimiento de Salud",
@@ -74,15 +74,15 @@ function StepperEditACSPS(props: any) {
 
     return (
         <>
-      <Link to="/referenceACSPSForm">
-        <Button
-          type="primary"
-          shape="circle"
-          htmlType="submit"
-          icon={<ArrowLeftOutlined />}
-          style={{ marginBottom: "40px" }}
-        />
-      </Link>
+            <Link to="/referenceACSPSForm">
+                <Button
+                    type="primary"
+                    shape="circle"
+                    htmlType="submit"
+                    icon={<ArrowLeftOutlined/>}
+                    style={{marginBottom: "40px"}}
+                />
+            </Link>
             <Steps current={current} style={{marginBottom: "30px"}}>
                 {steps.map((item) => (
                     <Step key={item.title} title={item.title}/>

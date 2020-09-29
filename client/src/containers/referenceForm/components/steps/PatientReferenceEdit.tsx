@@ -32,12 +32,13 @@ export default function PatientReferenceEdit(props: any) {
     };
 
     const handleChange = async (value: any) => {
-        setPatient({ id: value.value, name: value.label } as Patient);
-        const patientTemp = await findById(value.value);
+        const foundPatient = patients.find(p => p.id === value);
+        setPatient(foundPatient!);
+        const patientTemp = foundPatient;
         if (patientTemp !== undefined) {
             setIdPatient(patientTemp.idNumber);
-            setNamePatient(value.label);
-            setHiddenPatientInfo(true);
+            setNamePatient(patientTemp.name);
+            setHiddenPatientInfo(false);
         }
     };
 
@@ -48,8 +49,10 @@ export default function PatientReferenceEdit(props: any) {
             const demo = await findById(hospital.patientId ?? 1);
             const referenceEdit = await findById2(props.passId ?? 1);
             setIdentity(demo.idNumber)
+            await fetchPatient(referenceEdit.patientId.toString());
             form.setFieldsValue(
                 {
+                    patient: demo.idNumber,
                     patientId: demo.idNumber,
                     patientName: demo.name,
                     name: referenceEdit.companion,
@@ -120,7 +123,6 @@ export default function PatientReferenceEdit(props: any) {
                 <Divider orientation="left">Paciente</Divider>
                 <Form.Item label="Paciente" name="patient">
                     <Select
-                        labelInValue
                         showSearch
                         placeholder="Seleccionar paciente"
                         notFoundContent={fetching ? <Spin size="small" /> : null}
@@ -147,20 +149,13 @@ export default function PatientReferenceEdit(props: any) {
                     <Input
                         placeholder="Número de identidad"
                         disabled
-                        value={idPatient}
+                        value={patient.idNumber}
                         style={{ marginBottom: "20px" }} />
-                </Form.Item>
-                <Form.Item
-                    name="patientName"
-                    label="Información del Paciente"
-                    hidden={hiddenPatientInfo}
-                >
                     <Input
                         placeholder="Nombre"
                         disabled
-                        value={namePatient}
+                        value={patient.name}
                     />
-
 
                 </Form.Item>
                 <Divider orientation="left">Acompañante</Divider>
